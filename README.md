@@ -65,10 +65,18 @@ git add .
 git commit -m "Implemented authentication API"
 ```
 
-4️⃣ **Create a Pull Request (PR) to the respective `base` branch (`web/backend`, `embedded`, etc.).**
-- Ensure CI/CD checks pass.
+4️⃣ **Once tested and stable, merge to the `base` branch.**
+```sh
+git checkout web/backend
+git merge web/backend/authentication
+git push origin web/backend
+```
 
-5️⃣ **Once tested and stable, merge to the `base` branch.**
+5️⃣ **Delete the merged feature branch:**
+```sh
+git branch -d web/backend/authentication  # Delete locally
+git push origin --delete web/backend/authentication  # Delete remotely
+```
 
 6️⃣ **At the integration phase, we will merge all `base` branches (`web/backend`, `web/front-global`, `web/front-cart`, `devops`, `ml`, and `embedded`) into `dev`.**
 
