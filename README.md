@@ -49,18 +49,19 @@ embedded/sensor-integration
 
 1️⃣ **Ensure you are on the appropriate `base` branch before creating a feature branch:**
 ```sh
-git checkout web-backend-main
-git pull origin web-backend-main
+git fetch origin # Fetch latest remote branches
+git checkout web-backend-main # Switch to base branch
+git pull origin web-backend-main # Get latest code from base
 ```
 
 2️⃣ **Create a feature branch from the `base` branch:**
 ```sh
-git checkout -b web-backend/authentication
-git push -u origin web-backend/authentication
+git checkout -b web-backend/authentication # Creates a local branch
+git push -u origin web-backend/authentication # Creates a remote branch and tracks it (links it with the local one)
 ```
 ⭕ **If the branch already exists remotely, switch to it using:**
 ```sh
-git switch --track origin/web-backend/authentication
+git switch --track origin/web-backend/authentication # Creates a local branch based in the remote branch and tracks the remote
 ```
 ⭕ **To ensure your local branch is linked to the remote:**
 ```
@@ -72,15 +73,20 @@ git branch -vv
 ```
 3️⃣ **Work on your changes and commit regularly.**
 ```sh
+git pull
 git add .
 git commit -m "Implemented authentication API"
 ```
-
+**When ready to push:**
+```sh
+git push
+```
 4️⃣ **Once tested and stable, merge to the `base` branch.**
 ```sh
-git checkout web-backend-main
-git merge web-backend/authentication
-git push origin web-backend-main
+git pull
+git checkout web-backend-main # Switch to base
+git merge web-backend/authentication # Merge feature into base
+git push origin web-backend-main # Push to remote
 ```
 
 5️⃣ **Delete the merged feature branch:**
@@ -100,6 +106,7 @@ git push origin --delete web-backend/authentication  # Delete remotely
 
 ✅ **Always use feature branches.**  
 ✅ **Follow naming conventions (`base/feature-name`).**  
+✅ **Pull before committing or pushing**  
 ✅ **Ensure your changes are tested before merging.**  
 ✅ **Merge feature branches into `base` branches *not* `dev`.**  
 ✅ **Delete old branches after merging with your `base`.**  
