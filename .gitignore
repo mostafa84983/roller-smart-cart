@@ -26,8 +26,8 @@ Desktop.ini
 project.lock.json
 project.fragment.lock.json
 
-# ASP.NET Core specific files
-wwwroot/
+# ASP.NET Core specific files (Only ignore if not needed)
+# wwwroot/
 
 # Ignore NUnit Test Results
 TestResults/
@@ -37,8 +37,9 @@ Generated\
 
 # Ignore NuGet package cache
 .nuget/
+
 # Ignore NuGet packages folder (for local development only)
-packages/
+# packages/
 
 # Ignore log files
 *.log
