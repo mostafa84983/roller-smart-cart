@@ -1,0 +1,44 @@
+# Ignore build output directories
+bin/
+obj/
+
+# User-specific files
+.vs/
+.vscode/
+
+# Windows installer files
+Thumbs.db
+Desktop.ini
+
+# macOS Finder files
+.DS_Store
+
+# JetBrains Rider specific files
+.idea/
+
+# User-specific .NET files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# ASP.NET temporary files
+project.lock.json
+project.fragment.lock.json
+
+# ASP.NET Core specific files
+wwwroot/
+
+# Ignore NUnit Test Results
+TestResults/
+
+# Ignore generated files
+Generated\
+
+# Ignore NuGet package cache
+.nuget/
+# Ignore NuGet packages folder (for local development only)
+packages/
+
+# Ignore log files
+*.log
