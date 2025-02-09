@@ -1,7 +1,7 @@
 # 🚀 Team Branching Guidelines
 
 ## 🔴 DO NOT PUSH DIRECTLY TO `main` OR `dev` 🚫
-All code changes must go through **feature branches** and be merged via **Pull Requests (PRs)**.
+All code changes must go through **`feature`** branches and be merged into **`base`**.
 
 ---
 
