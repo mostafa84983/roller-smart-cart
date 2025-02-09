@@ -92,7 +92,6 @@ git push origin --delete web/backend/authentication  # Delete remotely
 ✅ **Ensure your changes are tested before merging.**  
 ✅ **Merge feature branches into `base` branches *not* `dev`.**  
 ✅ **Delete old branches after merging with your `base`.**  
-✅ **Follow naming conventions (`base/feature-name`).**  
 
 ❌ **DO NOT push directly to `main` or `dev`.**  
 ❌ **DO NOT merge to `dev` or `main` without team agreement.**  
