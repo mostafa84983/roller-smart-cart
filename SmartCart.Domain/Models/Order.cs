@@ -12,7 +12,7 @@ namespace SmartCart.Domain.Models
         public decimal OrderPrice { get; set; }
         public string OrderNumber { get; set; }
         public DateTime CreationDate { get; set; }
-        public decimal OrderDiscount { get; set; }
+        public decimal OrderDiscount { get; set; } = 0m;
         public int UserId { get; set; }
         public User User { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; }

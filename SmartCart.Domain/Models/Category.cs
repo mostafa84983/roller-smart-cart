@@ -11,7 +11,7 @@ namespace SmartCart.Domain.Models
         public int CategoryId { get; set; }
         public string CategoryImage { get; set; }
         public string CategoryName { get; set; }
-        public bool IsOffer { get; set; }
+        public bool IsOffer { get; set; } = false;
         public ICollection<Product> Products { get; set; }
     }
 }

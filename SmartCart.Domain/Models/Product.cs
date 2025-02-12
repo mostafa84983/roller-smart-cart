@@ -15,10 +15,10 @@ namespace SmartCart.Domain.Models
         public decimal ProductPrice { get; set; }
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }
-        public bool IsAvaiable { get; set; }
-        public bool IsDeleted { get; set; }
-        public bool IsOffer { get; set; }
-        public decimal OfferPercentage { get; set; }
+        public bool IsAvaiable { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
+        public bool IsOffer { get; set; } = false;
+        public decimal OfferPercentage { get; set; } = 0m;
         public int CategoryId { get; set; }
         public Category Category { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; }
