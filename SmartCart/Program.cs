@@ -55,7 +55,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-//Seeding Database before handling Requests
+// Seeding Database before handling Requests
 using (var scope = app.Services.CreateScope())
 {
     try
@@ -63,12 +63,16 @@ using (var scope = app.Services.CreateScope())
         var context = scope.ServiceProvider.GetRequiredService<DataContext>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+
+        // Apply migrations and create DB if it doesn't exist
+        await context.Database.MigrateAsync();
+
+        //  Now seed your new data
         await DatabaseSeeder.SeedAsync(context, userManager, roleManager);
     }
     catch (Exception ex)
     {
         Console.WriteLine($"Error while seeding database: {ex.Message}");
- 
     }
 }
 
