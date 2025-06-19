@@ -10,6 +10,7 @@ namespace SmartCart.Domain.Interfaces
     {
         Task<T> GetById (int id);
         Task<IEnumerable<T>> GetAll();
+        Task<(IEnumerable<T> Data , int TotalCount)> GetAllPaginated(int page, int pageSize);
         Task Add( T entity);
         void Update (T entity);
         void Delete (T entity);
