@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartCart.Application.Dto
 {
-    public class test
+    public class PaginatedResult<T>
     {
-        //test
+        public IEnumerable<T> Data { get; set; }
+        public int TotalCount { get; set; }
     }
 }

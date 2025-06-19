@@ -32,6 +32,18 @@ namespace SmartCart.Infrastructure.Repositories
             return await _context.Set<T>().AsNoTracking().ToListAsync();
         }
 
+        public virtual async Task<(IEnumerable<T> Data, int TotalCount)> GetAllPaginated(int page, int pageSize)
+        {
+            var query = _context.Set<T>().AsNoTracking();
+            var totalCount = await query.CountAsync();
+            var data = await query 
+                       .Skip((page - 1) * pageSize)
+                       .Take(pageSize)
+                       .ToListAsync();
+
+            return (data,totalCount);
+        }
+
         public async Task<T> GetById(int id)
         {
             return await _context.Set<T>().FindAsync(id);
