@@ -1,4 +1,5 @@
-﻿using SmartCart.Domain.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
 using SmartCart.Infrastructure.Data;
 using System;
@@ -14,6 +15,13 @@ namespace SmartCart.Infrastructure.Repositories
         public CategoryRepository(DataContext Context) : base(Context) 
         {
 
+        }
+
+        public async Task<IEnumerable<Category>> GetCategoriesWithOffers()
+        {
+            return await _context.Categories.Where(c => c.IsOffer)
+                            .AsNoTracking()
+                            .ToListAsync();
         }
     }
 }
