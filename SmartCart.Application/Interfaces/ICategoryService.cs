@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartCart.Application.Services
+namespace SmartCart.Application.Interfaces
 {
-    public class test
+    public interface ICategoryService
     {
-        //test
     }
 }
