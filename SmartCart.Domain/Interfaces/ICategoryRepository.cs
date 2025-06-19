@@ -1,15 +1,13 @@
-﻿using System;
+﻿using SmartCart.Domain.Models;
+using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartCart.Domain.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface ICategoryRepository : IGenericRepository<Category>
     {
-        ICategoryRepository Category { get; }
-        int Save();
     }
 }

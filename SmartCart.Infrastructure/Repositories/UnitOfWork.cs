@@ -13,9 +13,12 @@ namespace SmartCart.Infrastructure.Repositories
     {
         private readonly DataContext _context;
 
-        public UnitOfWork(DataContext context) 
+        public ICategoryRepository Category { get; }
+
+        public UnitOfWork(DataContext context, ICategoryRepository categoryRepository)
         {
             _context = context;
+            Category = categoryRepository;
         }
 
         public int Save()
