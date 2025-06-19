@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartCart.Application\SmartCart.Application.csproj" />
     <ProjectReference Include="..\SmartCart.Infrastructure\SmartCart.Infrastructure.csproj" />
   </ItemGroup>
 
