@@ -95,5 +95,29 @@ namespace SmartCart.Application.Services
             var productDto = _mapper.Map<ProductDto>(product);
             return GenericResult<ProductDto>.Success(productDto);
         }
+
+        public async Task<Result> SoftDeleteProduct(int productId)
+        {
+            var deletedProduct = await _unitOfWork.Product.SoftDeleteProduct(productId);
+            if(!deletedProduct)
+            {
+                return Result.Failure("Product not found or already deleted");
+            }
+
+             _unitOfWork.Save();
+            return Result.Success();
+        }
+
+        public async Task<Result> RestoreProduct(int productId)
+        {
+            var restoredProduct = await _unitOfWork.Product.RestoreProduct(productId);
+            if (!restoredProduct)
+            {
+                return Result.Failure("Product not found or not deleted");
+            }
+
+            _unitOfWork.Save();
+            return Result.Success();
+        }
     }
 }
