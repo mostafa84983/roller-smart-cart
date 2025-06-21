@@ -2,6 +2,7 @@
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
 using SmartCart.Application.Interfaces;
+using SmartCart.Domain.Enums;
 using SmartCart.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -63,10 +64,11 @@ namespace SmartCart.Application.Services
             return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
 
-/*        public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, string role)
+        //Need order method (get order by order id)
+        public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
         {
             throw new NotImplementedException();
-        }*/
+        }
 
         public async Task<GenericResult<ProductDto>> GetProductByCode(int productCode)
         {
