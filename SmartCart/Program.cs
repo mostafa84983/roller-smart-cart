@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SmartCart.Application.Interfaces;
+using SmartCart.Application.Services;
+using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
 using SmartCart.Infrastructure.Data;
+using SmartCart.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,6 +55,19 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+// Register AutoMapper 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Register repositories
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+// Register services
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+
 
 
 var app = builder.Build();
