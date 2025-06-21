@@ -13,6 +13,8 @@ namespace SmartCart.Domain.Interfaces
         Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsWithOfferInCategory(int categoryId, int page, int pageSize);
         Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize);
         Task<Product> GetProductByCode(int productCode);
+        Task<bool> SoftDeleteProduct(int productId);
+        Task<bool> RestoreProduct(int productId);
 
     }
 }

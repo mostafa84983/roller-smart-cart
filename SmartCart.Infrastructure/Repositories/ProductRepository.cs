@@ -70,5 +70,26 @@ namespace SmartCart.Infrastructure.Repositories
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<bool> SoftDeleteProduct(int productId)
+        {
+            var productToDelete = await _context.Products.FindAsync(productId);
+            if (productToDelete == null || productToDelete.IsDeleted)
+                return false;
+
+            productToDelete.IsDeleted = true;
+            return true;
+
+        }
+
+        public async Task<bool> RestoreProduct(int productId)
+        {
+            var productToRestore = await _context.Products.FindAsync(productId);
+            if (productToRestore == null || !productToRestore.IsDeleted)
+                return false;
+
+            productToRestore.IsDeleted = false;
+            return true;
+        }
     }
 }
