@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartCart.Application.Interfaces;
 
@@ -63,5 +64,29 @@ namespace SmartCart.API.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpDelete("{productId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SoftDeleteProduct(int productId)
+        {
+            var result = await _productService.SoftDeleteProduct(productId);
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok("Product soft deleted successfully");
+
+        }
+
+        [HttpPut("{productId}/restore")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RestoreProduct(int productId)
+        {
+            var result = await _productService.RestoreProduct(productId);
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok("Product restored successfully");
+        }
+
     }
 }
