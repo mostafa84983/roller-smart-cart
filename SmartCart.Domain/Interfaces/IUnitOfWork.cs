@@ -10,7 +10,11 @@ namespace SmartCart.Domain.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         ICategoryRepository Category { get; }
+
+        IOrderRepository Order { get; }
+
         IProductRepository Product { get; }
+
         int Save();
     }
 }

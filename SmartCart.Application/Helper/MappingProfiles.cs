@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using SmartCart.Application.Dto.Order;
+
 using SmartCart.Application.Dto;
 using SmartCart.Application.Dto.Category;
+
 using SmartCart.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +15,7 @@ namespace SmartCart.Application.Helper
 {
     public class MappingProfiles : Profile
     {
+
         public MappingProfiles()
         {
 
@@ -22,9 +26,7 @@ namespace SmartCart.Application.Helper
 
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
-
-
-
+            CreateMap<Order, OrderDto>();
         }
     }
 }
