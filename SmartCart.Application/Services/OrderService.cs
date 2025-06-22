@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SmartCart.Application.Common;
-using SmartCart.Application.Dto.Order;
+using SmartCart.Application.Dto;
 using SmartCart.Application.Interfaces;
 using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
@@ -24,7 +24,7 @@ namespace SmartCart.Application.Services
 
         public async Task<GenericResult<IEnumerable<OrderDto>>> GetOrdersOfUser(int userId)
         {
-            var orders = _unitOfWork1.Order.GetOrdersOfUser(userId);
+            var orders = await _unitOfWork1.Order.GetOrdersOfUser(userId);
             if (orders == null)
                 return GenericResult<IEnumerable<OrderDto>>.Failure("No Order is Found");
 

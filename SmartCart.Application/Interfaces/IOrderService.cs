@@ -1,5 +1,5 @@
 ﻿using SmartCart.Application.Common;
-using SmartCart.Application.Dto.Order;
+using SmartCart.Application.Dto;
 using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
 using System;

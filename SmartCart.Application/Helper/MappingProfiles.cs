@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using SmartCart.Application.Dto.Order;
 
 using SmartCart.Application.Dto;
 using SmartCart.Application.Dto.Category;
@@ -21,9 +20,7 @@ namespace SmartCart.Application.Helper
 
             CreateMap<Category, CategoryDto>();
             CreateMap<CategoryDto, Category>();
-
             CreateMap<CreateCategoryDto, Category>();
-
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<Order, OrderDto>();
