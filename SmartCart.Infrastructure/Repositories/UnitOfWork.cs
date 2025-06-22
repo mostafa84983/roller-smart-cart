@@ -14,11 +14,14 @@ namespace SmartCart.Infrastructure.Repositories
         private readonly DataContext _context;
 
         public ICategoryRepository Category { get; }
+        public IOrderRepository Order { get; }
 
-        public UnitOfWork(DataContext context, ICategoryRepository categoryRepository)
+        public UnitOfWork(DataContext context, ICategoryRepository categoryRepository , IOrderRepository orderRepository)
         {
             _context = context;
             Category = categoryRepository;
+            Order = orderRepository;
+            
         }
 
         public int Save()
