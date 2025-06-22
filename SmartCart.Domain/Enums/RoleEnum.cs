@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmartCart.Domain.Enums
 {
-    public class test
+    public enum RoleEnum
     {
-        //test
+        Admin=1,
+        User=2
     }
 }
