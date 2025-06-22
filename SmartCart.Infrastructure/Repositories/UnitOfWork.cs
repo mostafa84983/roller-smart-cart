@@ -14,7 +14,6 @@ namespace SmartCart.Infrastructure.Repositories
         private readonly DataContext _context;
 
         public ICategoryRepository Category { get; }
-
         public IProductRepository Product { get; }
         public IOrderRepository Order { get; }
         

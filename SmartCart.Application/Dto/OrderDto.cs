@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartCart.Application.Dto.Order
+namespace SmartCart.Application.Dto
 {
     public class OrderDto
     {
