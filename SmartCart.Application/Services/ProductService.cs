@@ -122,6 +122,9 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> AddOfferToProduct(int productId, decimal offerPercentage)
         {
+            if (offerPercentage < 0 || offerPercentage > 100)
+                return Result.Failure("Offer percentage must be between 0 and 100");
+
             var result = await _unitOfWork.Product.AddOfferToProduct(productId, offerPercentage);
             if (!result)
                 return Result.Failure("Failed to add offer: product not found or is deleted");
