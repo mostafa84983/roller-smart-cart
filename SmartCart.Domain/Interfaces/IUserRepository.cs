@@ -9,6 +9,6 @@ namespace SmartCart.Domain.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-
+        Task<IEnumerable<User>> GetAllUsers(int page, int pageSize);
     }
 }

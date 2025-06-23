@@ -19,12 +19,23 @@ namespace SmartCart.API.Controllers
 
         
         //[Authorize(Roles ="Admin")]
-        [HttpGet]
+        [HttpGet("userData")]
         [ProducesResponseType(typeof(IEnumerable<OrderDto>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetUserById (int userid)
         {
             var result = await _userService.GetUserById(userid);
+            if (result.IsSuccess)
+                return Ok(result.Value);
+            else
+                return BadRequest(result.ErrorMessage);
+        }
+
+        //[Authorize(Roles ="Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers(int page , int pageSize)
+        {
+            var result = await _userService.GetAllUsers(page, pageSize);
             if (result.IsSuccess)
                 return Ok(result.Value);
             else

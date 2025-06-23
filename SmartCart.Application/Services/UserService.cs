@@ -21,6 +21,16 @@ namespace SmartCart.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<GenericResult<IEnumerable<UserDto>>> GetAllUsers(int page, int pageSize)
+        {
+            var users = await _unitOfWork.User.GetAllUsers(page, pageSize);
+            if (users == null || !users.Any())
+                return GenericResult<IEnumerable<UserDto>>.Failure("No users found");
+
+            var usersDto = _mapper.Map<List<UserDto>>(users);
+            return GenericResult<IEnumerable<UserDto>>.Success(usersDto);
+        }
+
         public async Task<GenericResult<UserDto>> GetUserById(int userid)
         {
             var user = await _unitOfWork.User.GetById(userid);

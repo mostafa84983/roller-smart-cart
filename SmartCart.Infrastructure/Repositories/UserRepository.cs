@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
@@ -13,10 +15,31 @@ namespace SmartCart.Infrastructure.Repositories
 {
     public class UserRepository : GenericRepository<User> , IUserRepository
     {
-        public UserRepository (DataContext context) : base(context)
+        private UserManager<User> _userManager;
+        public UserRepository (DataContext context , UserManager<User> userManager) : base(context)
         {
-
+            _userManager = userManager;
         }
 
+        public async Task<IEnumerable<User>> GetAllUsers(int page, int pageSize)
+        {
+            var role = await _context.Roles.Where(r => r.Name == "User").Select(r => r.Id)
+                .FirstOrDefaultAsync();
+
+
+            var userIds = _context.UserRoles
+               .Where(ur => ur.RoleId == role)
+               .Select(ur => ur.UserId);
+
+            var users = await _context.Users
+                .Where(u => userIds.Contains(u.Id))
+                .OrderBy(u => u.Id) 
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return users;
+
+        }
     }
 }
