@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartCart.Application.Dto
+namespace SmartCart.Application.Dto.Product
 {
     public class ProductDto
     {
@@ -16,9 +16,9 @@ namespace SmartCart.Application.Dto
         public decimal ProductPrice { get; set; }
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }
-        public bool IsAvaiable { get; set; } 
-        public bool IsOffer { get; set; } 
-        public decimal OfferPercentage { get; set; } 
+        public bool IsAvaiable { get; set; }
+        public bool IsOffer { get; set; }
+        public decimal OfferPercentage { get; set; }
         public int CategoryId { get; set; }
 
     }

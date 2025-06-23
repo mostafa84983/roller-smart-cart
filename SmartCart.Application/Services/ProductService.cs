@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
+using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
 using SmartCart.Domain.Enums;
 using SmartCart.Domain.Interfaces;
@@ -143,7 +144,7 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public Task<Result> CreateProduct(ProductDto product)
+        public Task<Result> CreateProduct(CreateProductDto product)
         {
             throw new NotImplementedException();
         }
