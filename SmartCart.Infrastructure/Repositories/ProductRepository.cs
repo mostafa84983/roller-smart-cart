@@ -91,5 +91,51 @@ namespace SmartCart.Infrastructure.Repositories
             productToRestore.IsDeleted = false;
             return true;
         }
+
+        public async Task<bool> AddOfferToProduct(int productId, decimal offerPercentage)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null || product.IsDeleted)
+                return false;
+            
+            var category = await _context.Categories.FindAsync(product.CategoryId);
+            if (category == null)
+                return false; 
+
+            product.OfferPercentage = offerPercentage;
+            product.IsOffer = true;
+
+            category.IsOffer = true;
+
+            return true;
+        }
+
+        public async Task<bool> RemoveOfferFromProduct(int productId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null || product.IsDeleted || !product.IsOffer)
+                return false;
+
+
+            product.OfferPercentage = 0;
+            product.IsOffer = false;
+
+            var category = await _context.Categories.FindAsync(product.CategoryId);
+            if (category == null)
+                return false;
+
+            bool checkOtherProductsHaveOffer = await _context.Products.AnyAsync(p =>
+                                                                    p.CategoryId == product.CategoryId &&
+                                                                    p.ProductId != product.ProductId && 
+                                                                    p.IsOffer &&
+                                                                   !p.IsDeleted);
+
+            if(!checkOtherProductsHaveOffer)
+            {
+                category.IsOffer = false;
+            }
+
+            return true;
+        }
     }
 }
