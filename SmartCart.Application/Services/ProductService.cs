@@ -142,5 +142,15 @@ namespace SmartCart.Application.Services
             _unitOfWork.Save();
             return Result.Success();
         }
+
+        public Task<Result> CreateProduct(ProductDto product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result> UpdateProduct(ProductDto product)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
