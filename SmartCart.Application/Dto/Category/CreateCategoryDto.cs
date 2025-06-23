@@ -14,6 +14,5 @@ namespace SmartCart.Application.Dto.Category
 
         [Required(ErrorMessage = "Category name is required")]
         public string CategoryName { get; set; }
-        public bool IsOffer { get; set; } = false;
     }
 }
