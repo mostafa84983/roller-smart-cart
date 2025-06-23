@@ -65,10 +65,34 @@ namespace SmartCart.Application.Services
             return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
 
-        //Need order method (get order by order id)
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
         {
-            throw new NotImplementedException();
+            var order = await _unitOfWork.Order.GetById(orderId);
+            if(order == null)
+            {
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Order not found");
+            }
+
+            if(order.UserId != userClaims && role != RoleEnum.Admin)
+            {
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("You are not authorized to view products of this order");
+            }
+
+            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
+            if (productsData == null || !productsData.Any())
+            {
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products are found in this order");
+            }
+
+            var productDtos = _mapper.Map<List<ProductDto>>(productsData);
+
+            var paginatedResult = new PaginatedResult<ProductDto>
+            {
+                Data = productDtos,
+                TotalCount = totalCount
+            };
+
+            return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
 
         public async Task<GenericResult<ProductDto>> GetProductByCode(int productCode)
