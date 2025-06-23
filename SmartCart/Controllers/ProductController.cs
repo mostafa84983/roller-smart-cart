@@ -88,5 +88,28 @@ namespace SmartCart.API.Controllers
             return Ok("Product restored successfully");
         }
 
+        [HttpPut("{productId}/add-offer")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AddOfferToProduct(int productId, [FromQuery] decimal offerPercentage)
+        {
+            var result = await _productService.AddOfferToProduct(productId, offerPercentage);
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok("Offer added to product successfully");
+        }
+
+        [HttpPut("{productId}/remove-offer")]
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> RemoveOfferFromProduct(int productId)
+        {
+            var result = await _productService.RemoveOfferFromProduct(productId);
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok("Offer removed from product successfully");
+        }
+
     }
 }
