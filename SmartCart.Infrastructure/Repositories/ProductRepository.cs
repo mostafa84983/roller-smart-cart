@@ -95,7 +95,7 @@ namespace SmartCart.Infrastructure.Repositories
         public async Task<bool> AddOfferToProduct(int productId, decimal offerPercentage)
         {
             var product = await _context.Products.FindAsync(productId);
-            if (product == null || product.IsDeleted)
+            if (product == null || product.IsDeleted || !product.IsAvaiable)
                 return false;
             
             var category = await _context.Categories.FindAsync(product.CategoryId);
@@ -113,7 +113,7 @@ namespace SmartCart.Infrastructure.Repositories
         public async Task<bool> RemoveOfferFromProduct(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
-            if (product == null || product.IsDeleted || !product.IsOffer)
+            if (product == null || product.IsDeleted || !product.IsOffer || !product.IsAvaiable)
                 return false;
 
 
@@ -128,7 +128,8 @@ namespace SmartCart.Infrastructure.Repositories
                                                                     p.CategoryId == product.CategoryId &&
                                                                     p.ProductId != product.ProductId && 
                                                                     p.IsOffer &&
-                                                                   !p.IsDeleted);
+                                                                   !p.IsDeleted &&
+                                                                    p.IsAvaiable);
 
             if(!checkOtherProductsHaveOffer)
             {

@@ -127,7 +127,7 @@ namespace SmartCart.Application.Services
 
             var result = await _unitOfWork.Product.AddOfferToProduct(productId, offerPercentage);
             if (!result)
-                return Result.Failure("Failed to add offer: product not found or is deleted");
+                return Result.Failure("Failed to add offer: Product not found, deleted or unavailable");
 
             _unitOfWork.Save();
             return Result.Success();
