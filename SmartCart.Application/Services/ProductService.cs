@@ -119,5 +119,25 @@ namespace SmartCart.Application.Services
             _unitOfWork.Save();
             return Result.Success();
         }
+
+        public async Task<Result> AddOfferToProduct(int productId, decimal offerPercentage)
+        {
+            var result = await _unitOfWork.Product.AddOfferToProduct(productId, offerPercentage);
+            if (!result)
+                return Result.Failure("Failed to add offer: product not found or is deleted");
+
+            _unitOfWork.Save();
+            return Result.Success();
+        }
+
+        public async Task<Result> RemoveOfferFromProduct(int productId)
+        {
+            var result = await _unitOfWork.Product.RemoveOfferFromProduct(productId);
+            if (!result)
+                return Result.Failure("Failed to remove offer: product not found or doesn't have an active offer");
+
+            _unitOfWork.Save();
+            return Result.Success();
+        }
     }
 }

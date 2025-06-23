@@ -16,6 +16,8 @@ namespace SmartCart.Application.Interfaces
         Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role);
         Task<GenericResult<ProductDto>> GetProductByCode(int productCode);
         Task<GenericResult<ProductDto>> GetProductById(int productId);
+        Task<Result> AddOfferToProduct(int productId, decimal offerPercentage);
+        Task<Result> RemoveOfferFromProduct(int productId);
         Task<Result> SoftDeleteProduct(int productId);
         Task<Result> RestoreProduct(int productId);
     }
