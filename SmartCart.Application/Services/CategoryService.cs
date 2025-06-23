@@ -70,7 +70,7 @@ namespace SmartCart.Application.Services
         }
 
 
-        public async Task<Result> UpdateCategory(CategoryDto categoryDto)
+        public async Task<Result> UpdateCategory(UpdateCategoryDto categoryDto)
         {
             if(categoryDto == null)
             {
@@ -88,7 +88,9 @@ namespace SmartCart.Application.Services
                 return Result.Failure("Category not found");
             }
 
-            _mapper.Map(categoryDto, category);
+            category.CategoryName = categoryDto.CategoryName;
+            category.CategoryImage = categoryDto.CategoryImage;
+
             _unitOfWork.Category.Update(category);
             _unitOfWork.Save();
 
