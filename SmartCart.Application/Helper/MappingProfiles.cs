@@ -2,7 +2,7 @@
 
 using SmartCart.Application.Dto;
 using SmartCart.Application.Dto.Category;
-
+using SmartCart.Application.Dto.Product;
 using SmartCart.Domain.Models;
 using System;
 using System.Collections.Generic;

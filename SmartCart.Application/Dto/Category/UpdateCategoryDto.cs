@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace SmartCart.Application.Dto.Category
 {
-    public class CreateCategoryDto
+    public class UpdateCategoryDto
     {
+        public int CategoryId { get; set; }
+
         [Required(ErrorMessage = "Category image is required")]
         public string CategoryImage { get; set; }
 

@@ -55,7 +55,7 @@ namespace SmartCart.API.Controllers
 
         [HttpPut]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateCategory([FromBody] CategoryDto updatedCategoryDto)
+        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto updatedCategoryDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

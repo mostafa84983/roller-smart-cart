@@ -1,5 +1,6 @@
 ﻿using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
+using SmartCart.Application.Dto.Product;
 using SmartCart.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,10 @@ namespace SmartCart.Application.Interfaces
         Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role);
         Task<GenericResult<ProductDto>> GetProductByCode(int productCode);
         Task<GenericResult<ProductDto>> GetProductById(int productId);
+        Task<Result> CreateProduct (CreateProductDto product);
+        Task<Result> UpdateProduct (ProductDto product);
+        Task<Result> AddOfferToProduct(int productId, decimal offerPercentage);
+        Task<Result> RemoveOfferFromProduct(int productId);
         Task<Result> SoftDeleteProduct(int productId);
         Task<Result> RestoreProduct(int productId);
     }

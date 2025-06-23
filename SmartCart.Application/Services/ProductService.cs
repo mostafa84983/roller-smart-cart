@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
+using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
 using SmartCart.Domain.Enums;
 using SmartCart.Domain.Interfaces;
@@ -64,10 +65,34 @@ namespace SmartCart.Application.Services
             return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
 
-        //Need order method (get order by order id)
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
         {
-            throw new NotImplementedException();
+            var order = await _unitOfWork.Order.GetById(orderId);
+            if(order == null)
+            {
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Order not found");
+            }
+
+            if(order.UserId != userClaims && role != RoleEnum.Admin)
+            {
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("You are not authorized to view products of this order");
+            }
+
+            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
+            if (productsData == null || !productsData.Any())
+            {
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products are found in this order");
+            }
+
+            var productDtos = _mapper.Map<List<ProductDto>>(productsData);
+
+            var paginatedResult = new PaginatedResult<ProductDto>
+            {
+                Data = productDtos,
+                TotalCount = totalCount
+            };
+
+            return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
 
         public async Task<GenericResult<ProductDto>> GetProductByCode(int productCode)
@@ -118,6 +143,39 @@ namespace SmartCart.Application.Services
 
             _unitOfWork.Save();
             return Result.Success();
+        }
+
+        public async Task<Result> AddOfferToProduct(int productId, decimal offerPercentage)
+        {
+            if (offerPercentage < 0 || offerPercentage > 100)
+                return Result.Failure("Offer percentage must be between 0 and 100");
+
+            var result = await _unitOfWork.Product.AddOfferToProduct(productId, offerPercentage);
+            if (!result)
+                return Result.Failure("Failed to add offer: Product not found, deleted or unavailable");
+
+            _unitOfWork.Save();
+            return Result.Success();
+        }
+
+        public async Task<Result> RemoveOfferFromProduct(int productId)
+        {
+            var result = await _unitOfWork.Product.RemoveOfferFromProduct(productId);
+            if (!result)
+                return Result.Failure("Failed to remove offer: product not found or doesn't have an active offer");
+
+            _unitOfWork.Save();
+            return Result.Success();
+        }
+
+        public Task<Result> CreateProduct(CreateProductDto product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result> UpdateProduct(ProductDto product)
+        {
+            throw new NotImplementedException();
         }
     }
 }
