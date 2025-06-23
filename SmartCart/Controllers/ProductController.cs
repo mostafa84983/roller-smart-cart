@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SmartCart.Application.Interfaces;
+using SmartCart.Domain.Enums;
 
 namespace SmartCart.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController
     {
         private readonly IProductService _productService;
 
@@ -37,12 +38,23 @@ namespace SmartCart.API.Controllers
         }
 
 
-        /*        [HttpGet("order/{orderId}")]
-                  [Authorize]
-                public async Task<IActionResult> GetPaginatedProductsOfOrder(int orderId, int page = 1, int pageSize = 10)
-                {
+        [HttpGet("order/{orderId}/products")]
+        [Authorize]
+        public async Task<IActionResult> GetPaginatedProductsOfOrder(int orderId, int page = 1, int pageSize = 10)
+        {
+            var userIdClaims = GetUserIdFromClaims();
+            var role = GetRoleFromClaims();
 
-                }*/
+            if (!Enum.TryParse<RoleEnum>(role, ignoreCase: true, out var roleEnum))
+                return BadRequest("Invalid role in token");
+            
+
+            var result = await _productService.GetPaginatedProductsOfOrder(orderId, page, pageSize, userIdClaims, roleEnum);
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok(result.Value);
+        }
 
 
         [HttpGet("code/{productCode}")]
