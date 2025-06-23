@@ -14,6 +14,7 @@ namespace SmartCart.Domain.Interfaces
         IOrderRepository Order { get; }
 
         IProductRepository Product { get; }
+        IUserRepository User { get; }
 
         int Save();
     }

@@ -8,7 +8,7 @@ namespace SmartCart.API.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        public readonly IOrderService _orderService;
+        private readonly IOrderService _orderService;
         public OrderController(IOrderService orderService)
         {
             _orderService = orderService;

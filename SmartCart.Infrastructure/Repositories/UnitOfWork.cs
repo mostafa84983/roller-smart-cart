@@ -16,13 +16,15 @@ namespace SmartCart.Infrastructure.Repositories
         public ICategoryRepository Category { get; }
         public IProductRepository Product { get; }
         public IOrderRepository Order { get; }
+        public IUserRepository User { get; }
         
-        public UnitOfWork(DataContext context, ICategoryRepository categoryRepository, IProductRepository productRepository, IOrderRepository orderRepository)
+        public UnitOfWork(DataContext context, ICategoryRepository categoryRepository, IProductRepository productRepository, IOrderRepository orderRepository, IUserRepository userRepository)
         {
             _context = context;
             Category = categoryRepository;
             Product = productRepository;
             Order = orderRepository;
+            User = userRepository;
         }
 
         public int Save()
