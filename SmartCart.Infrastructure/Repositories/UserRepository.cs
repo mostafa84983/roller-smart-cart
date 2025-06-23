@@ -23,20 +23,15 @@ namespace SmartCart.Infrastructure.Repositories
 
         public async Task<IEnumerable<User>> GetAllUsers(int page, int pageSize)
         {
-            var role = await _context.Roles.Where(r => r.Name == "User").Select(r => r.Id)
-                .FirstOrDefaultAsync();
+            var roleId = await _context.Roles.Where(u => u.Name == "User").Select(u => u.Id).FirstOrDefaultAsync();
 
+            if (roleId == 0)
+                return new List<User>();
 
-            var userIds = _context.UserRoles
-               .Where(ur => ur.RoleId == role)
-               .Select(ur => ur.UserId);
-
-            var users = await _context.Users
-                .Where(u => userIds.Contains(u.Id))
-                .OrderBy(u => u.Id) 
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var usersId = _context.UserRoles.Where(ur => ur.RoleId == roleId).Select(ur => ur.UserId);
+            var users = await _context.Users.Where(u => usersId.Contains(u.Id)).OrderBy(u=> u.Id)
+                .Skip((page -1)* pageSize)
+                .Take(pageSize).ToListAsync();
 
             return users;
 

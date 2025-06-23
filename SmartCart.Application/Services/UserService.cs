@@ -24,7 +24,7 @@ namespace SmartCart.Application.Services
         public async Task<GenericResult<IEnumerable<UserDto>>> GetAllUsers(int page, int pageSize)
         {
             var users = await _unitOfWork.User.GetAllUsers(page, pageSize);
-            if (users == null || !users.Any())
+            if (!users.Any())
                 return GenericResult<IEnumerable<UserDto>>.Failure("No users found");
 
             var usersDto = _mapper.Map<List<UserDto>>(users);
