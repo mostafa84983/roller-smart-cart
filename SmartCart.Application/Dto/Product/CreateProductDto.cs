@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,13 +9,21 @@ namespace SmartCart.Application.Dto.Product
 {
     public class CreateProductDto
     {
+        [Required(ErrorMessage = "Product name is required")]
         public string ProductName { get; set; }
+
+        [Required(ErrorMessage = "Product code is required")]
         public int ProductCode { get; set; }
+
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335", ErrorMessage = "Weight must be greater than 0")]
         public decimal ProductWeight { get; set; }
+
+        [Range(0.01, 999999, ErrorMessage = "Price must be greater than 0")]
         public decimal ProductPrice { get; set; }
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }
-        /*public bool IsAvaiable { get; set; } = true;*/
+
+        [Required(ErrorMessage = "Category is required")]
         public int CategoryId { get; set; }
     }
 }

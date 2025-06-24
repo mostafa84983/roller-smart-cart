@@ -62,6 +62,13 @@ namespace SmartCart.Application.Services
                 return Result.Failure("Category data must be provided");
             }
 
+            var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(createCategoryDto.CategoryName, null);
+
+            if (isNameTaken)
+            {
+                return Result.Failure("Category name already exists");
+            }
+
             var category = _mapper.Map<Category>(createCategoryDto);
             await _unitOfWork.Category.Add(category);
             _unitOfWork.Save();
@@ -86,6 +93,12 @@ namespace SmartCart.Application.Services
             if (category == null)
             {
                 return Result.Failure("Category not found");
+            }
+
+            var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(categoryDto.CategoryName, categoryDto.CategoryId);
+            if (isNameTaken)
+            {
+                return Result.Failure("Another category with the same name already exists");
             }
 
             category.CategoryName = categoryDto.CategoryName;

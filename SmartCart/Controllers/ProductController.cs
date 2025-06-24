@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SmartCart.Application.Dto.Category;
+using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
+using SmartCart.Application.Services;
 using SmartCart.Domain.Enums;
 
 namespace SmartCart.API.Controllers
@@ -122,6 +125,37 @@ namespace SmartCart.API.Controllers
 
             return Ok("Offer removed from product successfully");
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _productService.CreateProduct(productDto);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok();
+        }
+
+
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDto productDto)
+        {
+
+            var result = await _productService.UpdateProduct(productDto);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Ok();
+        }
+
 
     }
 }

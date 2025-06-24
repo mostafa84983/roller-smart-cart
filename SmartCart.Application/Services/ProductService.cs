@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
+using SmartCart.Application.Dto.Category;
 using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
 using SmartCart.Domain.Enums;
 using SmartCart.Domain.Interfaces;
+using SmartCart.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,14 +170,81 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public Task<Result> CreateProduct(CreateProductDto product)
+        public async Task<Result> CreateProduct(CreateProductDto product)
         {
-            throw new NotImplementedException();
+            // NOTE: Remember to handle TotalQuantity here after migration
+            if (product == null)
+                return Result.Failure("Product data must be provided");
+
+            var existingProductCode = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
+
+            if(existingProductCode != null)
+                return Result.Failure("Product code already exists");
+
+            var newProduct = _mapper.Map<Product>(product);
+
+            newProduct.IsAvaiable = true;
+            newProduct.IsDeleted = false;
+            newProduct.IsOffer = false;
+            newProduct.OfferPercentage = 0m;
+
+            await _unitOfWork.Product.Add(newProduct);
+            _unitOfWork.Save();
+
+            return Result.Success();
         }
 
-        public Task<Result> UpdateProduct(ProductDto product)
+        public async Task<Result> UpdateProduct(UpdateProductDto productDto)
         {
-            throw new NotImplementedException();
+            // NOTE: Remember to handle TotalQuantity here after migration
+            if (productDto == null)
+            {
+                return Result.Failure("Product data must be provided");
+            }
+
+            if (productDto.ProductId <= 0)
+            {
+                return Result.Failure("Invalid ID");
+            }
+
+            var product = await _unitOfWork.Product.GetById(productDto.ProductId);
+            if (product == null)
+            {
+                return Result.Failure("Product not found");
+            }
+
+            if (!string.IsNullOrWhiteSpace(productDto.ProductName))
+                product.ProductName = productDto.ProductName;
+
+            if (productDto.ProductWeight.HasValue)
+            {
+                if (productDto.ProductWeight <= 0)
+                    return Result.Failure("Product weight must be greater than 0");
+
+                product.ProductWeight = productDto.ProductWeight.Value;
+            }
+
+            if (productDto.ProductPrice.HasValue)
+            {
+                if (productDto.ProductPrice <= 0)
+                    return Result.Failure("Product price must be greater than 0");
+
+                product.ProductPrice = productDto.ProductPrice.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
+                product.ProductImage = productDto.ProductImage;
+
+            if (!string.IsNullOrWhiteSpace(productDto.ProductDescription))
+                product.ProductDescription = productDto.ProductDescription;
+
+            if (productDto.IsAvaiable.HasValue)
+                product.IsAvaiable = productDto.IsAvaiable.Value;
+
+            _unitOfWork.Product.Update(product);
+            _unitOfWork.Save();
+
+            return Result.Success();
         }
     }
 }

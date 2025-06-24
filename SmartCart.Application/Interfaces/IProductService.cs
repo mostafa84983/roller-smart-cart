@@ -18,7 +18,7 @@ namespace SmartCart.Application.Interfaces
         Task<GenericResult<ProductDto>> GetProductByCode(int productCode);
         Task<GenericResult<ProductDto>> GetProductById(int productId);
         Task<Result> CreateProduct (CreateProductDto product);
-        Task<Result> UpdateProduct (ProductDto product);
+        Task<Result> UpdateProduct (UpdateProductDto productDto);
         Task<Result> AddOfferToProduct(int productId, decimal offerPercentage);
         Task<Result> RemoveOfferFromProduct(int productId);
         Task<Result> SoftDeleteProduct(int productId);

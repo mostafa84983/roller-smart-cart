@@ -23,5 +23,12 @@ namespace SmartCart.Infrastructure.Repositories
                             .AsNoTracking()
                             .ToListAsync();
         }
+
+        public async Task<bool> IsCategoryNameTaken(string categoryName, int? categoryId)
+        {
+            return await _context.Categories.AnyAsync(c =>
+                c.CategoryName == categoryName &&
+                (!categoryId.HasValue || c.CategoryId != categoryId) );
+        }
     }
 }

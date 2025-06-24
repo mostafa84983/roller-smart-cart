@@ -66,7 +66,7 @@ namespace SmartCart.API.Controllers
                 return BadRequest(result.ErrorMessage);
             }
 
-           return Ok(result);
+           return Ok();
         }
     }
 }
