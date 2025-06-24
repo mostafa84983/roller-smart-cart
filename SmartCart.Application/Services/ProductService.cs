@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
+using SmartCart.Application.Dto.Category;
 using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
 using SmartCart.Domain.Enums;
 using SmartCart.Domain.Interfaces;
+using SmartCart.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,9 +170,28 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public Task<Result> CreateProduct(CreateProductDto product)
+        public async Task<Result> CreateProduct(CreateProductDto product)
         {
-            throw new NotImplementedException();
+            // NOTE: Remember to handle TotalQuantity here after migration
+            if (product == null)
+                return Result.Failure("Product data must be provided");
+
+            var existingProductCode = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
+
+            if(existingProductCode != null)
+                return Result.Failure("Product code already exists");
+
+            var newProduct = _mapper.Map<Product>(product);
+
+            newProduct.IsAvaiable = true;
+            newProduct.IsDeleted = false;
+            newProduct.IsOffer = false;
+            newProduct.OfferPercentage = 0m;
+
+            await _unitOfWork.Product.Add(newProduct);
+            _unitOfWork.Save();
+
+            return Result.Success();
         }
 
         public Task<Result> UpdateProduct(ProductDto product)
