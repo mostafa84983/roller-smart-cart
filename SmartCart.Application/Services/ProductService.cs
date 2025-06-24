@@ -194,9 +194,57 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public Task<Result> UpdateProduct(ProductDto product)
+        public async Task<Result> UpdateProduct(UpdateProductDto productDto)
         {
-            throw new NotImplementedException();
+            // NOTE: Remember to handle TotalQuantity here after migration
+            if (productDto == null)
+            {
+                return Result.Failure("Product data must be provided");
+            }
+
+            if (productDto.ProductId <= 0)
+            {
+                return Result.Failure("Invalid ID");
+            }
+
+            var product = await _unitOfWork.Product.GetById(productDto.ProductId);
+            if (product == null)
+            {
+                return Result.Failure("Product not found");
+            }
+
+            if (!string.IsNullOrWhiteSpace(productDto.ProductName))
+                product.ProductName = productDto.ProductName;
+
+            if (productDto.ProductWeight.HasValue)
+            {
+                if (productDto.ProductWeight <= 0)
+                    return Result.Failure("Product weight must be greater than 0");
+
+                product.ProductWeight = productDto.ProductWeight.Value;
+            }
+
+            if (productDto.ProductPrice.HasValue)
+            {
+                if (productDto.ProductPrice <= 0)
+                    return Result.Failure("Product price must be greater than 0");
+
+                product.ProductPrice = productDto.ProductPrice.Value;
+            }
+
+            if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
+                product.ProductImage = productDto.ProductImage;
+
+            if (!string.IsNullOrWhiteSpace(productDto.ProductDescription))
+                product.ProductDescription = productDto.ProductDescription;
+
+            if (productDto.IsAvaiable.HasValue)
+                product.IsAvaiable = productDto.IsAvaiable.Value;
+
+            _unitOfWork.Product.Update(product);
+            _unitOfWork.Save();
+
+            return Result.Success();
         }
     }
 }
