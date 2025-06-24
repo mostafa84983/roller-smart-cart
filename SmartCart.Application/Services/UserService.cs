@@ -104,5 +104,34 @@ namespace SmartCart.Application.Services
             return GenericResult < LoginResult >.Success(result);
    
         }
+
+        public async Task<Result> Registeration(RegisterDto registerDto)
+        {
+            var user = await _userManager.FindByEmailAsync(registerDto.Email);
+            if (user!= null)
+                return Result.Failure("This email is already registered");
+
+            var newUser = new User
+            {
+                Email = registerDto.Email ,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName ,
+                PhoneNumber = registerDto.PhoneNumber,
+                Gender = registerDto.Gender ,
+                BirthDate = registerDto.BirthDate,
+                UserName = registerDto.Email
+            };
+
+            var result = await _userManager.CreateAsync(newUser, registerDto.Password);
+            if (!result.Succeeded)
+            {
+                var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                return Result.Failure(errorMessage);
+            }
+
+            await _userManager.AddToRoleAsync(newUser, "User");
+            return Result.Success();
+
+        }
     }
 }

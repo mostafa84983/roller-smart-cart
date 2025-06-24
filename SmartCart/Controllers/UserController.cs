@@ -63,5 +63,19 @@ namespace SmartCart.API.Controllers
             else
                 return BadRequest(result.ErrorMessage);
         }
+
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Registeration (RegisterDto registerDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userService.Registeration(registerDto);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
+        }
     }
 }

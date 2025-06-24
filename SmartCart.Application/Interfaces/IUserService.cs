@@ -17,5 +17,6 @@ namespace SmartCart.Application.Interfaces
         Task<GenericResult<IEnumerable<UserDto>>> GetAllUsers(int page , int pageSize);
         Task<GenericResult<LoginResult>> Login(LoginDto loginData);
         Task<GenericResult<LoginResult>> CreateToken(User user);
+        Task<Result> Registeration(RegisterDto registerDto);
     }
 }
