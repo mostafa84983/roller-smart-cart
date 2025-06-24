@@ -42,8 +42,8 @@ namespace SmartCart.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetPaginatedProductsOfOrder(int orderId, int page = 1, int pageSize = 10)
         {
-            var userIdClaims = GetUserIdFromClaims();
-            var role = GetRoleFromClaims();
+            var userIdClaims = GetUserId();
+            var role = GetUserRole();
 
             if (!Enum.TryParse<RoleEnum>(role, ignoreCase: true, out var roleEnum))
                 return BadRequest("Invalid role in token");
