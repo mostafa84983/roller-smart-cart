@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SmartCart.Application.Dto;
+using SmartCart.Application.Dto.Login;
 using SmartCart.Application.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SmartCart.API.Controllers
 {
@@ -42,5 +44,24 @@ namespace SmartCart.API.Controllers
                 return BadRequest(result.ErrorMessage);
         }
 
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login (LoginDto loginDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userService.Login(loginDto);
+            if (result.IsSuccess)
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(result.Value.Token),
+                    expiration = DateTime.Now.AddHours(2),
+                    role = result.Value.Role
+
+                });
+            else
+                return BadRequest(result.ErrorMessage);
+        }
     }
 }
