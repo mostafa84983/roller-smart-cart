@@ -20,5 +20,6 @@ namespace SmartCart.Application.Interfaces
         Task<Result> Registeration(RegisterDto registerDto);
         Task<Result> UpdateUserData (int userId, string? firstName, string? lastName,
             string? phoneNumber, string? birthDate);
+        Task<Result> ChangePassword(int userId, string currentPassword, string newPassword);
     }
 }

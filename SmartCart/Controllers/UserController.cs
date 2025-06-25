@@ -102,7 +102,24 @@ namespace SmartCart.API.Controllers
                 return BadRequest(ModelState);
 
             var userId = GetUserId();
+
             var result = await _userService.UpdateUserData(userId, firstName, lastName, phoneNumber, birthDate);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
+        }
+
+        [Authorize]
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = GetUserId();
+
+            var result = await _userService.ChangePassword(userId,currentPassword,newPassword);
             if (result.IsSuccess)
                 return Ok();
             else

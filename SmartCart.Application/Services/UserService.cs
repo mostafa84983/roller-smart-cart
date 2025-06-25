@@ -162,5 +162,33 @@ namespace SmartCart.Application.Services
 
 
         }
+
+        public async Task<Result> ChangePassword(int userId, string currentPassword, string newPassword)
+        {
+            if (string.IsNullOrWhiteSpace(newPassword))
+                return Result.Failure("Invalid empty password");
+
+            if (string.IsNullOrWhiteSpace(currentPassword))
+                return Result.Failure("Current password is required");
+
+            if (newPassword.Length < 8)
+                return Result.Failure("Invalid password less than 8 characters");
+
+            if (! newPassword.Any(char.IsUpper) || ! newPassword.Any(char.IsDigit))
+                return Result.Failure("Password must contain at least one uppercase letter and one digit.");
+
+            var user = await _unitOfWork.User.GetById(userId);
+            if (user == null)
+                return Result.Failure("Failed to change password");
+
+            var result = await _userManager.ChangePasswordAsync(user,currentPassword, newPassword);
+
+            if(!result.Succeeded)
+            {
+                var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                return Result.Failure(errorMessage);
+            }
+            return Result.Success();
+        }
     }
 }
