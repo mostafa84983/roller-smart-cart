@@ -232,6 +232,14 @@ namespace SmartCart.Application.Services
                 product.ProductPrice = productDto.ProductPrice.Value;
             }
 
+            if (productDto.Quantity <= 0)
+            {
+                return Result.Failure("Product quantity must be greater than 0");
+            }
+          
+             product.Quantity = productDto.Quantity;
+            
+
             if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
                 product.ProductImage = productDto.ProductImage;
 

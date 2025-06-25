@@ -20,6 +20,9 @@ namespace SmartCart.Application.Dto.Product
 
         [Range(0.01, 999999, ErrorMessage = "Price must be greater than 0")]
         public decimal ProductPrice { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
+        public int Quantity { get; set; }
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }
 

@@ -12,6 +12,7 @@ namespace SmartCart.Domain.Models
         public string ProductName { get; set; }
         public int ProductCode { get; set; }
         public decimal ProductWeight { get; set; }
+        public int Quantity { get; set; }
         public decimal ProductPrice { get; set; }
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }

@@ -18,7 +18,7 @@ namespace SmartCart.Infrastructure.Repositories
 
         public async Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsInCategory(int categoryId, int page, int pageSize)
         {
-            var query = _context.Products.Where(p => p.CategoryId == categoryId && p.IsAvaiable && !p.IsDeleted)
+            var query = _context.Products.Where(p => p.CategoryId == categoryId && p.IsAvaiable && !p.IsDeleted && p.Quantity>0)
                                 .OrderBy(p => p.ProductId)
                             .AsNoTracking();
 
@@ -33,7 +33,7 @@ namespace SmartCart.Infrastructure.Repositories
 
         public async Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsWithOfferInCategory(int categoryId, int page, int pageSize)
         {
-            var query = _context.Products.Where(p => p.CategoryId == categoryId && p.IsOffer && p.IsAvaiable && !p.IsDeleted)
+            var query = _context.Products.Where(p => p.CategoryId == categoryId && p.IsOffer && p.IsAvaiable && !p.IsDeleted && p.Quantity>0)
                             .OrderBy(p => p.ProductId)
                             .AsNoTracking();
 
@@ -66,7 +66,7 @@ namespace SmartCart.Infrastructure.Repositories
 
         public async Task<Product> GetProductByCode(int productCode)
         {
-            return await _context.Products.Where(p => p.ProductCode == productCode && !p.IsDeleted && p.IsAvaiable)
+            return await _context.Products.Where(p => p.ProductCode == productCode && !p.IsDeleted && p.IsAvaiable && p.Quantity > 0)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
         }
@@ -95,7 +95,7 @@ namespace SmartCart.Infrastructure.Repositories
         public async Task<bool> AddOfferToProduct(int productId, decimal offerPercentage)
         {
             var product = await _context.Products.FindAsync(productId);
-            if (product == null || product.IsDeleted || !product.IsAvaiable)
+            if (product == null || product.IsDeleted || !product.IsAvaiable || product.Quantity<= 0)
                 return false;
             
             var category = await _context.Categories.FindAsync(product.CategoryId);
@@ -113,7 +113,7 @@ namespace SmartCart.Infrastructure.Repositories
         public async Task<bool> RemoveOfferFromProduct(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
-            if (product == null || product.IsDeleted || !product.IsOffer || !product.IsAvaiable)
+            if (product == null || product.IsDeleted || !product.IsOffer || !product.IsAvaiable || product.Quantity <= 0)
                 return false;
 
 
