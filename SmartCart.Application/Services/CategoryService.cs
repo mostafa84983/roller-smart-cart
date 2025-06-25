@@ -27,10 +27,6 @@ namespace SmartCart.Application.Services
         public async Task<GenericResult<PaginatedResult<CategoryDto>>> GetAllPaginatedCategories(int page, int pageSize)
         {
             var (categoriesData, totalCount) = await _unitOfWork.Category.GetAllPaginated(page, pageSize);
-            if (categoriesData == null || !categoriesData.Any())
-            {
-                return GenericResult<PaginatedResult<CategoryDto>>.Failure("Categories are not found");
-            }
 
             var categoryDtos = _mapper.Map<List<CategoryDto>>(categoriesData);
             var paginatedResult = new PaginatedResult<CategoryDto>
@@ -40,19 +36,14 @@ namespace SmartCart.Application.Services
             };
 
             return GenericResult<PaginatedResult<CategoryDto>>.Success(paginatedResult);
-
         }
 
         public async Task<GenericResult<IEnumerable<CategoryDto>>> GetCategoriesWithOffers()
         {
             var categories = await _unitOfWork.Category.GetCategoriesWithOffers();
-            if (categories == null || !categories.Any()) 
-            {
-                return GenericResult<IEnumerable<CategoryDto>>.Failure("Categories with offers are not found");
-            }
+
             var categoryDto = _mapper.Map<List<CategoryDto>>(categories);
             return GenericResult<IEnumerable<CategoryDto>>.Success(categoryDto);
-
         }
 
         public async Task<Result> CreateCategory(CreateCategoryDto createCategoryDto)

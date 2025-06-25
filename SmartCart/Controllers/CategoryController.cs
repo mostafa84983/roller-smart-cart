@@ -21,7 +21,7 @@ namespace SmartCart.API.Controllers
         {
             var result = await _categoryService.GetAllPaginatedCategories(page, pageSize);
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessage);
+                return BadRequest(result.ErrorMessage ?? "An unexpected error occurred");
 
             return Ok(result.Value);
         }
@@ -32,7 +32,7 @@ namespace SmartCart.API.Controllers
         {
             var result = await _categoryService.GetCategoriesWithOffers();
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessage);
+                return BadRequest(result.ErrorMessage ?? "An unexpected error occurred");
 
             return Ok(result.Value);
         }

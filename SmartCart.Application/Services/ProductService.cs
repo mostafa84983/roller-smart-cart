@@ -30,9 +30,9 @@ namespace SmartCart.Application.Services
         {
            var (productsData , totalCount) = await  _unitOfWork.Product.GetPaginatedProductsInCategory(categoryId, page, pageSize);
 
-            if (productsData == null || !productsData.Any())
+            if (productsData == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products found in this category");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Could not retrieve products in this category");
             }
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
@@ -51,9 +51,9 @@ namespace SmartCart.Application.Services
         {
             var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsWithOfferInCategory(categoryId, page, pageSize);
 
-            if (productsData == null || !productsData.Any())
+            if (productsData == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products with offers found in this category");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Could not retrieve products with offers in this category");
             }
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
@@ -81,9 +81,9 @@ namespace SmartCart.Application.Services
             }
 
             var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
-            if (productsData == null || !productsData.Any())
+            if (productsData == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products are found in this order");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Could not retrieve products in this order");
             }
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
