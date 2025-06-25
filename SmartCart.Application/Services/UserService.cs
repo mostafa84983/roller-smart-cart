@@ -24,7 +24,7 @@ namespace SmartCart.Application.Services
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
-        public UserService(IUnitOfWork unitOfWork , IMapper mapper , UserManager<User> userManager , IConfiguration configuration) 
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -46,7 +46,7 @@ namespace SmartCart.Application.Services
         {
             var user = await _unitOfWork.User.GetById(userid);
             if (user == null)
-                return  GenericResult<UserDto>.Failure("no user found");
+                return GenericResult<UserDto>.Failure("no user found");
 
             var userDto = _mapper.Map<UserDto>(user);
             return GenericResult<UserDto>.Success(userDto);
@@ -56,11 +56,15 @@ namespace SmartCart.Application.Services
         public async Task<GenericResult<LoginResult>> Login(LoginDto loginData)
         {
             var user = await _userManager.FindByEmailAsync(loginData.Email);
-           if (user == null)
+            if (user == null)
                 return GenericResult<LoginResult>.Failure("Email is incorrect");
 
-            var truePass = await _userManager.CheckPasswordAsync(user, loginData.Password);
-            if(! truePass)
+            var isLocked = await _userManager.IsLockedOutAsync(user);
+            if (isLocked)
+                return GenericResult<LoginResult>.Failure("Account is Locked out ");
+
+            var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginData.Password);
+            if (!isPasswordCorrect)
             {
                 await _userManager.AccessFailedAsync(user);
                 return GenericResult<LoginResult>.Failure("Password is incorrect");
@@ -68,8 +72,8 @@ namespace SmartCart.Application.Services
 
             await _userManager.ResetAccessFailedCountAsync(user);
             var result = await CreateToken(user);
-            if(result.IsSuccess)
-               return  GenericResult<LoginResult>.Success(result.Value);
+            if (result.IsSuccess)
+                return GenericResult<LoginResult>.Success(result.Value);
 
             return GenericResult<LoginResult>.Failure("login failed");
 
@@ -92,7 +96,7 @@ namespace SmartCart.Application.Services
                 audience: _configuration["JWT:ValidAudience"],
                 claims: claims,
                 expires: DateTime.Now.AddHours(2),
-                signingCredentials : signingCredentials
+                signingCredentials: signingCredentials
                 );
 
             var result = new LoginResult
@@ -101,23 +105,23 @@ namespace SmartCart.Application.Services
                 Role = role.FirstOrDefault()
             };
 
-            return GenericResult < LoginResult >.Success(result);
-   
+            return GenericResult<LoginResult>.Success(result);
+
         }
 
         public async Task<Result> Registeration(RegisterDto registerDto)
         {
             var user = await _userManager.FindByEmailAsync(registerDto.Email);
-            if (user!= null)
+            if (user != null)
                 return Result.Failure("This email is already registered");
 
             var newUser = new User
             {
-                Email = registerDto.Email ,
+                Email = registerDto.Email,
                 FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName ,
+                LastName = registerDto.LastName,
                 PhoneNumber = registerDto.PhoneNumber,
-                Gender = registerDto.Gender ,
+                Gender = registerDto.Gender,
                 BirthDate = registerDto.BirthDate,
                 UserName = registerDto.Email
             };
@@ -149,11 +153,11 @@ namespace SmartCart.Application.Services
             if (!string.IsNullOrWhiteSpace(phoneNumber))
                 updatedUser.PhoneNumber = phoneNumber;
 
-            if (!string.IsNullOrWhiteSpace(birthDate) && DateTime.TryParse(birthDate , out var birthdate) )
+            if (!string.IsNullOrWhiteSpace(birthDate) && DateTime.TryParse(birthDate, out var birthdate))
                 updatedUser.BirthDate = birthdate;
 
             _unitOfWork.User.Update(updatedUser);
-           var result = _unitOfWork.Save() > 0;
+            var result = _unitOfWork.Save() > 0;
 
             if (result)
                 return Result.Success();
@@ -174,21 +178,59 @@ namespace SmartCart.Application.Services
             if (newPassword.Length < 8)
                 return Result.Failure("Invalid password less than 8 characters");
 
-            if (! newPassword.Any(char.IsUpper) || ! newPassword.Any(char.IsDigit))
+            if (!newPassword.Any(char.IsUpper) || !newPassword.Any(char.IsDigit))
                 return Result.Failure("Password must contain at least one uppercase letter and one digit.");
 
             var user = await _unitOfWork.User.GetById(userId);
             if (user == null)
                 return Result.Failure("Failed to change password");
 
-            var result = await _userManager.ChangePasswordAsync(user,currentPassword, newPassword);
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
                 return Result.Failure(errorMessage);
             }
             return Result.Success();
+        }
+
+        public async Task<Result> lockUser(int userId, int durationInMinutes)
+        {
+            if (durationInMinutes <= 0)
+                return Result.Failure("Invalid duration");
+
+            var user = await _unitOfWork.User.GetById(userId);
+            if (user == null)
+                return Result.Failure("Invalid user");
+
+            user.LockoutEnabled = true;
+            user.LockoutEnd = DateTimeOffset.UtcNow.AddMinutes(durationInMinutes);
+
+            var result = _unitOfWork.Save() > 0;
+            if (result)
+                return Result.Success();
+            else
+                return Result.Failure("Failed to Lock User");
+
+        }
+
+        public async Task<Result> UnLockUser(int userId)
+        {
+          
+            var user = await _unitOfWork.User.GetById(userId);
+            if (user == null)
+                return Result.Failure("Invalid user");
+
+            user.LockoutEnd = null;
+            user.LockoutEnabled = true;
+            user.AccessFailedCount = 0;
+
+            var result = _unitOfWork.Save() > 0;
+            if (result)
+                return Result.Success();
+            else
+                return Result.Failure("Failed to Lock User");
         }
     }
 }

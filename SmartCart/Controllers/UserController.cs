@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core.Pipeline;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SmartCart.Application.Dto;
@@ -124,6 +125,36 @@ namespace SmartCart.API.Controllers
                 return Ok();
             else
                 return BadRequest(result.ErrorMessage);
+        }
+
+        [Authorize (Roles ="Admin")]
+        [HttpPut("lockUser")]
+        public async Task<IActionResult> LockUser (int userId , int durationInMinutes)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userService.lockUser(userId , durationInMinutes);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
+
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("UnlockUser")]
+        public async Task<IActionResult> UnLockUser(int userId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var result = await _userService.UnLockUser(userId);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
+
         }
     }
 }
