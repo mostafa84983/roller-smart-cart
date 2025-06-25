@@ -18,5 +18,7 @@ namespace SmartCart.Application.Interfaces
         Task<GenericResult<LoginResult>> Login(LoginDto loginData);
         Task<GenericResult<LoginResult>> CreateToken(User user);
         Task<Result> Registeration(RegisterDto registerDto);
+        Task<Result> UpdateUserData (int userId, string? firstName, string? lastName,
+            string? phoneNumber, string? birthDate);
     }
 }

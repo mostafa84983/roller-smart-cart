@@ -133,5 +133,34 @@ namespace SmartCart.Application.Services
             return Result.Success();
 
         }
+
+        public async Task<Result> UpdateUserData(int userId, string? firstName, string? lastName, string? phoneNumber, string? birthDate)
+        {
+            var updatedUser = await _unitOfWork.User.GetById(userId);
+            if (updatedUser == null)
+                return Result.Failure("user not found");
+
+            if (!string.IsNullOrWhiteSpace(firstName))
+                updatedUser.FirstName = firstName;
+
+            if (!string.IsNullOrWhiteSpace(lastName))
+                updatedUser.LastName = lastName;
+
+            if (!string.IsNullOrWhiteSpace(phoneNumber))
+                updatedUser.PhoneNumber = phoneNumber;
+
+            if (!string.IsNullOrWhiteSpace(birthDate) && DateTime.TryParse(birthDate , out var birthdate) )
+                updatedUser.BirthDate = birthdate;
+
+            _unitOfWork.User.Update(updatedUser);
+           var result = _unitOfWork.Save() > 0;
+
+            if (result)
+                return Result.Success();
+            else
+                return Result.Failure("Failed to Update User Data");
+
+
+        }
     }
 }

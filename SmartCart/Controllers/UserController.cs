@@ -11,7 +11,7 @@ namespace SmartCart.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    public class UserController : ControllerBase
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
         public UserController(IUserService userService)
@@ -20,8 +20,8 @@ namespace SmartCart.API.Controllers
         }
 
 
-        [Authorize]
-        [HttpGet("userData")]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("userById")]
         [ProducesResponseType(typeof(IEnumerable<OrderDto>), 200)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetUserById (int userid)
@@ -33,7 +33,22 @@ namespace SmartCart.API.Controllers
                 return BadRequest(result.ErrorMessage);
         }
 
-        //[Authorize(Roles ="Admin")]
+        [Authorize]
+        [HttpGet("userData")]
+        [ProducesResponseType(typeof(IEnumerable<OrderDto>), 200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetUserById()
+        {
+            var userId = GetUserId();
+            var result = await _userService.GetUserById(userId);
+            if (result.IsSuccess)
+                return Ok(result.Value);
+            else
+                return BadRequest(result.ErrorMessage);
+        }
+
+
+        [Authorize(Roles ="Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllUsers(int page , int pageSize)
         {
@@ -72,6 +87,22 @@ namespace SmartCart.API.Controllers
                 return BadRequest(ModelState);
 
             var result = await _userService.Registeration(registerDto);
+            if (result.IsSuccess)
+                return Ok();
+            else
+                return BadRequest(result.ErrorMessage);
+        }
+
+        [Authorize]
+        [HttpPut("UpdateData")]
+        public async Task<IActionResult> UpdateUserData(string? firstName, string? lastName,
+            string? phoneNumber, string? birthDate)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userId = GetUserId();
+            var result = await _userService.UpdateUserData(userId, firstName, lastName, phoneNumber, birthDate);
             if (result.IsSuccess)
                 return Ok();
             else
