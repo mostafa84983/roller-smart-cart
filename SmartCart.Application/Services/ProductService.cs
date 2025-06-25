@@ -172,7 +172,6 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> CreateProduct(CreateProductDto product)
         {
-            // NOTE: Remember to handle TotalQuantity here after migration
             if (product == null)
                 return Result.Failure("Product data must be provided");
 
@@ -196,7 +195,6 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> UpdateProduct(UpdateProductDto productDto)
         {
-            // NOTE: Remember to handle TotalQuantity here after migration
             if (productDto == null)
             {
                 return Result.Failure("Product data must be provided");
@@ -232,13 +230,15 @@ namespace SmartCart.Application.Services
                 product.ProductPrice = productDto.ProductPrice.Value;
             }
 
-            if (productDto.Quantity <= 0)
+            if (productDto.Quantity.HasValue)
             {
-                return Result.Failure("Product quantity must be greater than 0");
+                if (productDto.Quantity <= 0)
+                    return Result.Failure("Product quantity must be greater than 0");
+
+                product.Quantity = productDto.Quantity.Value;
             }
-          
-             product.Quantity = productDto.Quantity;
-            
+
+
 
             if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
                 product.ProductImage = productDto.ProductImage;
