@@ -18,7 +18,7 @@ namespace SmartCart.Infrastructure.Repositories
         }
         public async Task<IEnumerable<Order>> GetOrdersOfUser(int userId)
         {
-            return await _context.Orders.Where(o => o.UserId == userId).ToListAsync();
+            return await _context.Orders.Where(o => o.UserId == userId ).ToListAsync();
         }
     }
 }
