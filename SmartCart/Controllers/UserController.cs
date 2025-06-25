@@ -19,8 +19,8 @@ namespace SmartCart.API.Controllers
             _userService = userService;
         }
 
-        
-        //[Authorize(Roles ="Admin")]
+
+        [Authorize]
         [HttpGet("userData")]
         [ProducesResponseType(typeof(IEnumerable<OrderDto>), 200)]
         [ProducesResponseType(400)]
