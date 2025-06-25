@@ -28,12 +28,13 @@ namespace SmartCart.Application.Services
 
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsInCategory(int categoryId, int page, int pageSize)
         {
-           var (productsData , totalCount) = await  _unitOfWork.Product.GetPaginatedProductsInCategory(categoryId, page, pageSize);
-
-            if (productsData == null)
+            var category = await _unitOfWork.Category.GetById(categoryId);
+            if (category == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("Could not retrieve products in this category");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Category not found");
             }
+
+            var (productsData , totalCount) = await  _unitOfWork.Product.GetPaginatedProductsInCategory(categoryId, page, pageSize);
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
 
@@ -49,12 +50,13 @@ namespace SmartCart.Application.Services
 
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsWithOfferInCategory(int categoryId, int page, int pageSize)
         {
-            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsWithOfferInCategory(categoryId, page, pageSize);
-
-            if (productsData == null)
+            var category = await _unitOfWork.Category.GetById(categoryId);
+            if (category == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("Could not retrieve products with offers in this category");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Category not found");
             }
+
+            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsWithOfferInCategory(categoryId, page, pageSize);
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
 
@@ -81,10 +83,6 @@ namespace SmartCart.Application.Services
             }
 
             var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
-            if (productsData == null)
-            {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("Could not retrieve products in this order");
-            }
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
 
