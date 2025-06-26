@@ -88,7 +88,7 @@ namespace SmartCart.API.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Product soft deleted successfully");
+            return Ok();
 
         }
 
@@ -100,7 +100,7 @@ namespace SmartCart.API.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Product restored successfully");
+            return Ok();
         }
 
         [HttpPut("{productId}/add-offer")]
