@@ -26,9 +26,12 @@ namespace SmartCart.Infrastructure.Repositories
 
         public async Task<bool> IsCategoryNameTaken(string categoryName, int? categoryId)
         {
+            var trimmedName = categoryName.Trim();
+
             return await _context.Categories.AnyAsync(c =>
-                c.CategoryName.ToLower() == categoryName.ToLower() &&
-                (!categoryId.HasValue || c.CategoryId != categoryId) );
+                EF.Functions.Like(c.CategoryName.Trim(), trimmedName) &&
+                (!categoryId.HasValue || c.CategoryId != categoryId.Value));
         }
+
     }
 }

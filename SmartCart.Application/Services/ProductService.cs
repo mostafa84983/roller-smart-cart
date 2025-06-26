@@ -208,7 +208,7 @@ namespace SmartCart.Application.Services
 
             bool hasUpdated = false;
 
-            if (!string.IsNullOrWhiteSpace(productDto.ProductName))
+            if (!string.IsNullOrWhiteSpace(productDto.ProductName) && !string.Equals(product.ProductName?.Trim(), productDto.ProductName.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(productDto.ProductName, productDto.ProductId);
                 if (isNameTaken)
@@ -224,23 +224,29 @@ namespace SmartCart.Application.Services
                 if (productDto.ProductCode <= 0)
                     return Result.Failure("Product code must be greater than 0");
 
-                var existingProduct = await _unitOfWork.Product.GetProductByCode(productDto.ProductCode.Value);
-                if (existingProduct != null && existingProduct.ProductId != productDto.ProductId)
+                if (product.ProductCode != productDto.ProductCode.Value)
                 {
-                    return Result.Failure("Another product with the same code already exists");
-                }
+                    var existingProduct = await _unitOfWork.Product.GetProductByCode(productDto.ProductCode.Value);
+                    if (existingProduct != null && existingProduct.ProductId != productDto.ProductId)
+                    {
+                        return Result.Failure("Another product with the same code already exists");
+                    }
 
-                product.ProductCode = productDto.ProductCode.Value;
-                hasUpdated = true;
+                    product.ProductCode = productDto.ProductCode.Value;
+                    hasUpdated = true;
+                }
             }
 
-            if (productDto.ProductWeight.HasValue)
+                if (productDto.ProductWeight.HasValue)
             {
                 if (productDto.ProductWeight <= 0)
                     return Result.Failure("Product weight must be greater than 0");
 
-                product.ProductWeight = productDto.ProductWeight.Value;
-                hasUpdated = true;
+                if (product.ProductWeight != productDto.ProductWeight.Value)
+                {
+                    product.ProductWeight = productDto.ProductWeight.Value;
+                    hasUpdated = true;
+                }
             }
 
             if (productDto.ProductPrice.HasValue)
@@ -248,8 +254,11 @@ namespace SmartCart.Application.Services
                 if (productDto.ProductPrice <= 0)
                     return Result.Failure("Product price must be greater than 0");
 
-                product.ProductPrice = productDto.ProductPrice.Value;
-                hasUpdated = true;
+                if (product.ProductPrice != productDto.ProductPrice.Value)
+                {
+                    product.ProductPrice = productDto.ProductPrice.Value;
+                    hasUpdated = true;
+                }
             }
 
             if (productDto.Quantity.HasValue)
@@ -257,23 +266,26 @@ namespace SmartCart.Application.Services
                 if (productDto.Quantity <= 0)
                     return Result.Failure("Product quantity must be greater than 0");
 
-                product.Quantity = productDto.Quantity.Value;
-                hasUpdated = true;
+                if (product.Quantity != productDto.Quantity.Value)
+                {
+                    product.Quantity = productDto.Quantity.Value;
+                    hasUpdated = true;
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
+            if (!string.IsNullOrWhiteSpace(productDto.ProductImage) && !string.Equals(product.ProductImage?.Trim(), productDto.ProductImage.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 product.ProductImage = productDto.ProductImage;
                 hasUpdated = true;
             }
 
-            if (!string.IsNullOrWhiteSpace(productDto.ProductDescription))
+            if (!string.IsNullOrWhiteSpace(productDto.ProductDescription) && !string.Equals(product.ProductDescription?.Trim(), productDto.ProductDescription.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 product.ProductDescription = productDto.ProductDescription;
                 hasUpdated = true;
             }
 
-            if (productDto.IsAvaiable.HasValue)
+            if (productDto.IsAvaiable.HasValue && product.IsAvaiable != productDto.IsAvaiable.Value)
             {
                 product.IsAvaiable = productDto.IsAvaiable.Value;
                 hasUpdated = true;
