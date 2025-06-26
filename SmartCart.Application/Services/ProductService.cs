@@ -145,24 +145,22 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result> AddOfferToProduct(int productId, decimal offerPercentage)
+        public async Task<Result> AddOfferToProduct(AddOfferDto productDto)
         {
-            if (offerPercentage < 0 || offerPercentage > 100)
-                return Result.Failure("Offer percentage must be between 0 and 100");
 
-            var result = await _unitOfWork.Product.AddOfferToProduct(productId, offerPercentage);
+            var result = await _unitOfWork.Product.AddOfferToProduct(productDto.ProductId, productDto.OfferPercentage);
             if (!result)
-                return Result.Failure("Failed to add offer: Product not found, deleted or unavailable");
+                return Result.Failure("Failed to add offer to the product");
 
             _unitOfWork.Save();
             return Result.Success();
         }
 
-        public async Task<Result> RemoveOfferFromProduct(int productId)
+        public async Task<Result> RemoveOfferFromProduct(RemoveOfferDto productDto)
         {
-            var result = await _unitOfWork.Product.RemoveOfferFromProduct(productId);
+            var result = await _unitOfWork.Product.RemoveOfferFromProduct(productDto.ProductId);
             if (!result)
-                return Result.Failure("Failed to remove offer: product not found or doesn't have an active offer");
+                return Result.Failure("Failed to remove offer from the product");
 
             _unitOfWork.Save();
             return Result.Success();

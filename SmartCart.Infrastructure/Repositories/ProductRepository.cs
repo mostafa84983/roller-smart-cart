@@ -113,7 +113,7 @@ namespace SmartCart.Infrastructure.Repositories
         public async Task<bool> RemoveOfferFromProduct(int productId)
         {
             var product = await _context.Products.FindAsync(productId);
-            if (product == null || product.IsDeleted || !product.IsOffer || !product.IsAvaiable || product.Quantity <= 0)
+            if (product == null || product.IsDeleted || !product.IsOffer)
                 return false;
 
 
@@ -124,17 +124,18 @@ namespace SmartCart.Infrastructure.Repositories
             if (category == null)
                 return false;
 
-            bool checkOtherProductsHaveOffer = await _context.Products.AnyAsync(p =>
-                                                                    p.CategoryId == product.CategoryId &&
-                                                                    p.ProductId != product.ProductId && 
-                                                                    p.IsOffer &&
-                                                                   !p.IsDeleted &&
-                                                                    p.IsAvaiable);
+            bool noOtherProductsHaveOffer = !await _context.Products.AnyAsync(p =>
+                                                 p.CategoryId == product.CategoryId &&
+                                                 p.ProductId != product.ProductId &&
+                                                 p.IsOffer &&
+                                                !p.IsDeleted &&
+                                                 p.IsAvaiable);
 
-            if(!checkOtherProductsHaveOffer)
+            if (noOtherProductsHaveOffer)
             {
                 category.IsOffer = false;
             }
+
 
             return true;
         }

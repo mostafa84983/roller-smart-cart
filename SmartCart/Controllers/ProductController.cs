@@ -103,27 +103,27 @@ namespace SmartCart.API.Controllers
             return Ok();
         }
 
-        [HttpPut("{productId}/add-offer")]
+        [HttpPut("add-offer")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddOfferToProduct(int productId, [FromQuery] decimal offerPercentage)
+        public async Task<IActionResult> AddOfferToProduct([FromBody] AddOfferDto productDto)
         {
-            var result = await _productService.AddOfferToProduct(productId, offerPercentage);
+            var result = await _productService.AddOfferToProduct(productDto);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Offer added to product successfully");
+            return Ok();
         }
 
-        [HttpPut("{productId}/remove-offer")]
+        [HttpPut("remove-offer")]
         [Authorize(Roles = "Admin")]
 
-        public async Task<IActionResult> RemoveOfferFromProduct(int productId)
+        public async Task<IActionResult> RemoveOfferFromProduct([FromBody] RemoveOfferDto productDto)
         {
-            var result = await _productService.RemoveOfferFromProduct(productId);
+            var result = await _productService.RemoveOfferFromProduct(productDto);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Offer removed from product successfully");
+            return Ok();
         }
 
         [HttpPost]
