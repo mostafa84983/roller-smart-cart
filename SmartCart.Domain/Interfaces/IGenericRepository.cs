@@ -14,6 +14,7 @@ namespace SmartCart.Domain.Interfaces
         Task Add( T entity);
         void Update (T entity);
         void Delete (T entity);
+        void Remove(T entity);
 
     }
 }

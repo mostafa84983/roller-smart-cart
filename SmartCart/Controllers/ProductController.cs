@@ -151,6 +151,36 @@ namespace SmartCart.API.Controllers
             return Ok();
         }
 
+        [HttpPost("Add/Product")]
+        public async Task<IActionResult> AddProductToCart ([FromBody] ProductRequest productRequest) 
+        {
+            var userId = GetUserId();
+            var result = await _productService.AddProductservice(productRequest, userId);
+           
+            if (result.IsSuccess)
+            {
+                var (product, total) = result.Value;
+                return Ok(new { product, total });
+            }
+            
+            else
+                return BadRequest(result.ErrorMessage);
+        }
 
+        [HttpPost("Remove/Product")]
+        public async Task<IActionResult> RemoveProductFromCart([FromBody] ProductRequest productRequest)
+        {
+            var userId = GetUserId();
+            var result = await _productService.RemoveProductservice(productRequest, userId);
+            
+            if (result.IsSuccess)
+            {
+                var (product, total) = result.Value;
+                return Ok(new { product, total });
+            }
+
+            else
+                return BadRequest(result.ErrorMessage);
+        }
     }
 }

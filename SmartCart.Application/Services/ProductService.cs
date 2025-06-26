@@ -19,11 +19,13 @@ namespace SmartCart.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IOrderService _orderService;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper , IOrderService orderService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _orderService = orderService;
         }
 
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsInCategory(int categoryId, int page, int pageSize)
@@ -302,27 +304,137 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result> AddProductToOrder(int productCode, int orderId)
+        public async Task<GenericResult<decimal>> AddProductToOrder(int productCode, int orderId)
         {
-            var order = await _unitOfWork.Order.GetById(orderId);
+            var order = await _unitOfWork.Order.GetOrderWithProducts(orderId);
             if (order == null)
-                return Result.Failure("Order not found");
+                return GenericResult<decimal>.Failure("Order not found");
 
             var product = await _unitOfWork.Product.GetProductByCode(productCode);
             if (product == null)
-                return Result.Failure("Product not found");
+                return GenericResult<decimal>.Failure("Product not found");
 
             var existing = order.OrderProducts.FirstOrDefault(op => op.ProductId == product.ProductId);
             if (existing != null)
+            {
                 existing.Quantity++;
+                _unitOfWork.OrderProduct.Update(existing);
+            }
+               
             else
-                order.OrderProducts.Add(new OrderProduct { ProductId = product.ProductId, Quantity=1});
+            {
+                var newOrderProduct = new OrderProduct
+                {
+                    ProductId = product.ProductId,
+                    OrderId = orderId,
+                    Quantity = 1
+                };
 
+                _unitOfWork.OrderProduct.Add(newOrderProduct); 
+            }
             order.OrderPrice += product.ProductPrice;
 
             _unitOfWork.Save();
-            return Result.Success() ;
+            return GenericResult<decimal>.Success(order.OrderPrice) ;
 
         }
+
+        public async Task<GenericResult<decimal>> RemoveProductFromOrder(int productCode, int orderId)
+        {
+            var order = await _unitOfWork.Order.GetOrderWithProducts(orderId);
+            if (order == null)
+                return GenericResult<decimal>.Failure("Order not found");
+
+            var product = await _unitOfWork.Product.GetProductByCode(productCode);
+            if (product == null)
+                return GenericResult<decimal>.Failure("Product not found");
+
+            var existing = order.OrderProducts.FirstOrDefault(op => op.ProductId == product.ProductId);
+            if (existing == null)
+                return GenericResult<decimal>.Failure("Product not found in order");
+
+            if (existing.Quantity > 1)
+            {
+                existing.Quantity--;
+                _unitOfWork.OrderProduct.Update(existing);
+            }
+            else
+            {
+                _unitOfWork.OrderProduct.Remove(existing);
+            }
+                
+            order.OrderPrice -= product.ProductPrice;
+
+            if (order.OrderPrice < 0)
+                order.OrderPrice = 0;
+
+            _unitOfWork.Save();
+            return GenericResult<decimal>.Success(order.OrderPrice);
+        }
+
+        public async Task<GenericResult<(ProductDto, decimal)>> AddProductservice(ProductRequest productRequest, int userId)
+        {
+            if (productRequest.CartId == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Invalid cart id");
+
+            if (productRequest.ProductCode == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Invalid product code");
+
+            var product = await _unitOfWork.Product.GetProductByCode(productRequest.ProductCode);
+            if (product == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
+
+            var orderId = _unitOfWork.CartService.GetOrderId(productRequest.CartId, userId);
+            if(orderId == null)
+            {
+                 var result =  await _orderService.CreateOrder(userId);
+                 orderId = result.Value;
+                _unitOfWork.CartService.SetOrderId(productRequest.CartId,userId,orderId.Value);
+            }
+
+            var result1 = await AddProductToOrder(productRequest.ProductCode, orderId.Value);
+
+            ProductDto returnedProduct = _mapper.Map<ProductDto>(product); ;
+            
+            if (result1.IsSuccess)
+            {
+                return GenericResult<(ProductDto, decimal)>.Success((returnedProduct,result1.Value));
+            }
+
+            return GenericResult<(ProductDto, decimal)>.Failure("Error while adding product to order");
+
+
+        }
+
+        
+        public async Task<GenericResult<(ProductDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId)
+        {
+            if (productRequest.CartId == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Invalid cart id");
+
+            if (productRequest.ProductCode == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Invalid product code");
+
+            var product = await _unitOfWork.Product.GetProductByCode(productRequest.ProductCode);
+            if (product == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
+
+            var orderId = _unitOfWork.CartService.GetOrderId(productRequest.CartId, userId);
+            if (orderId == null)
+                return GenericResult<(ProductDto, decimal)>.Failure("Order not found");
+
+
+            var result = await RemoveProductFromOrder(productRequest.ProductCode, orderId.Value);
+
+            if (result.IsSuccess)
+            {
+                ProductDto returnedProduct = _mapper.Map<ProductDto>(product);
+                return GenericResult<(ProductDto, decimal)>.Success((returnedProduct, result.Value));
+            }
+
+            return GenericResult<(ProductDto, decimal)>.Failure("Failed to remove product from order");
+        }
+
+        
     }
 }

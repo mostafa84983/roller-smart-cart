@@ -8,8 +8,8 @@ namespace SmartCart.Domain.Interfaces
 {
     public interface ICartSessionService
     {
-        int? GetOrderId(string cartId);
-        void SetOrderId (string cartId, int orderId);
-        void RemoveCart(string cartId);
+        int? GetOrderId(string cartId, int userId);
+        void RemoveCart(string cartId, int userId);
+        void SetOrderId(string cartId, int userId, int orderId);
     }
 }

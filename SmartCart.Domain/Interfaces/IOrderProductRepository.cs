@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartCart.Domain.Interfaces
 {
-    public interface IOrderRepository : IGenericRepository<Order>
+    public interface IOrderProductRepository : IGenericRepository<OrderProduct>
     {
-        Task<IEnumerable<Order>> GetOrdersOfUser(int userId);
-        Task<Order> GetOrderWithProducts(int orderId);
     }
 }

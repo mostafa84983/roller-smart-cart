@@ -53,5 +53,14 @@ namespace SmartCart.Infrastructure.Repositories
         {
             _context.Set<T>().Update(entity);
         }
+        public void Remove(T entity)
+        {
+            var entry = _context.Entry(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                _context.Attach(entity);
+            }
+            _context.Remove(entity);
+        }
     }
 }

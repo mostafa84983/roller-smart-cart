@@ -17,12 +17,16 @@ namespace SmartCart.Application.Interfaces
         Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role);
         Task<GenericResult<ProductDto>> GetProductByCode(int productCode);
         Task<GenericResult<ProductDto>> GetProductById(int productId);
-        Task<Result> CreateProduct (CreateProductDto product);
-        Task<Result> UpdateProduct (UpdateProductDto productDto);
+        Task<Result> CreateProduct(CreateProductDto product);
+        Task<Result> UpdateProduct(UpdateProductDto productDto);
         Task<Result> AddOfferToProduct(AddOfferDto productDto);
         Task<Result> RemoveOfferFromProduct(RemoveOfferDto productDto);
         Task<Result> SoftDeleteProduct(int productId);
         Task<Result> RestoreProduct(int productId);
-        Task<Result> AddProductToOrder(int productCode, int orderId);
+        Task<GenericResult<(ProductDto, decimal)>> AddProductservice(ProductRequest productRequest , int userId);
+        Task<GenericResult<(ProductDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId);
+        Task<GenericResult<decimal>> AddProductToOrder(int productCode, int orderId);
+        Task<GenericResult<decimal>> RemoveProductFromOrder(int productCode, int orderId);
+
     }
 }

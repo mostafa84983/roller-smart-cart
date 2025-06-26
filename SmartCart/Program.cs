@@ -9,6 +9,7 @@ using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
 using SmartCart.Infrastructure.Data;
 using SmartCart.Infrastructure.Repositories;
+using SmartCart.Infrastructure.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,6 +66,8 @@ builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartSessionService, CartSessionService>();
+builder.Services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 
 // Register services
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -72,6 +75,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+//Make one order for each user login 
+builder.Services.AddSingleton<ICartSessionService, CartSessionService>();
 
 
 //lock user and adjust Identity user options

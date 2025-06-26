@@ -22,11 +22,11 @@ namespace SmartCart.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<Result> createOrder(int userId)
+        public async Task<GenericResult<int>> CreateOrder(int userId)
         {
             var user = await _unitOfWork.User.GetById(userId);
             if (user == null)
-                return Result.Failure("User not found");
+                return GenericResult<int>.Failure("User not found");
 
             var order = new Order
             {
@@ -40,9 +40,9 @@ namespace SmartCart.Application.Services
              await _unitOfWork.Order.Add(order);
             var result = _unitOfWork.Save() > 0;
             if (result)
-                return Result.Success();
+                return GenericResult<int>.Success(order.OrderId);
             else
-                return Result.Failure("New order creation failed");
+                return GenericResult<int>.Failure("New order creation failed");
         }
 
         public async Task<GenericResult<IEnumerable<OrderDto>>> GetOrdersOfUser(int userId)

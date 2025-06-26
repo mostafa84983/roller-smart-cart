@@ -15,6 +15,6 @@ namespace SmartCart.Domain.Models
         public decimal OrderDiscount { get; set; } = 0m;
         public int UserId { get; set; }
         public User User { get; set; }
-        public ICollection<OrderProduct> OrderProducts { get; set; }
+        public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     }
 }
