@@ -185,6 +185,9 @@ namespace SmartCart.Application.Services
             if(existingProduct != null)
                 return Result.Failure("Product code already exists");
 
+            if (string.IsNullOrWhiteSpace(product.ProductName))
+                return Result.Failure("Product name cannot be empty or whitespace");
+
             var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(product.ProductName, null);
             if (isNameTaken)
             {
