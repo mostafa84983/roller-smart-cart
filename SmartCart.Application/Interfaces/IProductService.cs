@@ -23,5 +23,6 @@ namespace SmartCart.Application.Interfaces
         Task<Result> RemoveOfferFromProduct(RemoveOfferDto productDto);
         Task<Result> SoftDeleteProduct(int productId);
         Task<Result> RestoreProduct(int productId);
+        Task<Result> AddProductToOrder(int productCode, int orderId);
     }
 }

@@ -301,5 +301,28 @@ namespace SmartCart.Application.Services
 
             return Result.Success();
         }
+
+        public async Task<Result> AddProductToOrder(int productCode, int orderId)
+        {
+            var order = await _unitOfWork.Order.GetById(orderId);
+            if (order == null)
+                return Result.Failure("Order not found");
+
+            var product = await _unitOfWork.Product.GetProductByCode(productCode);
+            if (product == null)
+                return Result.Failure("Product not found");
+
+            var existing = order.OrderProducts.FirstOrDefault(op => op.ProductId == product.ProductId);
+            if (existing != null)
+                existing.Quantity++;
+            else
+                order.OrderProducts.Add(new OrderProduct { ProductId = product.ProductId, Quantity=1});
+
+            order.OrderPrice += product.ProductPrice;
+
+            _unitOfWork.Save();
+            return Result.Success() ;
+
+        }
     }
 }
