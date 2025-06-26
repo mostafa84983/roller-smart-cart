@@ -168,8 +168,11 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> CreateProduct(CreateProductDto product)
         {
-            var existingProductCode = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
-            if(existingProductCode != null)
+            if (product.ProductCode <= 0)
+                return Result.Failure("Product code must be greater than 0");
+
+            var existingProduct = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
+            if(existingProduct != null)
                 return Result.Failure("Product code already exists");
 
             var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(product.ProductName, null);
@@ -192,24 +195,44 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> UpdateProduct(UpdateProductDto productDto)
         {
-            if (productDto == null)
-            {
-                return Result.Failure("Product data must be provided");
-            }
-
             if (productDto.ProductId <= 0)
             {
                 return Result.Failure("Invalid ID");
             }
 
             var product = await _unitOfWork.Product.GetById(productDto.ProductId);
-            if (product == null)
+            if (product == null || product.IsDeleted)
             {
                 return Result.Failure("Product not found");
             }
 
+            bool hasUpdated = false;
+
             if (!string.IsNullOrWhiteSpace(productDto.ProductName))
+            {
+                var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(productDto.ProductName, productDto.ProductId);
+                if (isNameTaken)
+                {
+                    return Result.Failure("Another product with the same name already exists");
+                }
                 product.ProductName = productDto.ProductName;
+                hasUpdated = true;
+            }
+
+            if (productDto.ProductCode.HasValue)
+            {
+                if (productDto.ProductCode <= 0)
+                    return Result.Failure("Product code must be greater than 0");
+
+                var existingProduct = await _unitOfWork.Product.GetProductByCode(productDto.ProductCode.Value);
+                if (existingProduct != null && existingProduct.ProductId != productDto.ProductId)
+                {
+                    return Result.Failure("Another product with the same code already exists");
+                }
+
+                product.ProductCode = productDto.ProductCode.Value;
+                hasUpdated = true;
+            }
 
             if (productDto.ProductWeight.HasValue)
             {
@@ -217,6 +240,7 @@ namespace SmartCart.Application.Services
                     return Result.Failure("Product weight must be greater than 0");
 
                 product.ProductWeight = productDto.ProductWeight.Value;
+                hasUpdated = true;
             }
 
             if (productDto.ProductPrice.HasValue)
@@ -225,6 +249,7 @@ namespace SmartCart.Application.Services
                     return Result.Failure("Product price must be greater than 0");
 
                 product.ProductPrice = productDto.ProductPrice.Value;
+                hasUpdated = true;
             }
 
             if (productDto.Quantity.HasValue)
@@ -233,18 +258,31 @@ namespace SmartCart.Application.Services
                     return Result.Failure("Product quantity must be greater than 0");
 
                 product.Quantity = productDto.Quantity.Value;
+                hasUpdated = true;
             }
 
-
-
             if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
+            {
                 product.ProductImage = productDto.ProductImage;
+                hasUpdated = true;
+            }
 
             if (!string.IsNullOrWhiteSpace(productDto.ProductDescription))
+            {
                 product.ProductDescription = productDto.ProductDescription;
+                hasUpdated = true;
+            }
 
             if (productDto.IsAvaiable.HasValue)
+            {
                 product.IsAvaiable = productDto.IsAvaiable.Value;
+                hasUpdated = true;
+            }
+
+            if (!hasUpdated)
+            {
+                return Result.Failure("No valid fields to update");
+            }
 
             _unitOfWork.Product.Update(product);
             _unitOfWork.Save();

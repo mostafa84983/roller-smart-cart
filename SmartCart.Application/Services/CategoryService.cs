@@ -64,11 +64,6 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> UpdateCategory(UpdateCategoryDto categoryDto)
         {
-            if(categoryDto == null)
-            {
-                return Result.Failure("Category data must be provided");
-            }
-
             if(categoryDto.CategoryId <= 0)
             {
                 return Result.Failure("Invalid ID");
@@ -80,14 +75,29 @@ namespace SmartCart.Application.Services
                 return Result.Failure("Category not found");
             }
 
-            var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(categoryDto.CategoryName, categoryDto.CategoryId);
-            if (isNameTaken)
+            bool hasUpdated = false;
+
+            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryName))
             {
-                return Result.Failure("Another category with the same name already exists");
+                var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(categoryDto.CategoryName, categoryDto.CategoryId);
+                if (isNameTaken)
+                {
+                    return Result.Failure("Another category with the same name already exists");
+                }
+                category.CategoryName = categoryDto.CategoryName;
+                hasUpdated = true;
             }
 
-            category.CategoryName = categoryDto.CategoryName;
-            category.CategoryImage = categoryDto.CategoryImage;
+            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryImage))
+            {
+                category.CategoryImage = categoryDto.CategoryImage;
+                hasUpdated = true;
+            }
+
+            if (!hasUpdated)
+            {
+                return Result.Failure("No valid fields to update");
+            }
 
             _unitOfWork.Category.Update(category);
             _unitOfWork.Save();

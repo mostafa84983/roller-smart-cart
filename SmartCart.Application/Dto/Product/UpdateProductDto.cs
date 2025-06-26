@@ -9,8 +9,10 @@ namespace SmartCart.Application.Dto.Product
 {
     public class UpdateProductDto
     {
+        [Required(ErrorMessage = "Product ID is required")]
         public int ProductId { get; set; }
         public string? ProductName { get; set; }
+        public int? ProductCode { get; set; }
         public decimal? ProductWeight { get; set; }
         public int? Quantity { get; set; }
         public decimal? ProductPrice { get; set; }

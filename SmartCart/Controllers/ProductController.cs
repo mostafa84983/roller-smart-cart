@@ -138,11 +138,10 @@ namespace SmartCart.API.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPatch]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDto productDto)
         {
-
             var result = await _productService.UpdateProduct(productDto);
             if (!result.IsSuccess)
             {
