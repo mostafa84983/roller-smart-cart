@@ -27,7 +27,7 @@ namespace SmartCart.Infrastructure.Repositories
         public async Task<bool> IsCategoryNameTaken(string categoryName, int? categoryId)
         {
             return await _context.Categories.AnyAsync(c =>
-                c.CategoryName == categoryName &&
+                c.CategoryName.ToLower() == categoryName.ToLower() &&
                 (!categoryId.HasValue || c.CategoryId != categoryId) );
         }
     }

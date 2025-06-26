@@ -21,7 +21,7 @@ namespace SmartCart.API.Controllers
         {
             var result = await _categoryService.GetAllPaginatedCategories(page, pageSize);
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessage);
+                return BadRequest(result.ErrorMessage ?? "An unexpected error occurred");
 
             return Ok(result.Value);
         }
@@ -32,7 +32,7 @@ namespace SmartCart.API.Controllers
         {
             var result = await _categoryService.GetCategoriesWithOffers();
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessage);
+                return BadRequest(result.ErrorMessage ?? "An unexpected error occurred");
 
             return Ok(result.Value);
         }
@@ -42,9 +42,6 @@ namespace SmartCart.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto createdCategoryDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _categoryService.CreateCategory(createdCategoryDto);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
@@ -53,19 +50,14 @@ namespace SmartCart.API.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPatch]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto updatedCategoryDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _categoryService.UpdateCategory(updatedCategoryDto);
             if(!result.IsSuccess)
-            {
                 return BadRequest(result.ErrorMessage);
-            }
-
+            
            return Ok();
         }
     }

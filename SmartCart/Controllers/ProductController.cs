@@ -88,7 +88,7 @@ namespace SmartCart.API.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Product soft deleted successfully");
+            return Ok();
 
         }
 
@@ -100,41 +100,37 @@ namespace SmartCart.API.Controllers
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Product restored successfully");
+            return Ok();
         }
 
-        [HttpPut("{productId}/add-offer")]
+        [HttpPut("add-offer")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AddOfferToProduct(int productId, [FromQuery] decimal offerPercentage)
+        public async Task<IActionResult> AddOfferToProduct([FromBody] AddOfferDto productDto)
         {
-            var result = await _productService.AddOfferToProduct(productId, offerPercentage);
+            var result = await _productService.AddOfferToProduct(productDto);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Offer added to product successfully");
+            return Ok();
         }
 
-        [HttpPut("{productId}/remove-offer")]
+        [HttpPut("remove-offer")]
         [Authorize(Roles = "Admin")]
 
-        public async Task<IActionResult> RemoveOfferFromProduct(int productId)
+        public async Task<IActionResult> RemoveOfferFromProduct([FromBody] RemoveOfferDto productDto)
         {
-            var result = await _productService.RemoveOfferFromProduct(productId);
+            var result = await _productService.RemoveOfferFromProduct(productDto);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok("Offer removed from product successfully");
+            return Ok();
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _productService.CreateProduct(productDto);
-
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
@@ -142,11 +138,10 @@ namespace SmartCart.API.Controllers
         }
 
 
-        [HttpPut]
+        [HttpPatch]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDto productDto)
         {
-
             var result = await _productService.UpdateProduct(productDto);
             if (!result.IsSuccess)
             {

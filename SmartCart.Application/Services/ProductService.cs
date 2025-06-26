@@ -28,12 +28,13 @@ namespace SmartCart.Application.Services
 
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsInCategory(int categoryId, int page, int pageSize)
         {
-           var (productsData , totalCount) = await  _unitOfWork.Product.GetPaginatedProductsInCategory(categoryId, page, pageSize);
-
-            if (productsData == null || !productsData.Any())
+            var category = await _unitOfWork.Category.GetById(categoryId);
+            if (category == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products found in this category");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Category not found");
             }
+
+            var (productsData , totalCount) = await  _unitOfWork.Product.GetPaginatedProductsInCategory(categoryId, page, pageSize);
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
 
@@ -49,12 +50,13 @@ namespace SmartCart.Application.Services
 
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsWithOfferInCategory(int categoryId, int page, int pageSize)
         {
-            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsWithOfferInCategory(categoryId, page, pageSize);
-
-            if (productsData == null || !productsData.Any())
+            var category = await _unitOfWork.Category.GetById(categoryId);
+            if (category == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products with offers found in this category");
+                return GenericResult<PaginatedResult<ProductDto>>.Failure("Category not found");
             }
+
+            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsWithOfferInCategory(categoryId, page, pageSize);
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
 
@@ -81,10 +83,6 @@ namespace SmartCart.Application.Services
             }
 
             var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
-            if (productsData == null || !productsData.Any())
-            {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("No products are found in this order");
-            }
 
             var productDtos = _mapper.Map<List<ProductDto>>(productsData);
 
@@ -147,24 +145,22 @@ namespace SmartCart.Application.Services
             return Result.Success();
         }
 
-        public async Task<Result> AddOfferToProduct(int productId, decimal offerPercentage)
+        public async Task<Result> AddOfferToProduct(AddOfferDto productDto)
         {
-            if (offerPercentage < 0 || offerPercentage > 100)
-                return Result.Failure("Offer percentage must be between 0 and 100");
 
-            var result = await _unitOfWork.Product.AddOfferToProduct(productId, offerPercentage);
+            var result = await _unitOfWork.Product.AddOfferToProduct(productDto.ProductId, productDto.OfferPercentage);
             if (!result)
-                return Result.Failure("Failed to add offer: Product not found, deleted or unavailable");
+                return Result.Failure("Failed to add offer to the product");
 
             _unitOfWork.Save();
             return Result.Success();
         }
 
-        public async Task<Result> RemoveOfferFromProduct(int productId)
+        public async Task<Result> RemoveOfferFromProduct(RemoveOfferDto productDto)
         {
-            var result = await _unitOfWork.Product.RemoveOfferFromProduct(productId);
+            var result = await _unitOfWork.Product.RemoveOfferFromProduct(productDto.ProductId);
             if (!result)
-                return Result.Failure("Failed to remove offer: product not found or doesn't have an active offer");
+                return Result.Failure("Failed to remove offer from the product");
 
             _unitOfWork.Save();
             return Result.Success();
@@ -172,20 +168,24 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> CreateProduct(CreateProductDto product)
         {
-            if (product == null)
-                return Result.Failure("Product data must be provided");
+            if (product.ProductCode <= 0)
+                return Result.Failure("Product code must be greater than 0");
 
-            var existingProductCode = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
-
-            if(existingProductCode != null)
+            var existingProduct = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
+            if(existingProduct != null)
                 return Result.Failure("Product code already exists");
 
-            var newProduct = _mapper.Map<Product>(product);
+            var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(product.ProductName, null);
+            if (isNameTaken)
+            {
+                return Result.Failure("Product name already exists");
+            }
 
-            newProduct.IsAvaiable = true;
-            newProduct.IsDeleted = false;
-            newProduct.IsOffer = false;
-            newProduct.OfferPercentage = 0m;
+            var category = await _unitOfWork.Category.GetById(product.CategoryId);
+            if (category == null)
+                return Result.Failure("Category does not exist");
+
+            var newProduct = _mapper.Map<Product>(product);
 
             await _unitOfWork.Product.Add(newProduct);
             _unitOfWork.Save();
@@ -195,24 +195,44 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> UpdateProduct(UpdateProductDto productDto)
         {
-            if (productDto == null)
-            {
-                return Result.Failure("Product data must be provided");
-            }
-
             if (productDto.ProductId <= 0)
             {
                 return Result.Failure("Invalid ID");
             }
 
             var product = await _unitOfWork.Product.GetById(productDto.ProductId);
-            if (product == null)
+            if (product == null || product.IsDeleted)
             {
                 return Result.Failure("Product not found");
             }
 
+            bool hasUpdated = false;
+
             if (!string.IsNullOrWhiteSpace(productDto.ProductName))
+            {
+                var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(productDto.ProductName, productDto.ProductId);
+                if (isNameTaken)
+                {
+                    return Result.Failure("Another product with the same name already exists");
+                }
                 product.ProductName = productDto.ProductName;
+                hasUpdated = true;
+            }
+
+            if (productDto.ProductCode.HasValue)
+            {
+                if (productDto.ProductCode <= 0)
+                    return Result.Failure("Product code must be greater than 0");
+
+                var existingProduct = await _unitOfWork.Product.GetProductByCode(productDto.ProductCode.Value);
+                if (existingProduct != null && existingProduct.ProductId != productDto.ProductId)
+                {
+                    return Result.Failure("Another product with the same code already exists");
+                }
+
+                product.ProductCode = productDto.ProductCode.Value;
+                hasUpdated = true;
+            }
 
             if (productDto.ProductWeight.HasValue)
             {
@@ -220,6 +240,7 @@ namespace SmartCart.Application.Services
                     return Result.Failure("Product weight must be greater than 0");
 
                 product.ProductWeight = productDto.ProductWeight.Value;
+                hasUpdated = true;
             }
 
             if (productDto.ProductPrice.HasValue)
@@ -228,6 +249,7 @@ namespace SmartCart.Application.Services
                     return Result.Failure("Product price must be greater than 0");
 
                 product.ProductPrice = productDto.ProductPrice.Value;
+                hasUpdated = true;
             }
 
             if (productDto.Quantity.HasValue)
@@ -236,18 +258,31 @@ namespace SmartCart.Application.Services
                     return Result.Failure("Product quantity must be greater than 0");
 
                 product.Quantity = productDto.Quantity.Value;
+                hasUpdated = true;
             }
 
-
-
             if (!string.IsNullOrWhiteSpace(productDto.ProductImage))
+            {
                 product.ProductImage = productDto.ProductImage;
+                hasUpdated = true;
+            }
 
             if (!string.IsNullOrWhiteSpace(productDto.ProductDescription))
+            {
                 product.ProductDescription = productDto.ProductDescription;
+                hasUpdated = true;
+            }
 
             if (productDto.IsAvaiable.HasValue)
+            {
                 product.IsAvaiable = productDto.IsAvaiable.Value;
+                hasUpdated = true;
+            }
+
+            if (!hasUpdated)
+            {
+                return Result.Failure("No valid fields to update");
+            }
 
             _unitOfWork.Product.Update(product);
             _unitOfWork.Save();

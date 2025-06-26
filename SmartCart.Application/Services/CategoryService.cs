@@ -27,10 +27,6 @@ namespace SmartCart.Application.Services
         public async Task<GenericResult<PaginatedResult<CategoryDto>>> GetAllPaginatedCategories(int page, int pageSize)
         {
             var (categoriesData, totalCount) = await _unitOfWork.Category.GetAllPaginated(page, pageSize);
-            if (categoriesData == null || !categoriesData.Any())
-            {
-                return GenericResult<PaginatedResult<CategoryDto>>.Failure("Categories are not found");
-            }
 
             var categoryDtos = _mapper.Map<List<CategoryDto>>(categoriesData);
             var paginatedResult = new PaginatedResult<CategoryDto>
@@ -40,30 +36,19 @@ namespace SmartCart.Application.Services
             };
 
             return GenericResult<PaginatedResult<CategoryDto>>.Success(paginatedResult);
-
         }
 
         public async Task<GenericResult<IEnumerable<CategoryDto>>> GetCategoriesWithOffers()
         {
             var categories = await _unitOfWork.Category.GetCategoriesWithOffers();
-            if (categories == null || !categories.Any()) 
-            {
-                return GenericResult<IEnumerable<CategoryDto>>.Failure("Categories with offers are not found");
-            }
+
             var categoryDto = _mapper.Map<List<CategoryDto>>(categories);
             return GenericResult<IEnumerable<CategoryDto>>.Success(categoryDto);
-
         }
 
         public async Task<Result> CreateCategory(CreateCategoryDto createCategoryDto)
         {
-            if (createCategoryDto == null)
-            {
-                return Result.Failure("Category data must be provided");
-            }
-
             var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(createCategoryDto.CategoryName, null);
-
             if (isNameTaken)
             {
                 return Result.Failure("Category name already exists");
@@ -79,11 +64,6 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> UpdateCategory(UpdateCategoryDto categoryDto)
         {
-            if(categoryDto == null)
-            {
-                return Result.Failure("Category data must be provided");
-            }
-
             if(categoryDto.CategoryId <= 0)
             {
                 return Result.Failure("Invalid ID");
@@ -95,14 +75,29 @@ namespace SmartCart.Application.Services
                 return Result.Failure("Category not found");
             }
 
-            var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(categoryDto.CategoryName, categoryDto.CategoryId);
-            if (isNameTaken)
+            bool hasUpdated = false;
+
+            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryName))
             {
-                return Result.Failure("Another category with the same name already exists");
+                var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(categoryDto.CategoryName, categoryDto.CategoryId);
+                if (isNameTaken)
+                {
+                    return Result.Failure("Another category with the same name already exists");
+                }
+                category.CategoryName = categoryDto.CategoryName;
+                hasUpdated = true;
             }
 
-            category.CategoryName = categoryDto.CategoryName;
-            category.CategoryImage = categoryDto.CategoryImage;
+            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryImage))
+            {
+                category.CategoryImage = categoryDto.CategoryImage;
+                hasUpdated = true;
+            }
+
+            if (!hasUpdated)
+            {
+                return Result.Failure("No valid fields to update");
+            }
 
             _unitOfWork.Category.Update(category);
             _unitOfWork.Save();
