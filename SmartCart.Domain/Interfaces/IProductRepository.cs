@@ -11,7 +11,7 @@ namespace SmartCart.Domain.Interfaces
     {
         Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsInCategory(int categoryId,int page, int pageSize);
         Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsWithOfferInCategory(int categoryId, int page, int pageSize);
-        Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize);
+        Task<IEnumerable<OrderProduct>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize);
         Task<Product> GetProductByCode(int productCode);
         Task<bool> AddOfferToProduct(int productId, decimal offerPercentage);
         Task<bool> RemoveOfferFromProduct(int productId);

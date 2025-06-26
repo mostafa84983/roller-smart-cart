@@ -46,23 +46,42 @@ namespace SmartCart.Infrastructure.Repositories
             return (data, totalCount);
         }
 
-        public async Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize)
+        public async Task<IEnumerable<OrderProduct>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize)
         {
-            var query = _context.OrderProducts.Where(op => op.OrderId == orderId).Select(p => p.Product)
-                .OrderBy(p => p.ProductId)
-                .AsNoTracking();
+            var query = _context.OrderProducts
+            .Where(op => op.OrderId == orderId)
+            .Include(op => op.Product) 
+            .AsNoTracking();
 
             var totalCount = await query.CountAsync();
 
             var data = await query
+                .OrderBy(op => op.ProductId)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (data, totalCount);
+            return data;
         }
 
-    
+
+        //public async Task<(IEnumerable<Product> Data, int TotalCount)> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize)
+        //{
+        //    var query = _context.OrderProducts.Where(op => op.OrderId == orderId).Select(p => p.Product)
+        //        .OrderBy(p => p.ProductId)
+        //        .AsNoTracking();
+
+        //    var totalCount = await query.CountAsync();
+
+        //    var data = await query
+        //        .Skip((page - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToListAsync();
+
+        //    return (data, totalCount);
+        //}
+
+
 
         public async Task<Product> GetProductByCode(int productCode)
         {

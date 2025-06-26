@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.VisualBasic;
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
 using SmartCart.Application.Dto.Category;
@@ -71,31 +72,38 @@ namespace SmartCart.Application.Services
             return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
 
-        public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
+        public async Task<GenericResult<IEnumerable<ProductInOrderDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
         {
             var order = await _unitOfWork.Order.GetById(orderId);
-            if(order == null)
+            if (order == null)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("Order not found");
+                return GenericResult<IEnumerable<ProductInOrderDto>>.Failure("Order not found");
             }
 
-            if(order.UserId != userClaims && role != RoleEnum.Admin)
+            if (order.UserId != userClaims && role != RoleEnum.Admin)
             {
-                return GenericResult<PaginatedResult<ProductDto>>.Failure("You are not authorized to view products of this order");
+                return GenericResult<IEnumerable<ProductInOrderDto>>.Failure("You are not authorized to view products of this order");
             }
 
-            var (productsData, totalCount) = await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
+            var orderProducts =await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
 
-            var productDtos = _mapper.Map<List<ProductDto>>(productsData);
-
-            var paginatedResult = new PaginatedResult<ProductDto>
+            var productInOrderDtos = orderProducts.Select(op => new ProductInOrderDto
             {
-                Data = productDtos,
-                TotalCount = totalCount
-            };
+                ProductId = op.ProductId,
+                ProductName = op.Product.ProductName,
+                ProductCode = op.Product.ProductCode,
+                ProductWeight = op.Product.ProductWeight,
+                QuantityInOrder = op.Quantity, 
+                ProductPrice = op.Product.ProductPrice,
+                ProductImage = op.Product.ProductImage,
+                ProductDescription = op.Product.ProductDescription,
+                CategoryId = op.Product.CategoryId
+            }).ToList();
 
-            return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
+            return GenericResult<IEnumerable<ProductInOrderDto>>.Success(productInOrderDtos);
+
         }
+
 
         public async Task<GenericResult<ProductDto>> GetProductByCode(int productCode)
         {
