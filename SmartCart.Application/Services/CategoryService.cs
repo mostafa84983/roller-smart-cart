@@ -48,6 +48,13 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> CreateCategory(CreateCategoryDto createCategoryDto)
         {
+            createCategoryDto.CategoryName = createCategoryDto.CategoryName?.Trim();
+
+            if (string.IsNullOrWhiteSpace(createCategoryDto.CategoryName))
+            {
+                return Result.Failure("Category name cannot be empty or whitespace");
+            }
+
             var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(createCategoryDto.CategoryName, null);
             if (isNameTaken)
             {
