@@ -22,7 +22,9 @@ namespace SmartCart.Application.Dto.Product
         public decimal ProductPrice { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
+
         public int Quantity { get; set; }
+        [Required(ErrorMessage = "Product image is required")]
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }
 

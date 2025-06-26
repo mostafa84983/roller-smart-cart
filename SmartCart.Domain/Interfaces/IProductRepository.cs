@@ -17,6 +17,8 @@ namespace SmartCart.Domain.Interfaces
         Task<bool> RemoveOfferFromProduct(int productId);
         Task<bool> SoftDeleteProduct(int productId);
         Task<bool> RestoreProduct(int productId);
+        Task<bool> IsProductNameTaken(string productName, int? productId);
+
 
     }
 }

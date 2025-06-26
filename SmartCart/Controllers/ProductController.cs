@@ -130,11 +130,7 @@ namespace SmartCart.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _productService.CreateProduct(productDto);
-
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 

@@ -168,20 +168,21 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> CreateProduct(CreateProductDto product)
         {
-            if (product == null)
-                return Result.Failure("Product data must be provided");
-
             var existingProductCode = await _unitOfWork.Product.GetProductByCode(product.ProductCode);
-
             if(existingProductCode != null)
                 return Result.Failure("Product code already exists");
 
-            var newProduct = _mapper.Map<Product>(product);
+            var isNameTaken = await _unitOfWork.Product.IsProductNameTaken(product.ProductName, null);
+            if (isNameTaken)
+            {
+                return Result.Failure("Product name already exists");
+            }
 
-            newProduct.IsAvaiable = true;
-            newProduct.IsDeleted = false;
-            newProduct.IsOffer = false;
-            newProduct.OfferPercentage = 0m;
+            var category = await _unitOfWork.Category.GetById(product.CategoryId);
+            if (category == null)
+                return Result.Failure("Category does not exist");
+
+            var newProduct = _mapper.Map<Product>(product);
 
             await _unitOfWork.Product.Add(newProduct);
             _unitOfWork.Save();

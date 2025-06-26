@@ -23,6 +23,7 @@ namespace SmartCart.Application.Helper
             CreateMap<CreateCategoryDto, Category>();
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
+            CreateMap<CreateProductDto, Product>();
             CreateMap<Order, OrderDto>();
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();

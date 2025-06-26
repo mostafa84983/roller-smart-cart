@@ -139,5 +139,12 @@ namespace SmartCart.Infrastructure.Repositories
 
             return true;
         }
+
+        public async Task<bool> IsProductNameTaken(string productName, int? productId)
+        {
+            return await _context.Products.AnyAsync(p =>
+                p.ProductName.ToLower() == productName.ToLower() &&
+                (!productId.HasValue || p.ProductId != productId) );
+        }
     }
 }

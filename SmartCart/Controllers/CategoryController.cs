@@ -42,9 +42,6 @@ namespace SmartCart.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto createdCategoryDto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var result = await _categoryService.CreateCategory(createdCategoryDto);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);

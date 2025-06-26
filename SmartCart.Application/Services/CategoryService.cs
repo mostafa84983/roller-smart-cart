@@ -48,13 +48,7 @@ namespace SmartCart.Application.Services
 
         public async Task<Result> CreateCategory(CreateCategoryDto createCategoryDto)
         {
-            if (createCategoryDto == null)
-            {
-                return Result.Failure("Category data must be provided");
-            }
-
             var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(createCategoryDto.CategoryName, null);
-
             if (isNameTaken)
             {
                 return Result.Failure("Category name already exists");
