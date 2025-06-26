@@ -142,9 +142,12 @@ namespace SmartCart.Infrastructure.Repositories
 
         public async Task<bool> IsProductNameTaken(string productName, int? productId)
         {
+            var trimmedName = productName.Trim();
+
             return await _context.Products.AnyAsync(p =>
-                p.ProductName.ToLower() == productName.ToLower() &&
-                (!productId.HasValue || p.ProductId != productId) );
+                EF.Functions.Like(p.ProductName.Trim(), trimmedName) &&
+                (!productId.HasValue || p.ProductId != productId.Value));
         }
+
     }
 }

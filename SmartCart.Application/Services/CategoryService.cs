@@ -77,7 +77,7 @@ namespace SmartCart.Application.Services
 
             bool hasUpdated = false;
 
-            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryName))
+            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryName) && !string.Equals(category.CategoryName?.Trim(), categoryDto.CategoryName.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 var isNameTaken = await _unitOfWork.Category.IsCategoryNameTaken(categoryDto.CategoryName, categoryDto.CategoryId);
                 if (isNameTaken)
@@ -88,7 +88,7 @@ namespace SmartCart.Application.Services
                 hasUpdated = true;
             }
 
-            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryImage))
+            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryImage) && !string.Equals(category.CategoryImage?.Trim(), categoryDto.CategoryImage.Trim(), StringComparison.OrdinalIgnoreCase))
             {
                 category.CategoryImage = categoryDto.CategoryImage;
                 hasUpdated = true;

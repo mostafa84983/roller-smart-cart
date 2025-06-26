@@ -28,7 +28,7 @@ namespace SmartCart.Application.Dto.Product
         public string ProductImage { get; set; }
         public string ProductDescription { get; set; }
 
-        [Required(ErrorMessage = "Category is required")]
+        [Required(ErrorMessage = "Category ID is required")]
         public int CategoryId { get; set; }
     }
 }
