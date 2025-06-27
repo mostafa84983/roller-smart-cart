@@ -16,6 +16,7 @@ namespace SmartCart.Infrastructure.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<CartOrder> CartOrders { get; set; }
         public DataContext(DbContextOptions<DataContext> options): base(options){}
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

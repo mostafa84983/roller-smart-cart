@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartCart.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace SmartCart.Domain.Models
         public DateTime CreationDate { get; set; }
         public decimal OrderDiscount { get; set; } = 0m;
         public int UserId { get; set; }
+        //public OrderStatus Status { get; set; }
         public User User { get; set; }
         public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
     }

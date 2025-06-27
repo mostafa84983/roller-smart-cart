@@ -353,7 +353,7 @@ namespace SmartCart.Application.Services
         public async Task<GenericResult<decimal>> RemoveProductFromOrder(int productCode, int orderId)
         {
             var order = await _unitOfWork.Order.GetOrderWithProducts(orderId);
-            if (order == null)
+            if (order == null )
                 return GenericResult<decimal>.Failure("Order not found");
 
             var product = await _unitOfWork.Product.GetProductByCode(productCode);
@@ -395,12 +395,16 @@ namespace SmartCart.Application.Services
             if (product == null)
                 return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
 
-            var orderId = _unitOfWork.CartService.GetOrderId(productRequest.CartId, userId);
+            var orderId = await  _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
             if(orderId == null)
             {
-                 var result =  await _orderService.CreateOrder(userId);
-                 orderId = result.Value;
-                _unitOfWork.CartService.SetOrderId(productRequest.CartId,userId,orderId.Value);
+                var result =  await _orderService.CreateOrder(userId);
+                if (!result.IsSuccess)
+                {
+                    return GenericResult<(ProductDto, decimal)>.Failure("Failed to create order");
+                }
+                orderId = result.Value;
+                await _unitOfWork.CartService.SetOrderIdAsync(productRequest.CartId, userId, orderId.Value);
             }
 
             var result1 = await AddProductToOrder(productRequest.ProductCode, orderId.Value);
@@ -430,10 +434,9 @@ namespace SmartCart.Application.Services
             if (product == null)
                 return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
 
-            var orderId = _unitOfWork.CartService.GetOrderId(productRequest.CartId, userId);
+            var orderId = await _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
             if (orderId == null)
                 return GenericResult<(ProductDto, decimal)>.Failure("Order not found");
-
 
             var result = await RemoveProductFromOrder(productRequest.ProductCode, orderId.Value);
 

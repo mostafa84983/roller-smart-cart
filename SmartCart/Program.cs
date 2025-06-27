@@ -75,8 +75,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-//Make one order for each user login 
-builder.Services.AddSingleton<ICartSessionService, CartSessionService>();
+////Make one order for each user login 
+//builder.Services.AddSingleton<ICartSessionService, CartSessionService>();
 
 
 //lock user and adjust Identity user options

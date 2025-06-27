@@ -2,6 +2,7 @@
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
 using SmartCart.Application.Interfaces;
+using SmartCart.Domain.Enums;
 using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
 using System;
@@ -32,9 +33,10 @@ namespace SmartCart.Application.Services
             {
                 UserId = userId,
                 OrderPrice = 0,
-                OrderDiscount = 0 ,
+                OrderDiscount = 0,
                 OrderNumber = $"ORD-{Guid.NewGuid().ToString().Substring(0, 8)}",
                 CreationDate = DateTime.UtcNow,
+                //Status = OrderStatus.Active
             };
 
              await _unitOfWork.Order.Add(order);
