@@ -78,6 +78,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 ////Make one order for each user login 
 //builder.Services.AddSingleton<ICartSessionService, CartSessionService>();
 
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IStripeService, StripeService>();
+
+
 
 //lock user and adjust Identity user options
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
@@ -115,6 +119,7 @@ builder.Services.AddAuthentication(options =>
 
 
 var app = builder.Build();
+Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
