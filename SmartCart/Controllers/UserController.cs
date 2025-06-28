@@ -68,16 +68,24 @@ namespace SmartCart.API.Controllers
                 return BadRequest(ModelState);
 
             var result = await _userService.Login(loginDto);
-            if (result.IsSuccess)
-                return Ok(new
+            if (! result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(result.Value.Token);
+
+            // Send to external API
+            using (var httpClient = new HttpClient())
+            {
+                var payload = new { token = tokenString };
+                var response = await httpClient.PostAsJsonAsync("http://localhost:5050/set-token", payload);
+
+            }
+            return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(result.Value.Token),
                     expiration = DateTime.Now.AddHours(2),
                     role = result.Value.Role
-
                 });
-            else
-                return BadRequest(result.ErrorMessage);
+    
         }
 
 
