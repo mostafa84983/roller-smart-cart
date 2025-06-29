@@ -16,6 +16,9 @@ venv/
 
 # === Project-specific ignores ===
 
+# Ignore model folders
+my_model_* 
+
 # Ignore test modules
 test_modules/
 
