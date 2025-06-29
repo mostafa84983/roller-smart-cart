@@ -1,7 +1,7 @@
 from threading import Thread
 from flask import Flask, request
 from camera_module import CameraModule
-from product_detector import get_top_label
+# from product_detector import get_top_label
 from product_api import get_product_by_code
 from weight_sensor import WeightSensor
 from cart_api import add_product, get_token, TOKEN_FILE
@@ -66,7 +66,7 @@ def main():
                 continue
 
             result = cam.capture_and_detect(show_window=False)
-            label, conf = get_top_label(result)
+            label, conf = cam.get_top_label(result)
 
             if not label:
                 print("No product detected.")
@@ -85,7 +85,7 @@ def main():
 
 
             if not product:
-                print("Product not found in local DB.")
+                print("Product not found in DB.")
                 continue
 
             expected = float(product['productWeight'])
@@ -110,6 +110,7 @@ def main():
     finally:
         print("Shutting down...")
         weight_sensor.close()
+        cam.release()
 
 if __name__ == "__main__":
     main()

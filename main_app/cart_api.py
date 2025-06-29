@@ -33,6 +33,7 @@ def add_product(product_code: int, cart_id: str = "1234"):
         response = requests.post(API_ADD, json=payload, headers=headers)
         if response.status_code == 200:
             print("Product successfully added to cart.")
+            print(response.text)
             return True
         else:
             print(f"Failed to add product. Status: {response.status_code}")

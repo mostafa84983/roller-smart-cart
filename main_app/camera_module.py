@@ -24,7 +24,24 @@ class CameraModule:
         if show_window:
             annotated = result.plot()
             cv2.imshow("Detection", annotated)
-            if cv2.waitKey(1) == ord("q"):
-                cv2.destroyAllWindows()
+            # if cv2.waitKey(1) == ord("q"):
+            #     cv2.destroyAllWindows()
 
         return result
+
+    def get_top_label(result):
+        if len(result.boxes) == 0:
+            return None, 0.0
+
+        # Get the most confident box
+        best_box = result.boxes[0]
+        class_id = int(best_box.cls[0])
+        confidence = float(best_box.conf[0])
+        label = result.names[class_id]
+
+        return label, confidence
+    
+    def release(self):
+        self.picam2.stop()
+        self.picam2.close()
+        cv2.destroyAllWindows()
