@@ -52,10 +52,11 @@ def main():
     cam = CameraModule()
     weight_sensor = WeightSensor()
 
-    print("System ready. Press Enter to detect product, or 'q' + Enter to quit.\n")
+    print("System ready.\nPress 'r' to remove product from cart, or just press Enter to add it.\nPress 'q' to quit.")
 
     try:
         while True:
+            remove_product = False
             user_input = input("> ")
             if user_input.lower() == 'q':
                 break
