@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: smartcart-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Yourpassword123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  smartcart-api:
+    build:
+      context: .
+      dockerfile: SmartCart/Dockerfile
+    container_name: smartcart-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=SmartCart;User Id=sa;Password=Yourpassword123!;TrustServerCertificate=True;
+    ports:
+      - "5138:8080"  # container listens on 8080
+    depends_on:
+      - sqlserver
+    restart: on-failure
+
+volumes:
+  sql_data:

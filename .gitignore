@@ -1,0 +1,38 @@
+# === Global ignores ===
+*.pyc
+*.log
+*.sqlite3
+
+# Ignore all Python bytecode and caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.db
+
+# === Python virtual environments ===
+venv/
+.env
+.env.*
+
+# === Project-specific ignores ===
+
+# Ignore test modules
+test_modules/
+
+# Ignore the backend branch folder inside main_app/repo
+main_app/repo/smart-cart/
+
+# Ignore built Docker images and containers
+*.tar
+*.img
+
+# Ignore OS junk
+.DS_Store
+Thumbs.db
+
+# Ignore editor/IDE settings
+.vscode/
+.idea/
+
+# Optional: ignore compiled shared objects
+*.so
