@@ -29,7 +29,7 @@ class CameraModule:
 
         return result
 
-    def get_top_label(result):
+    def get_top_label(self, result):
         if len(result.boxes) == 0:
             return None, 0.0
 
