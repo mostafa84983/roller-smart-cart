@@ -59,6 +59,8 @@ def main():
             user_input = input("> ")
             if user_input.lower() == 'q':
                 break
+            elif user_input.strip() == 'r':
+                remove_product = True
 
             token = get_token()
             if not token:
@@ -102,8 +104,14 @@ def main():
 
             if verify_weight(expected, weight, tolerance):
                 print("Item accepted.")
-                success = add_product(product['productCode'], cart_id="1234")
-                print("Sent to backend." if success else "Failed to send to backend.")
+                if remove_product:
+                    print("Removing product from cart...")
+                    success = remove_product(product['productCode'], cart_id="1234")
+                    print("Removed from backend." if success else "Failed to remove from backend.")
+                else:
+                    print("Adding product to cart...")
+                    success = add_product(product['productCode'], cart_id="1234")
+                    print("Sent to backend." if success else "Failed to send to backend.")
             else:
                 print("Weight mismatch. Item rejected.")
 
