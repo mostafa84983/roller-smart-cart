@@ -5,7 +5,7 @@ from picamera2 import Picamera2
 from ultralytics import YOLO
 
 class CameraModule:
-    def __init__(self, model_path="my_model_6_ncnn_model", resolution=(1280, 1280), imgsz=480):
+    def __init__(self, model_path="my_model_ncnn_model", resolution=(1280, 1280), imgsz=480):
         self.model = YOLO(model_path)
         self.imgsz = imgsz
         self.picam2 = Picamera2()
