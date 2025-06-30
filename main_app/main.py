@@ -78,6 +78,7 @@ def main():
                 continue
 
             if user_input == 'b':
+                print("Scanning barcode...")
                 identifier = barcode_detector.scan_once()
                 if not identifier:
                     print("No barcode detected.")
@@ -88,6 +89,7 @@ def main():
                 # 'r' means remove; empty string (Enter) means add
                 isRemoveProduct = user_input == 'r'
 
+                print("Detecting product...")
                 result = cam.capture_and_detect(show_window=False)
                 identifier, conf = cam.get_top_label(result)
 
@@ -117,6 +119,7 @@ def main():
 
             print(f"Expected Weight: {expected} ± {tolerance} g")
 
+            print("Measuring weight...")
             weight = weight_sensor.get_weight()
             if weight is None:
                 print("Failed to read weight.")
