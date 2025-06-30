@@ -18,7 +18,7 @@ export class AuthService {
 
   login(credintials:{email:string , password:string}) 
   {
-    return this.http.post<any>('https://localhost:7163/api/User/Login' , credintials) ;
+    return this.http.post<any>('https://localhost:7075/api/User/Login' , credintials) ;
   }
   
 
