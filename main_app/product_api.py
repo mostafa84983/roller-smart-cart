@@ -6,7 +6,9 @@ def get_product_by_code(product_code):
     try:
         response = requests.get(f"{API_BASE_URL}/{product_code}")
         response.raise_for_status()
-        return response.json()
-    except Exception as e:
-        print(f"Failed to fetch product {product_code}: {e}")
+        data = response.json()
+        print(f"[Product API] Fetched product {product_code}: {data}")
+        return data
+    except requests.exceptions.RequestException as e:
+        print(f"[Product API] Failed to fetch product {product_code}: {e}")
         return None

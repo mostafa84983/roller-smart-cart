@@ -47,11 +47,11 @@ def verify_weight(expected, actual, tolerance):
 
 
 def main():
-    print("Starting token server in background...")
+    print("[Main] Starting token server in background...")
     Thread(target=start_flask, daemon=True).start()
     time.sleep(1)  # Allow Flask server to start
 
-    print("Initializing components...")
+    print("[Main] Initializing components...")
     cam_mgr = CameraManager()
     cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(main={"format": "RGB888", "size": (3280, 2464)}))
     cam_mgr.add_config("detect", cam_mgr.picam2.create_preview_configuration(main={"format": "RGB888", "size": (640, 640)}))
@@ -60,88 +60,87 @@ def main():
     barcode_detector = BarcodeModule(cam_mgr, config_name="barcode")
     weight_sensor = WeightSensor()
     
-    print("System ready.\nPress Enter to detect object and add to cart.\nPress 'r' to remove item.\nPress 'b' to scan barcode.\nPress 'q' to quit.")
+    print("[Main] System ready.\nPress Enter to detect object and add to cart.\nPress 'r' to remove item.\nPress 'b' to scan barcode.\nPress 'q' to quit.")
 
     try:
         while True:
-            print("[Debug] Entered loop. Waiting for input...")
+            print("[Main Debug] Entered loop. Waiting for input...")
             isRemoveProduct = False
             user_input = input("> ").strip().lower()
-            print(f"[DEBUG] You entered: {user_input}")
+            print(f"[Main DEBUG] You entered: {user_input}")
 
             if user_input == 'q':
                 break
 
             token = get_token()
             if not token:
-                print("No token. User must log in first.")
+                print("[Main] No token. User must log in first.")
                 continue
 
             if user_input == 'b':
-                print("Scanning barcode...")
+                print("[Main] Scanning barcode...")
                 identifier = barcode_detector.scan_once()
                 if not identifier:
-                    print("No barcode detected.")
+                    print("[Main] No barcode detected.")
                     continue
-                print(f"Detected barcode: {identifier}")
+                print(f"[Main] Detected barcode: {identifier}")
 
             elif user_input == 'r' or user_input == '':
                 # 'r' means remove; empty string (Enter) means add
                 isRemoveProduct = user_input == 'r'
 
-                print("Detecting product...")
+                print("[Main] Detecting product...")
                 result = cam.capture_and_detect(show_window=False)
                 identifier, conf = cam.get_top_label(result)
 
                 if not identifier:
-                    print("No product detected.")
+                    print("[Main] No product detected.")
                     continue
-                print(f"Detected: {identifier} ({conf*100:.1f}%)")
+                print(f"[Main] Detected: {identifier} ({conf*100:.1f}%)")
 
             else:
-                print("Invalid input.")
+                print("[Main] Invalid input.")
                 continue
-
 
             label, product_code, product_info = get_product_info(identifier)
 
             if not product_info:
-                print(f"'{identifier}' not recognized in label map.")
+                print(f"[Main] '{identifier}' not recognized in label map.")
                 continue
 
             product = get_product_by_code(product_code)
             if not product:
-                print("Product not found in DB.")
+                print("[Main] Product not found in DB.")
                 continue
 
             expected = float(product['productWeight'])
             tolerance = expected * 0.10
 
-            print(f"Expected Weight: {expected} ± {tolerance} g")
+            print(f"[Main] Expected Weight: {expected} ± {tolerance} g")
 
-            print("Measuring weight...")
+            print("[Main] Measuring weight...")
             weight = weight_sensor.get_weight()
             if weight is None:
-                print("Failed to read weight.")
+                print("[Main] Failed to read weight.")
                 continue
 
-            print(f"Measured Weight: {weight:.2f} g")
+            print(f"[Main] Measured Weight: {weight:.2f} g")
 
             if verify_weight(expected, weight, tolerance):
-                print("Item accepted.")
+                print("[Main] Item accepted.")
                 if isRemoveProduct:
-                    print("Removing product from cart...")
+                    print("[Main] Removing product from cart...")
                     success = remove_product(product['productCode'], cart_id="1234")
-                    print("Removed from backend." if success else "Failed to remove from backend.")
+                    print("[Main] Removed from backend." if success else "[Main] Failed to remove from backend.")
                 else:
-                    print("Adding product to cart...")
+                    print("[Main] Adding product to cart...")
                     success = add_product(product['productCode'], cart_id="1234")
-                    print("Sent to backend." if success else "Failed to send to backend.")
+                    print("[Main] Sent to backend." if success else "[Main] Failed to send to backend.")
             else:
-                print("Weight mismatch. Item rejected.")
+                print("[Main] Weight mismatch. Item rejected.")
 
     finally:
-        print("Shutting down...")
+        print("[Main] Shutting down...")
         weight_sensor.close()
         cam.release()
 

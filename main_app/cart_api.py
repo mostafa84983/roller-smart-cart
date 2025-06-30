@@ -16,9 +16,9 @@ def get_token():
 def add_product(product_code: int, cart_id: str = "1234"):
     token = get_token()
     if not token:
-        print("No token available.")
+        print("[Cart API] No token available.")
         return False
-    
+
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
@@ -32,22 +32,22 @@ def add_product(product_code: int, cart_id: str = "1234"):
     try:
         response = requests.post(API_ADD, json=payload, headers=headers)
         if response.status_code == 200:
-            print("Product successfully added to cart.")
+            print("[Cart API] Product successfully added to cart.")
             print(response.text)
             return True
         else:
-            print(f"Failed to add product. Status: {response.status_code}")
+            print(f"[Cart API] Failed to add product. Status: {response.status_code}")
             print(response.text)
             return False
     except requests.RequestException as e:
-        print(f"Network error: {e}")
+        print(f"[Cart API] Network error: {e}")
         return False
 
 
 def remove_product(product_code: int, cart_id: str = "1234"):
     token = get_token()
     if not token:
-        print("No token available.")
+        print("[Cart API] No token available.")
         return False
 
     headers = {
@@ -63,13 +63,13 @@ def remove_product(product_code: int, cart_id: str = "1234"):
     try:
         response = requests.post(API_REMOVE, json=payload, headers=headers)
         if response.status_code == 200:
-            print("Product successfully removed from cart.")
+            print("[Cart API] Product successfully removed from cart.")
             print(response.text)
             return True
         else:
-            print(f"Failed to remove product. Status: {response.status_code}")
+            print(f"[Cart API] Failed to remove product. Status: {response.status_code}")
             print(response.text)
             return False
     except requests.RequestException as e:
-        print(f"Network error: {e}")
+        print(f"[Cart API] Network error: {e}")
         return False
