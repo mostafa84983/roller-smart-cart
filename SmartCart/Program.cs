@@ -93,7 +93,6 @@ builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 .AddDefaultTokenProviders();
 
 
-
 //JWT token
 builder.Services.AddAuthentication(options =>
 {
@@ -117,6 +116,16 @@ builder.Services.AddAuthentication(options =>
 
 });
 
+// Add CORS policy to allow Angular frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        builder => builder.WithOrigins("http://localhost:4200")  // Use http if your Angular app is running on http
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials());  // Allow credentials for secure cookie or token-based authentication
+});
+
 
 var app = builder.Build();
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
@@ -127,6 +136,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 
 // Seeding Database before handling Requests
@@ -153,7 +163,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-
+app.UseCors("AllowAngular");
 app.UseAuthentication();
 app.UseAuthorization();
 
