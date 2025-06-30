@@ -20,9 +20,9 @@ export class CategoryService {
       `${this.baseUrl}/paginated?page=${page}&pageSize=${pageSize}`);  
   }
 
-  getCategoriesWithOffers() : Observable<CategoryModel[]>
+  getCategoriesWithOffers(page : number , pageSize : number) : Observable<PaginatedResult<CategoryModel>>
   {
-    return this.http.get<CategoryModel[]>(`${this.baseUrl}/offers`);
+    return this.http.get<PaginatedResult<CategoryModel>>(`${this.baseUrl}/offers?page=${page}&pageSize=${pageSize}`);
   }
 
   createCategory(dto : CreateCategoryModel) : Observable<void>
