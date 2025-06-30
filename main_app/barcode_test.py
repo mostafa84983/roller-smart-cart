@@ -5,22 +5,31 @@ import time
 
 def main():
     detector = cv2.barcode_BarcodeDetector()
-    print("Barcode Detector with Preview (1920x1080, 5s cooldown). Press 'q' to quit.")
+    print("High-Res Barcode Detector with Cropping (5s cooldown). Press 'q' to quit.")
 
     picam2 = Picamera2()
-    config = picam2.create_video_configuration(main={"format": "RGB888", "size": (1920, 1080)})
+    # Use full 5MP resolution
+    config = picam2.create_still_configuration(main={"format": "RGB888", "size": (3280, 2464)})
     picam2.configure(config)
-    picam2.set_controls({"Sharpness": 1.0, "Contrast": 1.0})  # Optional tuning
+    picam2.set_controls({"Sharpness": 1.0, "Contrast": 1.0})
     picam2.start()
     time.sleep(1)
 
-    cooldowns = {}  # barcode_text -> last_seen_timestamp (float)
+    cooldowns = {}  # barcode_text -> last_seen_timestamp
 
     try:
         while True:
             current_time = time.time()
             frame = picam2.capture_array()
-            ok, decoded_infos, points, _ = detector.detectAndDecodeMulti(frame)
+
+            # Define a center crop area
+            crop_w, crop_h = 1280, 960  # 720p area
+            full_h, full_w = frame.shape[:2]
+            x1 = (full_w - crop_w) // 2
+            y1 = (full_h - crop_h) // 2
+            cropped = frame[y1:y1+crop_h, x1:x1+crop_w]
+
+            ok, decoded_infos, points, _ = detector.detectAndDecodeMulti(cropped)
 
             if ok and decoded_infos and points is not None:
                 for s, pts in zip(decoded_infos, points):
@@ -35,10 +44,13 @@ def main():
                             print("Detected barcode:", s)
 
                         pts = np.int32(pts).reshape(-1, 2)
+                        # Adjust points from crop to full frame for visualization
+                        pts += np.array([x1, y1])
                         cv2.polylines(frame, [pts], True, (0, 255, 0), 2)
                         cv2.putText(frame, s, tuple(pts[0]), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
-            preview = cv2.resize(frame, (640, 360))
+            # Resize full frame for display
+            preview = cv2.resize(frame, (640, 480))
             cv2.imshow("Barcode Detection", preview)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
