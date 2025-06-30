@@ -23,9 +23,8 @@ class CameraModule:
 
         if show_window:
             annotated = result.plot()
+            cv2.resize(annotated, (640, 480), interpolation=cv2.INTER_LINEAR)
             cv2.imshow("Detection", annotated)
-            # if cv2.waitKey(1) == ord("q"):
-            #     cv2.destroyAllWindows()
 
         return result
 
