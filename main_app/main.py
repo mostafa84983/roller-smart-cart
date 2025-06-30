@@ -4,7 +4,7 @@ from camera_module import CameraModule
 # from product_detector import get_top_label
 from product_api import get_product_by_code
 from weight_sensor import WeightSensor
-from cart_api import add_product, get_token, TOKEN_FILE
+from cart_api import add_product, remove_product, get_token, TOKEN_FILE
 from label_map import LABEL_TO_CODE
 
 
@@ -56,12 +56,12 @@ def main():
 
     try:
         while True:
-            remove_product = False
+            isRemoveProduct = False
             user_input = input("> ")
             if user_input.lower() == 'q':
                 break
             elif user_input.strip() == 'r':
-                remove_product = True
+                isRemoveProduct = True
 
             token = get_token()
             if not token:
@@ -105,7 +105,7 @@ def main():
 
             if verify_weight(expected, weight, tolerance):
                 print("Item accepted.")
-                if remove_product:
+                if isRemoveProduct:
                     print("Removing product from cart...")
                     success = remove_product(product['productCode'], cart_id="1234")
                     print("Removed from backend." if success else "Failed to remove from backend.")
