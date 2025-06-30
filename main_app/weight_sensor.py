@@ -5,6 +5,7 @@ class WeightSensor:
     def __init__(self, port="/dev/ttyUSB0", baudrate=115200):
         self.ser = serial.Serial(port, baudrate, timeout=2)
         time.sleep(2)
+        self.ser.reset_input_buffer()  # Flush old/stale data
 
     def get_weight(self):
         try:

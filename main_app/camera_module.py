@@ -1,29 +1,23 @@
 # camera_module.py
 
 import cv2
-from picamera2 import Picamera2
 from ultralytics import YOLO
 
 class CameraModule:
-    def __init__(self, model_path="my_model_ncnn_model", resolution=(640, 640), imgsz=480):
+    def __init__(self, cam_manager, config_name, model_path="my_model_ncnn_model", imgsz=480):
+        self.cam_manager = cam_manager
+        self.config_name = config_name
         self.model = YOLO(model_path)
         self.imgsz = imgsz
-        self.picam2 = Picamera2()
-
-        self.picam2.preview_configuration.main.size = resolution
-        self.picam2.preview_configuration.main.format = "RGB888"
-        self.picam2.preview_configuration.align()
-        self.picam2.configure("preview")
-        self.picam2.start()
 
     def capture_and_detect(self, show_window=False):
-        frame = self.picam2.capture_array()
+        frame = self.cam_manager.capture(self.config_name)
         results = self.model.predict(frame, imgsz=self.imgsz)
         result = results[0]
 
         if show_window:
             annotated = result.plot()
-            annotated = cv2.resize(annotated, (640, 480), interpolation=cv2.INTER_LINEAR)
+            annotated = cv2.resize(annotated, (640, 480))
             cv2.imshow("Detection", annotated)
             cv2.waitKey(1)
 
@@ -33,7 +27,6 @@ class CameraModule:
         if len(result.boxes) == 0:
             return None, 0.0
 
-        # Pick the most confident box
         best_box = sorted(result.boxes, key=lambda box: float(box.conf[0]), reverse=True)[0]
         confidence = float(best_box.conf[0])
         if confidence < min_conf:
@@ -41,10 +34,7 @@ class CameraModule:
 
         class_id = int(best_box.cls[0])
         label = result.names[class_id]
-
         return label, confidence
-    
+
     def release(self):
-        self.picam2.stop()
-        self.picam2.close()
         cv2.destroyAllWindows()

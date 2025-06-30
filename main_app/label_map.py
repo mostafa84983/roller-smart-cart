@@ -19,8 +19,15 @@ LABEL_MAP = {
     }
 }
 
-def get_label_by_barcode(barcode):
+def get_product_info(label_or_barcode):
+    # Direct label match
+    if label_or_barcode in LABEL_MAP:
+        info = LABEL_MAP[label_or_barcode]
+        return label_or_barcode, info["productCode"], info
+
+    # Try to match by barcode
     for label, info in LABEL_MAP.items():
-        if str(info["barcode"]) == str(barcode):
-            return label
-    return None
+        if str(info.get("barcode")) == str(label_or_barcode):
+            return label, info["productCode"], info
+
+    return None, None, None

@@ -1,12 +1,15 @@
+# main.py
+
 from threading import Thread
 from flask import Flask, request
+from picamera2 import Picamera2
+from camera_manager import CameraManager
 from camera_module import CameraModule
 from barcode_module import BarcodeModule
 from product_api import get_product_by_code
 from weight_sensor import WeightSensor
 from cart_api import add_product, remove_product, get_token, TOKEN_FILE
-from label_map import LABEL_MAP, get_label_by_barcode
-
+from label_map import get_product_info
 
 import time
 import os
@@ -49,9 +52,14 @@ def main():
     time.sleep(1)  # Allow Flask server to start
 
     print("Initializing components...")
-    cam = CameraModule()
+    cam_mgr = CameraManager()
+    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(main={"format": "RGB888", "size": (3280, 2464)}))
+    cam_mgr.add_config("detect", cam_mgr.picam2.create_preview_configuration(main={"format": "RGB888", "size": (640, 640)}))
+
+    cam = CameraModule(cam_mgr, config_name="detect")
+    barcode_detector = BarcodeModule(cam_mgr, config_name="barcode")
     weight_sensor = WeightSensor()
-    barcode_detector = BarcodeModule()  # New barcode scanner wrapper class
+    
     print("System ready.\nPress Enter to detect object and add to cart.\nPress 'r' to remove item.\nPress 'b' to scan barcode.\nPress 'q' to quit.")
 
     try:
@@ -73,34 +81,26 @@ def main():
                 continue
 
             if useBarcode:
-                barcode = barcode_detector.scan_once()
-                if not barcode:
+                identifier = barcode_detector.scan_once()
+                if not identifier:
                     print("No barcode detected.")
                     continue
-                print(f"Detected barcode: {barcode}")
-
-                label = get_label_by_barcode(barcode)
-                if not label:
-                    print("Barcode not recognized.")
-                    continue
-
-                print(f"Matched label: {label}")
+                print(f"Detected barcode: {identifier}")
             else:
                 result = cam.capture_and_detect(show_window=False)
-                label, conf = cam.get_top_label(result)
+                identifier, conf = cam.get_top_label(result)
 
-                if not label:
+                if not identifier:
                     print("No product detected.")
                     continue
+                print(f"Detected: {identifier} ({conf*100:.1f}%)")
 
-                print(f"Detected: {label} ({conf*100:.1f}%)")
+            label, product_code, product_info = get_product_info(identifier)
 
-            product_info = LABEL_MAP.get(label)
             if not product_info:
-                print(f"Label '{label}' not mapped to product info.")
+                print(f"'{identifier}' not recognized in label map.")
                 continue
 
-            product_code = product_info["productCode"]
             product = get_product_by_code(product_code)
             if not product:
                 print("Product not found in DB.")
@@ -135,7 +135,6 @@ def main():
         print("Shutting down...")
         weight_sensor.close()
         cam.release()
-        barcode_detector.close()  # Optional if your barcode module has cleanup
 
 
 if __name__ == "__main__":
