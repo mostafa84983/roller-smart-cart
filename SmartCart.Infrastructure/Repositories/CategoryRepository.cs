@@ -17,12 +17,21 @@ namespace SmartCart.Infrastructure.Repositories
 
         }
 
-        public async Task<IEnumerable<Category>> GetCategoriesWithOffers()
+        public async Task<(IEnumerable<Category> Data, int TotalCount)> GetPaginatedCategoriesWithOffers(int page, int pageSize)
         {
-            return await _context.Categories.Where(c => c.IsOffer)
-                            .AsNoTracking()
-                            .ToListAsync();
+            var query = _context.Categories.Where(c => c.IsOffer)
+                                   .AsNoTracking();
+
+            var totalCount = await query.CountAsync();
+
+            var paginatedData = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (paginatedData, totalCount);
         }
+
 
         public async Task<bool> IsCategoryNameTaken(string categoryName, int? categoryId)
         {

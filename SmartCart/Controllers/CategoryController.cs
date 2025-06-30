@@ -28,9 +28,9 @@ namespace SmartCart.API.Controllers
 
 
         [HttpGet("offers")]
-        public async Task<IActionResult> GetCategoriesWithOffers()
+        public async Task<IActionResult> GetPaginatedCategoriesWithOffers(int page =1 , int pageSize =10)
         {
-            var result = await _categoryService.GetCategoriesWithOffers();
+            var result = await _categoryService.GetPaginatedCategoriesWithOffers(page , pageSize);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage ?? "An unexpected error occurred");
 

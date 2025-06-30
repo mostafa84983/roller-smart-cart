@@ -12,7 +12,7 @@ namespace SmartCart.Application.Interfaces
     public interface ICategoryService
     {
         Task<GenericResult<PaginatedResult<CategoryDto>>> GetAllPaginatedCategories(int page, int pageSize);
-        Task<GenericResult<IEnumerable<CategoryDto>>> GetCategoriesWithOffers();
+        Task<GenericResult<PaginatedResult<CategoryDto>>> GetPaginatedCategoriesWithOffers(int page , int pageSize);
         Task<Result> CreateCategory(CreateCategoryDto createCategoryDto);
         Task<Result> UpdateCategory(UpdateCategoryDto categoryDto);
     }
