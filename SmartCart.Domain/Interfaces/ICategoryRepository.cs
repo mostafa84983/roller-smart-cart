@@ -9,7 +9,7 @@ namespace SmartCart.Domain.Interfaces
 {
     public interface ICategoryRepository : IGenericRepository<Category>
     {
-        Task<IEnumerable<Category>> GetCategoriesWithOffers();
+        Task<(IEnumerable<Category> Data, int TotalCount)> GetPaginatedCategoriesWithOffers(int page, int pageSize);
         Task<bool> IsCategoryNameTaken(string categoryName, int? categoryId);
     }
 }
