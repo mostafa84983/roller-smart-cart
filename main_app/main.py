@@ -65,28 +65,27 @@ def main():
     try:
         while True:
             isRemoveProduct = False
-            useBarcode = False
             user_input = input("> ").strip().lower()
 
             if user_input == 'q':
                 break
-            elif user_input == 'r':
-                isRemoveProduct = True
-            elif user_input == 'b':
-                useBarcode = True
 
             token = get_token()
             if not token:
                 print("No token. User must log in first.")
                 continue
 
-            if useBarcode:
+            if user_input == 'b':
                 identifier = barcode_detector.scan_once()
                 if not identifier:
                     print("No barcode detected.")
                     continue
                 print(f"Detected barcode: {identifier}")
-            else:
+
+            elif user_input == 'r' or user_input == '':
+                # 'r' means remove; empty string (Enter) means add
+                isRemoveProduct = user_input == 'r'
+
                 result = cam.capture_and_detect(show_window=False)
                 identifier, conf = cam.get_top_label(result)
 
@@ -94,6 +93,11 @@ def main():
                     print("No product detected.")
                     continue
                 print(f"Detected: {identifier} ({conf*100:.1f}%)")
+
+            else:
+                print("Invalid input.")
+                continue
+
 
             label, product_code, product_info = get_product_info(identifier)
 
