@@ -64,8 +64,10 @@ def main():
 
     try:
         while True:
+            print("[Debug] Entered loop. Waiting for input...")
             isRemoveProduct = False
             user_input = input("> ").strip().lower()
+            print(f"[DEBUG] You entered: {user_input}")
 
             if user_input == 'q':
                 break
