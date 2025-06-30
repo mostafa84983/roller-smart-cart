@@ -16,7 +16,7 @@ class CameraManager:
     def switch(self, name):
         if self.current_config_name != name:
             config = self.configs[name]
-            self.picam2.switch_mode_and_configure(config)
+            self.picam2.switch_mode(config)
             self.current_config_name = name
             time.sleep(0.1)
 
