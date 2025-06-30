@@ -17,7 +17,7 @@ import { Router, RouterModule } from '@angular/router';
 export class LoginComponent  {
 
   errorMessage : string = "" ;
-  isloggedIn = false;
+  isloggedIn = true;
   form : FormGroup = new FormGroup({}) ;
 
   constructor(private formBuilder : FormBuilder , private authService : AuthService , private router : Router)
@@ -46,13 +46,16 @@ export class LoginComponent  {
       error : err => 
       {
         this.isloggedIn = false;
-       this.errorMessage= err.value ;
+       this.errorMessage= err.error ;
       }
     })
 
 
   }
 
+  logout(){
+    this.authService.logout() ;
+  }
 
 
 }

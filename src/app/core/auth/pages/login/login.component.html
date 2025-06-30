@@ -1,7 +1,8 @@
-<h1 form>Login</h1>
+<h1 >Login</h1>
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()">  
   <p>
-    <mat-form-field  appearance="outline">
+    <mat-form-field appearance="outline">
       <mat-label>email</mat-label>
       <input matInput placeholder="enter your email" formControlName="email" >
       <mat-icon matSuffix>mail</mat-icon>
@@ -23,25 +24,29 @@
       <mat-label>password</mat-label>
       <input type="password" matInput placeholder="enter your Password" formControlName="password">
       <mat-icon matSuffix>lock</mat-icon>
-      @if(this.form.get('password')?.hasError('required')){
+       @if(this.form.get('password')?.hasError('required')){
         <mat-error>{{ 'password is required'}}</mat-error>
       }
       @if(this.form.get('password')?.hasError('minlength')){
         <mat-error>{{ 'password should be at least 8 characters'}}</mat-error>
       }
+    
     </mat-form-field>
   </p>
 
 
-  @if(isloggedIn == false)
-  {
-  <mat-error>{{errorMessage}}</mat-error>
-  }
+  @if(!isloggedIn){
+    <div class="alert">
+      <strong>Error!</strong> {{errorMessage}}
+    </div>
+   } 
   
-  <button type="submit" class="btn ">Login</button>
+  <button type="submit" class="btn">Sign In</button>
 
 
 </form> 
+
+<!-- <button (click)="logout()">logout</button> -->
 
 
  
