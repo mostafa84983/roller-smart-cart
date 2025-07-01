@@ -11,11 +11,13 @@ import { CartService } from '../../shared/cart.service';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent  {
+export class HomeComponent implements OnInit {
    products: productCartDto[] = [];
    page : number = 1 ;
    pagesize : number = 3 ;
    orderId : number = -1;
+   totalPrice : number = 0;
+
    errorMessage : string = ''
 
    constructor(private cartProductService : CartproductService , private cartservice : CartService){}
@@ -23,11 +25,16 @@ export class HomeComponent  {
    ngOnInit(): void {
     this.cartservice.orderid$.subscribe(id => {
     this.orderId = id; 
-    this.startPage() ;
-  });
+    if (id > 0) {
+    this.startPage();
+    }
 
-   
-  }
+    this.cartservice.totalPrice$.subscribe(price =>{
+      this.totalPrice = price ;
+    })
+    
+  });
+}
 
   startPage(){
   this.cartProductService.getProductsOfCart(this.page, this.pagesize,this.orderId).subscribe( {
