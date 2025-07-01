@@ -79,6 +79,9 @@ export class AuthService {
         localStorage.removeItem(this.expriration);
         localStorage.removeItem(this.role);
       }
+
+    if(localStorage.getItem('orderId'))
+      localStorage.removeItem('orderId') ;
      
       this.router.navigate(['/login']) ;
   }

@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './core/layout/header/header.component';
 import { CartSignalrService } from './features/cart-product/cart-signalr.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { productModel } from './features/product/models/product.model';
 import { CartService } from './shared/cart.service';
+import { ProductAddOrRemoveDto } from './features/cart-product/ProductAddOrRemoveDto';
 
 @Component({
   selector: 'app-root',
@@ -17,9 +16,10 @@ export class AppComponent implements OnInit{
   title = 'smart cart';
   cartId ="1234";
   backendBaseUrl = 'https://localhost:7075/';
-  currentProduct: any = null;
+  currentProduct:any = null;
+  productStatus :string = "" ;
 
-  constructor(private cartSignalRService : CartSignalrService , private snakBar : MatSnackBar , private cartservice : CartService){}
+  constructor(private cartSignalRService : CartSignalrService , private cartservice : CartService){}
 
   
 
@@ -29,14 +29,15 @@ export class AppComponent implements OnInit{
   this.cartSignalRService.onProductAdded(data => {
     this.currentProduct = data ;
     this.cartservice.setOrderId(data.product.orderId);
-  console.log("Received ProductAdded:", data);
-  this.snakBar.open(`Added: ${data.product.productName}, Total: ${data.total}`, 'Close', { duration: 4000 });
+    this.cartservice.setTotalPrice(data.total) ;
+    this.productStatus = "Product Added";
 });
 
 this.cartSignalRService.onProductRemoved(data => {
-    this.currentProduct = data ;
+   this.currentProduct = data ;
    this.cartservice.setOrderId(data.product.orderId);
-  this.snakBar.open(`Removed: ${data.product.productName}, Total: ${data.total}`, 'Close', { duration: 4000 });
+   this.cartservice.setTotalPrice(data.total) ;
+   this.productStatus = "Product Removed";
 });
 
 }
