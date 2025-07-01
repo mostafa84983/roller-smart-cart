@@ -17,11 +17,13 @@ export class CategoryComponent implements OnInit{
     categories : CategoryModel[] = [];
     totalCount : number = 0;
     pageNumber : number =1;
-    pageSize   : number =4;
+    pageSize   : number =3;
 
     errorMessage : string = '';
     isOfferRoute : boolean = false;
     isAdmin : boolean = false;
+
+    backendBaseUrl = 'https://localhost:7075';
 
     constructor(private categoryService : CategoryService, private route : ActivatedRoute,
       private authService : AuthService) { }
@@ -98,4 +100,8 @@ export class CategoryComponent implements OnInit{
       this.fetchCategories();    
     }
   }
+
+  getImageUrl(imageFileName: string): string {
+  return `${this.backendBaseUrl}/${imageFileName}`;
+}
 }
