@@ -60,7 +60,7 @@ restoreProduct(productId : number) : Observable<void>
   return this.http.put<void>(`${this.baseUrl}/${productId}/restore` , {} );
 }
 
-createProdct(dto : CreateProductModel) : Observable<void>
+createProduct(dto : CreateProductModel) : Observable<void>
 {
  return this.http.post<void>(this.baseUrl, dto);
 }
