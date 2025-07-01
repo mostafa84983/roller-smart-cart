@@ -2,3 +2,23 @@
   <app-header></app-header>
   <router-outlet></router-outlet>
 </div>
+
+@if(currentProduct)
+{
+  <div class="overlay" (click)="closePopup()">
+    <div class="card-popup" (click)="$event.stopPropagation()">
+      <div class="card" style="width: 20rem;">
+        <img [src]="getImageUrl(currentProduct.product.productImage)" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">{{ currentProduct.product.productName}}</h5>
+          <p class="card-text">{{ currentProduct.product.productDescription }}</p>
+          <p class="card-text"><strong>Price:</strong> {{ currentProduct.product.productPrice }}</p>
+          <p class="card-text"><strong>weight:</strong> {{ currentProduct.product.productWeight }}</p>
+           <p class="card-text"><strong>Order Price:</strong> {{ currentProduct.total }}</p>
+        
+          <button class="btn btn-danger" (click)="closePopup()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -3,14 +3,10 @@ import { LoginComponent } from './core/auth/pages/login/login.component';
 import { HomeComponent } from './features/home/home.component';
 import { authGuard } from './core/auth/auth.guard';
 import { CategoryComponent } from './features/category/pages/category/category.component';
+import { CartProductComponent } from './features/cart-product/cart-product.component';
 
 export const routes: Routes = 
 [
-{
-    path: '',
-    redirectTo: '/home',
-    pathMatch: 'full'
-},
 {
     path : 'login',
     component: LoginComponent
@@ -27,6 +23,15 @@ export const routes: Routes =
 {
     path: 'offers',
     component : CategoryComponent
+},
+{
+    path: 'cartproduct',
+    component: CartProductComponent
+},
+{ 
+        path: '',
+        redirectTo: '/home', 
+        pathMatch: 'full'
 }
 
 
