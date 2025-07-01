@@ -1,1 +1,37 @@
-<p>home works!</p>
+<div>
+  @if(orderId == -1)
+  {
+    <div class="empty-cart">
+    <h1>Your cart is waiting for a new adventure — add your first product!</h1>
+    <img src="assets/cart.jpg" alt="">
+    </div>
+    
+    
+  }
+  @else 
+  {
+    <app-cart-product [products]="products"></app-cart-product>
+    <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                
+                  <li class="page-item" [class.disabled]="page <= 1">
+                    <button class="page-link" (click)="onPageChange(page - 1)" [disabled]="page <= 1">
+                      Previous
+                    </button>
+                  </li>
+              
+                  <li class="page-item disabled">
+                    <span class="page-link">Page {{ page }}</span>
+                  </li>
+              
+                    <li class="page-item" [class.disabled]="products.length < pagesize">
+                      <button class="page-link" (click)="onPageChange(page + 1)" 
+                        [disabled]="products.length < pagesize">
+                        Next
+                      </button>
+                 </li>
+           </ul>
+   </nav>
+  }
+   
+</div>

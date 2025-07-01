@@ -1,10 +1,10 @@
 
 form{
     margin: auto;
-    width: 50%;
-    margin-top: 3%;
+    width: 40%;
+    margin-top: 1%;
     margin-bottom: 20px;
-    background-color:#435b6b ;
+    background-color:#838383 ;
     border-style: solid;
     border-radius: 70px;
     border-color: #ffffff;
@@ -17,10 +17,10 @@ form{
      color: #FE7743;
      font-family:'Lucida Sans', 'Lucida Sans Regular', 
      'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-     font-size: 60px;
+     font-size: 50px;
      text-align: center;
      font-weight: bold;
-     margin-top: 10%;
+     margin-top: 6%;
     text-shadow: 1px 2px #111111;
  }
  mat-form-field{
@@ -37,21 +37,23 @@ mat-icon {
 mat-form-field, 
 mat-form-field mat-label, 
 mat-form-field input {
-  font-size: 20px;
+  font-size: 16px;
+  color: #ffffff;
 }
 mat-form-field mat-error{
     margin-top: 4px;
-    font-size: 17px;
+    font-size: 15px;
+    color: #ffdac2;
 }
 
  button{
   display: block;
-  margin: 15px auto;
+  margin: 10px auto;
   background-color: #ffffff;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   border-radius: 20px;
-  font-size: 25px;
+  font-size: 20px;
  }
  form a{
     margin-left: 6px;

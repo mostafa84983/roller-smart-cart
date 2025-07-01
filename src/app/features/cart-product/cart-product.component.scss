@@ -1,0 +1,33 @@
+.product-card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-body {
+    padding: 1.2rem;
+  }
+}
+
+.moneyBtn{
+  background-color: #FE7743;
+}
+.gramBtn{
+  background-color: #273F4F;
+}
+
+.product-img {
+  height: 200px;
+  object-fit: cover;
+}
+h1{
+    font-size: 30px;
+}
+p{
+    font-size: 20px ;
+}
+

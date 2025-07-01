@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -8,10 +9,17 @@ import { Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent  {
 
-  constructor(private router : Router) {}
+  isLoggedIn : boolean = false ;
+  constructor(private router : Router , private authservice : AuthService) {}
 
+  ngOnInit(){
+    this.authservice.isAuthenticated$.subscribe(value => {
+      this.isLoggedIn = value ;
+    }) ;
+  }
+  
   goToCategories(){
     // this.router.navigate(['/categories']);
     this.router.navigate(['/categories'], { queryParams: { isOffer : false } });
@@ -19,5 +27,8 @@ export class HeaderComponent {
 
   goToOffers(){
     this.router.navigate(['/offers'], { queryParams: { isOffer : true } });
+  }
+  Logout(){
+  this.authservice.logout();
   }
 }
