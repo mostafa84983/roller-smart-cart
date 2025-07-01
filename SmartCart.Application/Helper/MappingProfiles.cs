@@ -27,6 +27,7 @@ namespace SmartCart.Application.Helper
             CreateMap<Order, OrderDto>();
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+            CreateMap<Product, ProductAddOrRemoveDto>();
         }
     }
 }

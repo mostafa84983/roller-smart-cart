@@ -383,72 +383,135 @@ namespace SmartCart.Application.Services
             return GenericResult<decimal>.Success(order.OrderPrice);
         }
 
-        public async Task<GenericResult<(ProductDto, decimal)>> AddProductservice(ProductRequest productRequest, int userId)
+        //public async Task<GenericResult<(ProductDto, decimal)>> AddProductservice(ProductRequest productRequest, int userId)
+        //{
+        //    if (productRequest.CartId == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Invalid cart id");
+
+        //    if (productRequest.ProductCode == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Invalid product code");
+
+        //    var product = await _unitOfWork.Product.GetProductByCode(productRequest.ProductCode);
+        //    if (product == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
+
+        //    var orderId = await  _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
+        //    if(orderId == null)
+        //    {
+        //        var result =  await _orderService.CreateOrder(userId);
+        //        if (!result.IsSuccess)
+        //        {
+        //            return GenericResult<(ProductDto, decimal)>.Failure("Failed to create order");
+        //        }
+        //        orderId = result.Value;
+        //        await _unitOfWork.CartService.SetOrderIdAsync(productRequest.CartId, userId, orderId.Value);
+        //    }
+
+        //    var result1 = await AddProductToOrder(productRequest.ProductCode, orderId.Value);
+
+        //    ProductDto returnedProduct = _mapper.Map<ProductDto>(product); ;
+
+        //    if (result1.IsSuccess)
+        //    {
+        //        return GenericResult<(ProductDto, decimal)>.Success((returnedProduct,result1.Value));
+        //    }
+
+        //    return GenericResult<(ProductDto, decimal)>.Failure("Error while adding product to order");
+
+
+        //}
+
+        public async Task<GenericResult<(ProductAddOrRemoveDto, decimal)>> AddProductservice(ProductRequest productRequest, int userId)
         {
             if (productRequest.CartId == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Invalid cart id");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Invalid cart id");
 
             if (productRequest.ProductCode == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Invalid product code");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Invalid product code");
 
             var product = await _unitOfWork.Product.GetProductByCode(productRequest.ProductCode);
             if (product == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Product not found");
 
-            var orderId = await  _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
-            if(orderId == null)
+            var orderId = await _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
+            if (orderId == null)
             {
-                var result =  await _orderService.CreateOrder(userId);
+                var result = await _orderService.CreateOrder(userId);
                 if (!result.IsSuccess)
-                {
-                    return GenericResult<(ProductDto, decimal)>.Failure("Failed to create order");
-                }
+                    return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Failed to create order");
+
                 orderId = result.Value;
                 await _unitOfWork.CartService.SetOrderIdAsync(productRequest.CartId, userId, orderId.Value);
             }
 
             var result1 = await AddProductToOrder(productRequest.ProductCode, orderId.Value);
 
-            ProductDto returnedProduct = _mapper.Map<ProductDto>(product); ;
-            
+            var returnedProduct = _mapper.Map<ProductAddOrRemoveDto>(product);
+            returnedProduct.OrderId = orderId.Value;
+
             if (result1.IsSuccess)
-            {
-                return GenericResult<(ProductDto, decimal)>.Success((returnedProduct,result1.Value));
-            }
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Success((returnedProduct, result1.Value));
 
-            return GenericResult<(ProductDto, decimal)>.Failure("Error while adding product to order");
-
-
+            return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Error while adding product to order");
         }
 
-        
-        public async Task<GenericResult<(ProductDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId)
+
+        //public async Task<GenericResult<(ProductDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId)
+        //{
+        //    if (productRequest.CartId == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Invalid cart id");
+
+        //    if (productRequest.ProductCode == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Invalid product code");
+
+        //    var product = await _unitOfWork.Product.GetProductByCode(productRequest.ProductCode);
+        //    if (product == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
+
+        //    var orderId = await _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
+        //    if (orderId == null)
+        //        return GenericResult<(ProductDto, decimal)>.Failure("Order not found");
+
+        //    var result = await RemoveProductFromOrder(productRequest.ProductCode, orderId.Value);
+
+        //    if (result.IsSuccess)
+        //    {
+        //        ProductDto returnedProduct = _mapper.Map<ProductDto>(product);
+        //        return GenericResult<(ProductDto, decimal)>.Success((returnedProduct, result.Value));
+        //    }
+
+        //    return GenericResult<(ProductDto, decimal)>.Failure("Failed to remove product from order");
+        //}
+
+
+        public async Task<GenericResult<(ProductAddOrRemoveDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId)
         {
             if (productRequest.CartId == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Invalid cart id");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Invalid cart id");
 
             if (productRequest.ProductCode == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Invalid product code");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Invalid product code");
 
             var product = await _unitOfWork.Product.GetProductByCode(productRequest.ProductCode);
             if (product == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Product not found");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Product not found");
 
             var orderId = await _unitOfWork.CartService.GetActiveOrderIdAsync(productRequest.CartId, userId);
             if (orderId == null)
-                return GenericResult<(ProductDto, decimal)>.Failure("Order not found");
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Order not found");
 
             var result = await RemoveProductFromOrder(productRequest.ProductCode, orderId.Value);
 
-            if (result.IsSuccess)
-            {
-                ProductDto returnedProduct = _mapper.Map<ProductDto>(product);
-                return GenericResult<(ProductDto, decimal)>.Success((returnedProduct, result.Value));
-            }
+            var returnedProduct = _mapper.Map<ProductAddOrRemoveDto>(product);
+            returnedProduct.OrderId = orderId.Value;
 
-            return GenericResult<(ProductDto, decimal)>.Failure("Failed to remove product from order");
+            if (result.IsSuccess)
+                return GenericResult<(ProductAddOrRemoveDto, decimal)>.Success((returnedProduct, result.Value));
+
+            return GenericResult<(ProductAddOrRemoveDto, decimal)>.Failure("Failed to remove product from order");
         }
 
-        
+
+
     }
 }

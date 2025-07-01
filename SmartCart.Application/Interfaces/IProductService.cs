@@ -23,8 +23,8 @@ namespace SmartCart.Application.Interfaces
         Task<Result> RemoveOfferFromProduct(RemoveOfferDto productDto);
         Task<Result> SoftDeleteProduct(int productId);
         Task<Result> RestoreProduct(int productId);
-        Task<GenericResult<(ProductDto, decimal)>> AddProductservice(ProductRequest productRequest , int userId);
-        Task<GenericResult<(ProductDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId);
+        Task<GenericResult<(ProductAddOrRemoveDto, decimal)>> AddProductservice(ProductRequest productRequest , int userId);
+        Task<GenericResult<(ProductAddOrRemoveDto, decimal)>> RemoveProductservice(ProductRequest productRequest, int userId);
         Task<GenericResult<decimal>> AddProductToOrder(int productCode, int orderId);
         Task<GenericResult<decimal>> RemoveProductFromOrder(int productCode, int orderId);
 
