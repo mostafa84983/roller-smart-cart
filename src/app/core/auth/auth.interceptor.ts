@@ -1,26 +1,3 @@
-// import { HttpInterceptorFn } from '@angular/common/http';
-
-// export const authInterceptor: HttpInterceptorFn = (req, next) => {
-
-//   const localToken = localStorage.getItem("authToken");
-
-//   if (req.url.includes('/User/login') || (!localToken && req.url.includes('/User/details'))) {
-//     return next(req);
-//   }
-
-//   // Add Authorization header if token exists
-//   if (localToken) {
-//     const newRequest = req.clone({
-//       setHeaders: {
-//         Authorization: `Bearer ${localToken}`,
-//       },
-//     });
-//     return next(newRequest);
-//   }
-
-//   return next(req);
-// };
-
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';

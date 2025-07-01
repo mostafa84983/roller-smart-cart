@@ -22,9 +22,11 @@ export class HomeComponent  {
   
    ngOnInit(): void {
     this.cartservice.orderid$.subscribe(id => {
-    this.orderId = id; });
-
+    this.orderId = id; 
     this.startPage() ;
+  });
+
+   
   }
 
   startPage(){
