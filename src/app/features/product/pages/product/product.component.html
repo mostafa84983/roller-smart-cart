@@ -1,1 +1,82 @@
-<p>product works!</p>
+<div class="container mt-4">
+  <div class="row">
+    @if (isAdmin) {
+      <div class="admin-controls">
+        <button class="btn btn-primary btn-sm me-2">Create</button>
+      </div>
+    }
+
+    @for (product of products; track product.productId) {
+      <div class="col-md-6 mb-4">
+        <div class="card product-card">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img 
+                [src]="getImageUrl(product.productImage)" 
+                class="product-image"
+                alt="{{ product.productName }}">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body product-card-body">
+                <h5 class="product-title">{{ product.productName }}</h5>
+
+                <p class="card-text text-center">{{ product.productDescription }}</p>
+
+                <p class="card-text text-center mb-1">
+                  <strong>Weight:</strong> {{ product.productWeight }}{{ getProductUnit(product.productDescription) }}
+                </p>
+
+                <p class="card-text text-center mb-2">
+                  <strong>Price:</strong>
+                  <span *ngIf="!product.isOffer">
+                    {{ product.productPrice | number: '1.2-2' }} EGP
+                  </span>
+                  <span *ngIf="product.isOffer">
+                    <s class="text-muted">{{ product.productPrice | number: '1.2-2' }} EGP</s>
+                    <span class="discounted-price">
+                      {{
+                        (product.productPrice * (1 - product.offerPercentage / 100)) | number : '1.2-2'
+                      }} EGP
+                    </span>
+                    <span class="badge bg-danger ms-2">-{{ product.offerPercentage }}%</span>
+                  </span>
+                </p>
+
+                @if (isAdmin) {
+                  <div class="admin-buttons">
+                    <button class="btn btn-secondary btn-sm">Update</button>
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                    @if (!product.isOffer) {
+                      <button class="btn btn-success btn-sm">Add Offer</button>
+                    }
+                    @if (product.isOffer) {
+                      <button class="btn btn-warning btn-sm">Remove Offer</button>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <nav aria-label="Product pagination">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="pageNumber === 1">
+        <button class="page-link" [disabled]="pageNumber === 1" (click)="changePage(pageNumber - 1)">Previous</button>
+      </li>
+
+      @for (page of getPageNumbers(); track page) {
+        <li class="page-item" [class.active]="pageNumber === page">
+          <a class="page-link" href="#" (click)="changePage(page); $event.preventDefault()">{{ page }}</a>
+        </li>
+      }
+
+      <li class="page-item" [class.disabled]="pageNumber === totalPages()">
+        <button class="page-link" [disabled]="pageNumber === totalPages()" (click)="changePage(pageNumber + 1)">Next</button>
+      </li>
+    </ul>
+  </nav>
+</div>

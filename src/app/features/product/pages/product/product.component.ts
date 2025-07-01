@@ -2,11 +2,13 @@ import { Component ,OnInit} from '@angular/core';
 import { ProductService } from '../../product.service';
 import { productModel } from '../../models/product.model';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss'
 })
@@ -14,21 +16,27 @@ export class ProductComponent implements OnInit{
 
   categoryId! : number;
   pageNumber : number =1;
-  pageSize   : number =3;
+  pageSize   : number =4;
 
   products : productModel[] = [];
   totalCount : number = 0;
 
   errorMessage : string = '';
   isOffer : boolean = false;
+  isAdmin : boolean = false;
+
 
 
   backendBaseUrl = 'https://localhost:7075';
 
 
-  constructor(private productService : ProductService, private route : ActivatedRoute) {}
+  constructor(private productService : ProductService, private route : ActivatedRoute,
+    private authService : AuthService) {}
 
   ngOnInit(): void {
+
+    const role = this.authService.getRole();
+    this.isAdmin = (role === 'Admin');
 
     this.route.paramMap.subscribe(params => {
 
@@ -37,6 +45,8 @@ export class ProductComponent implements OnInit{
     this.route.queryParamMap.subscribe(queryParams => {
       
     this.isOffer = queryParams.get('isOffer') === 'true';
+
+    this.pageNumber = 1;
 
     if(this.isOffer)
     {
@@ -107,5 +117,12 @@ export class ProductComponent implements OnInit{
   getImageUrl(imageFileName: string): string 
   {
     return `${this.backendBaseUrl}/${imageFileName}`;
+  }
+
+  getProductUnit(description: string): string 
+  {
+  if (description.includes("ml")) return "ml";
+  if (description.includes("g")) return "g";
+  return "g";
   }
 }
