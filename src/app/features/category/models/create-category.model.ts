@@ -1,4 +1,4 @@
 export interface CreateCategoryModel{
-    CategoryImage : string;
-    CategoryName : string;
+    categoryImage : string;
+    categoryName : string;
 }

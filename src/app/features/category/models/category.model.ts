@@ -1,6 +1,6 @@
 export interface CategoryModel{
-    CategoryId : number;
-    CategoryImage : string;
-    CategoryName : string;
-    IsOffer : boolean;
+    categoryId : number;
+    categoryImage : string;
+    categoryName : string;
+    isOffer : boolean;
 }

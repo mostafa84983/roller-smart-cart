@@ -1,5 +1,5 @@
 export interface PaginatedResult<T>
 {
-    Data : T[];
-    TotalCount : number;
+    data : T[];
+    totalCount : number;
 }
