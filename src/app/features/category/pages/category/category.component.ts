@@ -38,7 +38,8 @@ export class CategoryComponent implements OnInit{
       this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
       this.isOffer = queryParams['isOffer'] === 'true';
       
-
+      this.pageNumber = 1;
+      
       if(this.isOffer)
       {
         this.fetchCategoriesWithOffers();
