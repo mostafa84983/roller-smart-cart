@@ -11,9 +11,6 @@
       </div>
       <div class="offcanvas-body">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <!-- <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#" (click) = "goToCategories()">Categories</a>
-          </li> -->
           <li class="nav-item">
             <a 
             class="nav-link text-light" 
@@ -21,14 +18,10 @@
             [queryParams]="{ isOffer: false }"
             routerLinkActive="active"data-bs-dismiss="offcanvas">Categories</a>
            </li>
-
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="#" (click) = "goToOffers()">Offers</a>
-          </li> -->
             <li class="nav-item">
               <a 
                 class="nav-link text-light" 
-                [routerLink]="['/offers']" 
+                [routerLink]="['/categories']" 
                 [queryParams]="{ isOffer: true }"
                 routerLinkActive="active"
                 data-bs-dismiss="offcanvas">Offers</a>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../category.service';
 import { CategoryModel } from '../../models/category.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Params } from '@angular/router';
@@ -27,7 +27,7 @@ export class CategoryComponent implements OnInit{
 
     backendBaseUrl = 'https://localhost:7075';
 
-    constructor(private categoryService : CategoryService, private activatedRoute : ActivatedRoute,
+    constructor(private categoryService : CategoryService, private activatedRoute : ActivatedRoute,private route :Router,
       private authService : AuthService) { }
 
     ngOnInit(): void {
@@ -59,8 +59,7 @@ export class CategoryComponent implements OnInit{
         },
       error : err => 
       {  
-              console.error('Error fetching categories:', err);
-
+      // console.error('Error fetching categories:', err);
        this.errorMessage= err.error ;
       }
       });
@@ -97,17 +96,30 @@ export class CategoryComponent implements OnInit{
 
       this.pageNumber = page;
       
-    if (this.isOffer) 
-    {
-      this.fetchCategoriesWithOffers();
-    } 
-    else 
-    {
-      this.fetchCategories();    
+      if (this.isOffer) 
+      {
+        this.fetchCategoriesWithOffers();
+      } 
+      else 
+      {
+        this.fetchCategories();    
+      }
     }
-  }
 
   getImageUrl(imageFileName: string): string {
   return `${this.backendBaseUrl}/${imageFileName}`;
+}
+
+
+goToProducts(categoryId : number) : void
+{
+  if(this.isOffer)
+  {
+    this.route.navigate(['/categories', categoryId, 'products'], {queryParams: { isOffer: this.isOffer } } );  
+  }
+  else
+  {
+    this.route.navigate(['/categories', categoryId, 'products'], {queryParams: { isOffer: this.isOffer } });
+  }
 }
 }

@@ -4,6 +4,7 @@ import { HomeComponent } from './features/home/home.component';
 import { authGuard } from './core/auth/auth.guard';
 import { CategoryComponent } from './features/category/pages/category/category.component';
 import { CartProductComponent } from './features/cart-product/cart-product.component';
+import { ProductComponent } from './features/product/pages/product/product.component';
 
 export const routes: Routes = 
 [
@@ -21,12 +22,12 @@ export const routes: Routes =
     component : CategoryComponent
 },
 {
-    path: 'offers',
-    component : CategoryComponent
-},
-{
     path: 'cartproduct',
     component: CartProductComponent
+},
+{
+  path: 'categories/:categoryId/products',
+  component: ProductComponent
 },
 { 
         path: '',

@@ -20,14 +20,6 @@ export class HeaderComponent  {
     }) ;
   }
   
-  // goToCategories(){
-  //   // this.router.navigate(['/categories']);
-  //   this.router.navigate(['/categories'], { queryParams: { isOffer : false } });
-  // }
-
-  // goToOffers(){
-  //   this.router.navigate(['/offers'], { queryParams: { isOffer : true } });
-  // }
   Logout(){
   this.authservice.logout();
   }
