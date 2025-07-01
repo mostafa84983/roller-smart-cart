@@ -13,10 +13,11 @@ export class HeaderComponent {
   constructor(private router : Router) {}
 
   goToCategories(){
-    this.router.navigate(['/categories']);
+    // this.router.navigate(['/categories']);
+    this.router.navigate(['/categories'], { queryParams: { isOffer : false } });
   }
 
   goToOffers(){
-    this.router.navigate(['/offers']);
+    this.router.navigate(['/offers'], { queryParams: { isOffer : true } });
   }
 }

@@ -4,6 +4,8 @@ import { CategoryModel } from '../../models/category.model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
+import { Params } from '@angular/router';
+
 
 @Component({
   selector: 'app-category',
@@ -20,12 +22,12 @@ export class CategoryComponent implements OnInit{
     pageSize   : number =3;
 
     errorMessage : string = '';
-    isOfferRoute : boolean = false;
+    isOffer : boolean = false;
     isAdmin : boolean = false;
 
     backendBaseUrl = 'https://localhost:7075';
 
-    constructor(private categoryService : CategoryService, private route : ActivatedRoute,
+    constructor(private categoryService : CategoryService, private activatedRoute : ActivatedRoute,
       private authService : AuthService) { }
 
     ngOnInit(): void {
@@ -33,8 +35,11 @@ export class CategoryComponent implements OnInit{
       const role = this.authService.getRole();
       this.isAdmin = (role === 'Admin');
 
-      this.isOfferRoute = this.route.snapshot.routeConfig?.path === 'offers';
-      if(this.isOfferRoute)
+      this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
+      this.isOffer = queryParams['isOffer'] === 'true';
+      
+
+      if(this.isOffer)
       {
         this.fetchCategoriesWithOffers();
       }
@@ -42,7 +47,7 @@ export class CategoryComponent implements OnInit{
       {
         this.fetchCategories();
       }
-
+    });
     }
 
     fetchCategories() : void {
@@ -91,7 +96,7 @@ export class CategoryComponent implements OnInit{
 
       this.pageNumber = page;
       
-    if (this.isOfferRoute) 
+    if (this.isOffer) 
     {
       this.fetchCategoriesWithOffers();
     } 
