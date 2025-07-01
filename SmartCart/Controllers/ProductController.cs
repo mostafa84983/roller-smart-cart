@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using SmartCart.API.Hubs;
 using SmartCart.Application.Dto.Category;
 using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
@@ -14,10 +16,12 @@ namespace SmartCart.API.Controllers
     public class ProductController : BaseController
     {
         private readonly IProductService _productService;
+        private readonly IHubContext<CartHub> _hubContext ;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService , IHubContext<CartHub> hubContext)
         {
             _productService = productService;
+            _hubContext = hubContext;
         }
 
         [HttpGet("category/{categoryId}")]
@@ -156,11 +160,17 @@ namespace SmartCart.API.Controllers
         {
             var userId = GetUserId();
             var result = await _productService.AddProductservice(productRequest, userId);
+
            
             if (result.IsSuccess)
             {
                 var (product, total) = result.Value;
+
+                await _hubContext.Clients.Group(productRequest.CartId.ToString())
+               .SendAsync("ProductAdded", new { product, total });
+
                 return Ok(new { product, total });
+
             }
             
             else
@@ -176,6 +186,10 @@ namespace SmartCart.API.Controllers
             if (result.IsSuccess)
             {
                 var (product, total) = result.Value;
+
+                await _hubContext.Clients.Group(productRequest.CartId.ToString())
+               .SendAsync("ProductRemoved", new { product, total });
+
                 return Ok(new { product, total });
             }
 

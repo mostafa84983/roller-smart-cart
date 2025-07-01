@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SmartCart.API.Hubs;
 using SmartCart.Application.Interfaces;
 using SmartCart.Application.Services;
 using SmartCart.Domain.Interfaces;
@@ -116,6 +117,9 @@ builder.Services.AddAuthentication(options =>
 
 });
 
+//Add signalR
+builder.Services.AddSignalR();
+
 // Add CORS policy to allow Angular frontend
 builder.Services.AddCors(options =>
 {
@@ -168,5 +172,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapHub<CartHub>("/hubs/cart");
 app.Run();
