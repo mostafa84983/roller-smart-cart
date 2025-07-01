@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../../category.service';
 import { CategoryModel } from '../../models/category.model';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [],
+  imports: [NgIf,NgFor],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss'
 })
@@ -19,10 +21,15 @@ export class CategoryComponent implements OnInit{
 
     errorMessage : string = '';
     isOfferRoute : boolean = false;
+    isAdmin : boolean = false;
 
-    constructor(private categoryService : CategoryService, private route : ActivatedRoute) { }
+    constructor(private categoryService : CategoryService, private route : ActivatedRoute,
+      private authService : AuthService) { }
 
     ngOnInit(): void {
+
+      const role = this.authService.getRole();
+      this.isAdmin = (role === 'Admin');
 
       this.isOfferRoute = this.route.snapshot.routeConfig?.path === 'offers';
       if(this.isOfferRoute)
@@ -39,11 +46,13 @@ export class CategoryComponent implements OnInit{
     fetchCategories() : void {
       this.categoryService.getPaginatedCategories(this.pageNumber,this.pageSize).subscribe({
         next : (response) => {
-          this.categories = response.Data;
-          this.totalCount = response.TotalCount;
+          this.categories = response.data;
+          this.totalCount = response.totalCount;
         },
       error : err => 
       {  
+              console.error('Error fetching categories:', err);
+
        this.errorMessage= err.error ;
       }
       });
@@ -53,8 +62,9 @@ export class CategoryComponent implements OnInit{
     {
       this.categoryService.getCategoriesWithOffers(this.pageNumber, this.pageSize).subscribe({ 
         next : response => {
-          this.categories = response.Data;
-          this.totalCount = response.TotalCount;        },
+          this.categories = response.data;
+          this.totalCount = response.totalCount;    
+        },
         error : err =>
         {
           this.errorMessage = err.error;
@@ -65,13 +75,20 @@ export class CategoryComponent implements OnInit{
 
     totalPages(): number
     {
-      return this.totalCount / this.pageSize;
+      return Math.ceil(this.totalCount / this.pageSize);
+    }
+
+    getPageNumbers(): number[] 
+    {
+        return Array.from({ length: this.totalPages() }, (_, i) => i + 1);
     }
 
     changePage(page : number ) : void
     {
       if (page < 1 || page > this.totalPages()) return;
+
       this.pageNumber = page;
+      
     if (this.isOfferRoute) 
     {
       this.fetchCategoriesWithOffers();

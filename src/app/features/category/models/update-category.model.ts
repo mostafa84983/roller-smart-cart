@@ -1,5 +1,5 @@
 export interface UpdateCategoryModel{
-    CategoryId : number;
-    CategoryImage? : string;
-    CategoryName? : string;
+    categoryId : number;
+    categoryImage? : string;
+    categoryName? : string;
 }
