@@ -2,6 +2,7 @@
 using SmartCart.Application.Common;
 using SmartCart.Application.Dto;
 using SmartCart.Application.Dto.Category;
+using SmartCart.Application.Dto.Product;
 using SmartCart.Application.Interfaces;
 using SmartCart.Domain.Interfaces;
 using SmartCart.Domain.Models;
@@ -17,10 +18,12 @@ namespace SmartCart.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper) 
+        private readonly IFileService _fileService;
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, IFileService fileService) 
         { 
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
  
@@ -67,7 +70,13 @@ namespace SmartCart.Application.Services
                 return Result.Failure("Category name already exists");
             }
 
+            var uploadResult = await _fileService.SaveImage(createCategoryDto.CategoryImage);
+            if (!uploadResult.IsSuccess)
+                return Result.Failure(uploadResult.ErrorMessage);
+
             var category = _mapper.Map<Category>(createCategoryDto);
+            category.CategoryImage = uploadResult.Value;
+
             await _unitOfWork.Category.Add(category);
             _unitOfWork.Save();
 
@@ -101,11 +110,22 @@ namespace SmartCart.Application.Services
                 hasUpdated = true;
             }
 
-            if (!string.IsNullOrWhiteSpace(categoryDto.CategoryImage) && !string.Equals(category.CategoryImage?.Trim(), categoryDto.CategoryImage.Trim(), StringComparison.OrdinalIgnoreCase))
+            if (categoryDto.CategoryImage != null && categoryDto.CategoryImage.Length > 0)
             {
-                category.CategoryImage = categoryDto.CategoryImage;
+                // Delete old image
+                var deleteResult = await _fileService.DeleteImage(category.CategoryImage);
+                if (!deleteResult.IsSuccess)
+                    return Result.Failure(deleteResult.ErrorMessage);
+
+                // Save new image
+                var uploadResult = await _fileService.SaveImage(categoryDto.CategoryImage);
+                if (!uploadResult.IsSuccess)
+                    return Result.Failure(uploadResult.ErrorMessage);
+
+                category.CategoryImage = uploadResult.Value;
                 hasUpdated = true;
             }
+
 
             if (!hasUpdated)
             {

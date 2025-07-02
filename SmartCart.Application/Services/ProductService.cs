@@ -21,12 +21,14 @@ namespace SmartCart.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IOrderService _orderService;
+        private readonly IFileService _fileService;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper , IOrderService orderService)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper , IOrderService orderService, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _orderService = orderService;
+            _fileService = fileService;
         }
 
         public async Task<GenericResult<PaginatedResult<ProductDto>>> GetPaginatedProductsInCategory(int categoryId, int page, int pageSize)
@@ -198,7 +200,12 @@ namespace SmartCart.Application.Services
             if (category == null)
                 return Result.Failure("Category does not exist");
 
+            var uploadResult = await _fileService.SaveImage(product.ProductImage);
+            if (!uploadResult.IsSuccess)
+                return Result.Failure(uploadResult.ErrorMessage);
+
             var newProduct = _mapper.Map<Product>(product);
+            newProduct.ProductImage = uploadResult.Value;
 
             await _unitOfWork.Product.Add(newProduct);
             _unitOfWork.Save();
@@ -286,11 +293,22 @@ namespace SmartCart.Application.Services
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(productDto.ProductImage) && !string.Equals(product.ProductImage?.Trim(), productDto.ProductImage.Trim(), StringComparison.OrdinalIgnoreCase))
+            if (productDto.ProductImage != null && productDto.ProductImage.Length > 0)
             {
-                product.ProductImage = productDto.ProductImage;
+                // Delete old image
+                var deleteResult = await _fileService.DeleteImage(product.ProductImage);
+                if (!deleteResult.IsSuccess)
+                    return Result.Failure(deleteResult.ErrorMessage);
+
+                // Save new image
+                var uploadResult = await _fileService.SaveImage(productDto.ProductImage);
+                if (!uploadResult.IsSuccess)
+                    return Result.Failure(uploadResult.ErrorMessage);
+
+                product.ProductImage = uploadResult.Value;
                 hasUpdated = true;
             }
+
 
             if (!string.IsNullOrWhiteSpace(productDto.ProductDescription) && !string.Equals(product.ProductDescription?.Trim(), productDto.ProductDescription.Trim(), StringComparison.OrdinalIgnoreCase))
             {
