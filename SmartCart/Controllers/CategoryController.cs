@@ -40,7 +40,7 @@ namespace SmartCart.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto createdCategoryDto)
+        public async Task<IActionResult> CreateCategory([FromForm] CreateCategoryDto createdCategoryDto)
         {
             var result = await _categoryService.CreateCategory(createdCategoryDto);
             if (!result.IsSuccess)
@@ -52,7 +52,7 @@ namespace SmartCart.API.Controllers
 
         [HttpPatch]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto updatedCategoryDto)
+        public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryDto updatedCategoryDto)
         {
             var result = await _categoryService.UpdateCategory(updatedCategoryDto);
             if(!result.IsSuccess)

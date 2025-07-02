@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SmartCart.Application.Dto.Category
     {
         [Required(ErrorMessage = "Category ID is required")]
         public int CategoryId { get; set; }
-        public string? CategoryImage { get; set; }
+        public IFormFile? CategoryImage { get; set; }
         public string? CategoryName { get; set; }
     }
 }

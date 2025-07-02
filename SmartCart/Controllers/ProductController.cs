@@ -132,7 +132,7 @@ namespace SmartCart.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
+        public async Task<IActionResult> CreateProduct([FromForm] CreateProductDto productDto)
         {
             var result = await _productService.CreateProduct(productDto);
             if (!result.IsSuccess)
@@ -144,7 +144,7 @@ namespace SmartCart.API.Controllers
 
         [HttpPatch]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductDto productDto)
+        public async Task<IActionResult> UpdateProduct([FromForm] UpdateProductDto productDto)
         {
             var result = await _productService.UpdateProduct(productDto);
             if (!result.IsSuccess)
