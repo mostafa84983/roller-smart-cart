@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CategoryModel } from './models/category.model';
 import { PaginatedResult } from '../../shared/paginated-result.model';
-import { CreateCategoryModel } from './models/create-category.model';
 import { UpdateCategoryModel } from './models/update-category.model';
 
 @Injectable({
@@ -25,9 +24,9 @@ export class CategoryService {
     return this.http.get<PaginatedResult<CategoryModel>>(`${this.baseUrl}/offers?page=${page}&pageSize=${pageSize}`);
   }
 
-  createCategory(dto : CreateCategoryModel) : Observable<void>
+  createCategory(formData : FormData) : Observable<void>
   {
-    return this.http.post<void>(this.baseUrl, dto);
+    return this.http.post<void>(this.baseUrl, formData);
   }
 
   updateCategory(dto : UpdateCategoryModel) : Observable<void>

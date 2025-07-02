@@ -3,12 +3,15 @@ import { ProductService } from '../../product.service';
 import { productModel } from '../../models/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { CreateProductDialogComponent } from '../../dialogs/create-product-dialog/create-product-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,CreateProductDialogComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss'
 })
@@ -24,14 +27,14 @@ export class ProductComponent implements OnInit{
   errorMessage : string = '';
   isOffer : boolean = false;
   isAdmin : boolean = false;
-
+  
 
 
   backendBaseUrl = 'https://localhost:7075';
 
 
   constructor(private productService : ProductService, private route : ActivatedRoute,
-    private authService : AuthService) {}
+    private authService : AuthService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
 
@@ -123,6 +126,24 @@ export class ProductComponent implements OnInit{
   {
   if (description.includes("ml")) return "ml";
   if (description.includes("g")) return "g";
-  return "g";
+
+     return "g";
   }
+
+  openCreateProductDialog() 
+  {
+  const dialogRef = this.dialog.open(CreateProductDialogComponent, {
+    width: '350px',
+    data: { categoryId: this.categoryId },
+    panelClass: 'custom-dialog-container'
+
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'created') {
+      this.fetchProductsOfCategory();
+    }
+  });
+}
+
 }
