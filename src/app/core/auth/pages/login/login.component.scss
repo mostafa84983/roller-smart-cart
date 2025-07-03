@@ -4,10 +4,10 @@ form{
     width: 40%;
     margin-top: 1%;
     margin-bottom: 20px;
-    background-color:#ffffff ;
+    background-color:#eeeded ;
     border-style: solid;
     border-radius: 70px;
-    border-color: #B6B09F;
+    border-color: #000000;
     justify-content: center;
  }
  p{
@@ -29,7 +29,7 @@ form{
     margin-top: 5%;
     width: 90%;
     font-size: 20px;
-    background-color: #EAE4D5;
+   //  background-color: rgb(255, 255, 255);
  }
 mat-icon {
   color: rgb(0, 0, 0);
@@ -50,7 +50,7 @@ mat-form-field mat-error{
  button{
   display: block;
   margin: 10px auto;
-  background-color: #ffffff;
+//   background-color: #EAE4D5;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   border-radius: 20px;
