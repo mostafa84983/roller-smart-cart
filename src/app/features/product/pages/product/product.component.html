@@ -45,13 +45,13 @@
 
                 @if (isAdmin) {
                   <div class="admin-buttons">
-                    <button class="btn btn-secondary btn-sm">Update</button>
-                    <button class="btn btn-danger btn-sm">Delete</button>
+                    <button class="btn btn-sm btn-new2">Update</button>
+                    <button class="btn btn-sm">Delete</button>
                     @if (!product.isOffer) {
-                      <button class="btn btn-success btn-sm">Add Offer</button>
+                      <button class="btn btn-sm btn-new">Add Offer</button>
                     }
                     @if (product.isOffer) {
-                      <button class="btn btn-warning btn-sm">Remove Offer</button>
+                      <button class="btn btn-sm btn-new">Remove Offer</button>
                     }
                   </div>
                 }

@@ -1,6 +1,4 @@
-.title-text{
-    font-size: 60px;
-}
+
 img{
     width: 7%;
     height: 100%;
@@ -8,4 +6,23 @@ img{
 }
 nav{
     background-color: #ec2c12;
+}
+
+.nav-link {
+    font-weight: bold;
+
+    font-size: 20px;
+}
+
+.offcanvas-title {
+    font-weight: bold;
+    font-size: 30px;
+}
+
+.btn-close {
+    font-size: 1.2rem;
+}
+
+.navbar-toggler {
+    border-color: #fff;
 }
