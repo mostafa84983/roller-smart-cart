@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
+import { RegisterDto } from './register.model';
 
 
 @Injectable({
@@ -20,6 +21,11 @@ export class AuthService {
   {
     return this.http.post<any>('https://localhost:7075/api/User/Login' , credintials) ;
   }
+
+ register(register:RegisterDto) 
+ {
+  return this.http.post<any>('https://localhost:7075/api/User/Register', register) ;
+ }
   
 
   storeToken (token:string , expiration:string , role:string)
