@@ -10,12 +10,17 @@
   }
   @else 
   {
-    <h1 class="total-price-heading">
+   <div class="total-price-container">
+  <h1 class="total-price-heading">
     <strong>Total Price:</strong>
-    <span class="badge gramBtn me-2  total-price-badge">
-      {{totalPrice}} <span class="egp">EGP</span>
-    </span> 
-    </h1>  
+    <span class="badge gramBtn me-2 total-price-badge">
+      {{ totalPrice }} <span class="egp">EGP</span>
+    </span>
+  </h1>
+
+  <button class="btn checkout-btn">Checkout</button>
+</div>
+
     <app-cart-product [products]="products"></app-cart-product>
     <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
