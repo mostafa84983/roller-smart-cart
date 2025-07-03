@@ -1,6 +1,7 @@
 .container {
-  background-color: #EAE4D5;
+  background-color: #eeeded;
   box-sizing: border-box;
+
 }
 
 
@@ -12,7 +13,7 @@
 }
 
 .card {
-  background-color: #FFFFFF;
+  // background-color: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 8px;
   overflow: hidden;
@@ -34,7 +35,7 @@
 
 .card-body {
   padding: 1.5rem; 
-  background-color: #EAE4D5;
+  background-color: #fffdfd;
 }
 
 .card-title {
@@ -60,15 +61,15 @@
 }
 
 .btn-secondary {
-  background-color: #FF1E00;
+  background-color: #000000;
   border-color: #000000;
   color: #FFFFFF;
   font-size: 20px;
 }
 
 .btn-secondary:hover {
-  background-color: #3a5162;
-  border-color: #3a5162;
+  background-color: #ec2c12;
+  border-color: #ec2c12;
 }
 
 .pagination {
@@ -86,14 +87,16 @@
 .page-link:hover {
   background-color: #FF1E00;
   color: #FFFFFF;
-  border-color: #FF1E00;
+  // border-color: #FF1E00;
 }
+
 
 .page-item.active .page-link {
   background-color: #FF1E00;
   border-color: #FF1E00;
   color: #FFFFFF;
 }
+
 
 .page-item.disabled .page-link {
   color: rgba(0, 0, 0, 0.5);
