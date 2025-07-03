@@ -4,17 +4,17 @@ form{
     width: 40%;
     margin-top: 1%;
     margin-bottom: 20px;
-    background-color:#838383 ;
+    background-color:#ffffff ;
     border-style: solid;
     border-radius: 70px;
-    border-color: #ffffff;
+    border-color: #B6B09F;
     justify-content: center;
  }
  p{
     margin-top: 10px;
  }
  h1{
-     color: #FE7743;
+     color: #000000;
      font-family:'Lucida Sans', 'Lucida Sans Regular', 
      'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
      font-size: 50px;
@@ -29,21 +29,22 @@ form{
     margin-top: 5%;
     width: 90%;
     font-size: 20px;
+    background-color: #EAE4D5;
  }
 mat-icon {
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 mat-form-field, 
 mat-form-field mat-label, 
 mat-form-field input {
   font-size: 16px;
-  color: #ffffff;
+  color: #000000;
 }
 mat-form-field mat-error{
     margin-top: 4px;
     font-size: 15px;
-    color: #ffdac2;
+    color: #FF1E00;
 }
 
  button{
