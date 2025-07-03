@@ -134,8 +134,10 @@ export class ProductComponent implements OnInit{
   {
   const dialogRef = this.dialog.open(CreateProductDialogComponent, {
     width: '350px',
+    maxWidth: '500px',
+    height: '90vh',   
+    autoFocus: false,
     data: { categoryId: this.categoryId },
-    panelClass: 'custom-dialog-container'
 
   });
 
