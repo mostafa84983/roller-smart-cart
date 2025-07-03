@@ -1,0 +1,57 @@
+<h2>Create Category</h2>
+
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+
+  <p>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Category Name</mat-label>
+      <input matInput formControlName="categoryName" placeholder="Enter category name" />
+      <mat-icon matSuffix>category</mat-icon>
+      <mat-error *ngIf="categoryForm.get('categoryName')?.hasError('required')">
+        Category name is required
+      </mat-error>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field appearance="outline" class="w-100" floatLabel="always">
+      <mat-label>Category Image</mat-label>
+
+      <input
+        type="text"
+        matInput
+        [value]="selectedFile?.name || ''"
+        placeholder="No file selected"
+        readonly
+      />
+
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        aria-label="Select image"
+        (click)="fileInput.click()"
+      >
+        <mat-icon>image</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Hidden real file input -->
+    <input
+      type="file"
+      accept="image/*"
+      #fileInput
+      (change)="onFileSelected($event)"
+      style="display: none"
+    />
+  </p>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="categoryForm.invalid">
+    Create
+  </button>
+
+</form>

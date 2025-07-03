@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Params } from '@angular/router';
+import { CreateCategoryDialogComponent } from '../../dialogs/create-category-dialog/create-category-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -28,7 +30,7 @@ export class CategoryComponent implements OnInit{
     backendBaseUrl = 'https://localhost:7075';
 
     constructor(private categoryService : CategoryService, private activatedRoute : ActivatedRoute,private route :Router,
-      private authService : AuthService) { }
+      private authService : AuthService, private dialog: MatDialog) { }
 
     ngOnInit(): void {
 
@@ -122,4 +124,19 @@ goToProducts(categoryId : number) : void
     this.route.navigate(['/categories', categoryId, 'products'], {queryParams: { isOffer: this.isOffer } });
   }
 }
+
+
+  openCreateCategoryDialog() 
+  {
+  const dialogRef = this.dialog.open(CreateCategoryDialogComponent, {
+    width: '350px',
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result === 'created') {
+      this.fetchCategories();
+    }
+  });
+}
+
 }
