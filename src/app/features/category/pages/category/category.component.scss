@@ -13,7 +13,7 @@
 
 .card {
   background-color: #FFFFFF;
-  border: 1px solid #273F4F;
+  border: 1px solid #000000;
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s ease;
@@ -38,7 +38,7 @@
 }
 
 .card-title {
-  color: #273F4F;
+  color: #000000;
   font-weight: 600;
   margin-bottom: 1rem;
   font-size: 30px; 
@@ -61,7 +61,7 @@
 
 .btn-secondary {
   background-color: #FF1E00;
-  border-color: #273F4F;
+  border-color: #000000;
   color: #FFFFFF;
   font-size: 20px;
 }
@@ -77,9 +77,9 @@
 }
 
 .page-link {
-  color: #273F4F;
+  color: #000000;
   background-color: #EFEEEA;
-  border-color: #273F4F;
+  border-color: #000000;
   cursor: pointer;
 }
 
@@ -98,10 +98,10 @@
 .page-item.disabled .page-link {
   color: rgba(0, 0, 0, 0.5);
   background-color: #EFEEEA;
-  border-color: #273F4F;
+  border-color: #000000;
   cursor: not-allowed;
 }
 
 .text-center {
-  color: #273F4F;
+  color: #000000;
 }
