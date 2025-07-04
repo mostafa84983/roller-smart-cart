@@ -11,5 +11,6 @@ namespace SmartCart.Domain.Interfaces
         Task<int?> GetActiveOrderIdAsync(string cartId, int userId);
         Task SetOrderIdAsync(string cartId, int userId, int orderId);
         Task RemoveCartAsync(string cartId, int userId);
+        Task<bool> CompleteOrder (int orderId);
     }
 }

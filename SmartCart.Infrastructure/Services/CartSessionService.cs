@@ -19,6 +19,23 @@ namespace SmartCart.Infrastructure.Services
             _context = context;
         }
 
+        public async Task<bool> CompleteOrder(int orderId)
+        {
+            var CartOrder = await _context.CartOrders
+                .Where(co => co.OrderId == orderId && co.IsActive)
+                .OrderByDescending(co => co.CreatedAt)
+                .FirstOrDefaultAsync();
+
+             if(CartOrder!= null)
+            {
+                CartOrder.IsActive = false;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+            
+        }
+
         public async Task<int?> GetActiveOrderIdAsync(string cartId, int userId)
         {
             var cartOrder = await _context.CartOrders
