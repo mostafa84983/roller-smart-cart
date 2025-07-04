@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore NuGet packages
+        run: dotnet restore SmartCart.sln
+      - name: Build solution
+        run: dotnet build SmartCart.sln --configuration Release --no-restore
+      - name: Run unit tests
+        run: dotnet test SmartCart.sln --no-restore --verbosity normal
+
+  docker:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: SmartCart/Dockerfile
+          push: true
+          tags: ${{ secrets.REGISTRY }}/smartcart-api:latest
