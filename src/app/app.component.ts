@@ -40,6 +40,10 @@ this.cartSignalRService.onProductRemoved(data => {
    this.productStatus = "Product Removed";
 });
 
+this.cartSignalRService.onOrderCompleted(() => {
+  this.cartservice.setOrderId(-1);
+})
+
 }
 
 closePopup() {

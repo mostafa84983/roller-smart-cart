@@ -32,7 +32,11 @@ export class CartSignalrService {
 
  onProductRemoved(callback: (data: any) => void) {
     this.hubConnection.on('ProductRemoved', callback);
-  } 
+  }
+
+ onOrderCompleted(callback: () => void){
+  this.hubConnection.on('CompleteProduct', callback);
+}
 
 
 }
