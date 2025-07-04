@@ -42,7 +42,7 @@ this.cartSignalRService.onProductRemoved(data => {
 
 this.cartSignalRService.onOrderCompleted(() => {
   this.cartservice.setOrderId(-1);
-})
+});
 
 }
 
