@@ -1,7 +1,7 @@
 export const environment = { 
   production: true, 
-  apiUrl: 'https://localhost/api', 
-  backendBaseUrl: 'https://localhost', 
-  signalRUrl: 'https://localhost/hubs' 
+  apiUrl: 'http://localhost/api', 
+  backendBaseUrl: 'http://localhost', 
+  signalRUrl: 'http://localhost/hubs' 
 };
 
