@@ -29,7 +29,7 @@
           
            
    
-          @if (isLoggedIn) 
+          @if (isLoggedIn && role == "User") 
           {
             <li class="nav-item"><a 
               class="nav-link text-light"
@@ -44,6 +44,16 @@
               routerLinkActive="active"
               data-bs-dismiss="offcanvas"
               >Orders</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" (click) = "Logout()" >logout</a></li>
+          }
+          @else if (isLoggedIn && role == "Admin") 
+          {
+              <li class="nav-item"><a 
+              class="nav-link text-light"
+              [routerLink]="['/start']" 
+              routerLinkActive="active"
+              data-bs-dismiss="offcanvas"
+              >Users</a></li>
             <li class="nav-item"><a class="nav-link" href="#" (click) = "Logout()" >logout</a></li>
           }
 
