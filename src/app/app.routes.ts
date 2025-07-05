@@ -8,6 +8,7 @@ import { ProductComponent } from './features/product/pages/product/product.compo
 import { PaymentComponent } from './features/payment/pages/payment/payment.component';
 import { PaymentSuccessComponent } from './features/payment/payment-success/payment-success.component';
 import { PaymentCancelComponent } from './features/payment/payment-cancel/payment-cancel.component';
+import { OrderComponent } from './features/order/order.component';
 
 export const routes: Routes = 
 [
@@ -23,6 +24,10 @@ export const routes: Routes =
 {
     path: 'categories',
     component : CategoryComponent
+},
+{
+    path: 'orders',
+    component : OrderComponent
 },
 {
     path: 'cartproduct',
