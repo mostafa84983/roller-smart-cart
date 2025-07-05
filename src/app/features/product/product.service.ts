@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaginatedResult } from '../../shared/paginated-result.model';
 import { productModel } from './models/product.model';
-import { UpdateProductModel } from './models/update-product.model';
 import { AddOfferModel } from './models/add-offer.model';
 import { RemoveOfferModel } from './models/remove-offer.model';
 
@@ -64,9 +63,9 @@ createProduct(formData : FormData) : Observable<void>
  return this.http.post<void>(this.baseUrl, formData);
 }
 
-updateProduct(dto : UpdateProductModel) : Observable<void>
+updateProduct(formData : FormData) : Observable<void>
 {
- return this.http.patch<void>(this.baseUrl,dto);
+ return this.http.patch<void>(this.baseUrl,formData);
 }
 
 }

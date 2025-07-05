@@ -7,12 +7,13 @@ import { NgFor, NgIf } from '@angular/common';
 import { Params } from '@angular/router';
 import { CreateCategoryDialogComponent } from '../../dialogs/create-category-dialog/create-category-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UpdateCategoryDialogComponent } from '../../dialogs/update-category-dialog/update-category-dialog.component';
 
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [NgIf,NgFor],
+  imports: [NgIf,NgFor, UpdateCategoryDialogComponent],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss'
 })
@@ -138,5 +139,21 @@ goToProducts(categoryId : number) : void
     }
   });
 }
+openUpdateCategoryDialog(category : CategoryModel)
+{
+ const dialogRef = this.dialog.open(UpdateCategoryDialogComponent, {
+      width: '350px',
+      data: {
+        categoryId: category.categoryId,
+        categoryName: category.categoryName,
+        categoryImage: category.categoryImage
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'updated') {
+        this.fetchCategories();
+      }
+    });
+}
 }
