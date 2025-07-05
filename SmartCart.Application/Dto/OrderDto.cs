@@ -15,6 +15,6 @@ namespace SmartCart.Application.Dto
         public DateTime CreationDate { get; set; }
         public decimal OrderDiscount { get; set; } = 0m;
         public int UserId { get; set; }
-        public OrderStatus Status { get; set; }
+        //public OrderStatus Status { get; set; }
     }
 }
