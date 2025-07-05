@@ -10,7 +10,7 @@ export class CartSignalrService {
 
   startConnection(cartId: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(`${environment.apiUrl}/cart`) 
+      .withUrl(`${environment.signalRUrl}/cart`) 
       .withAutomaticReconnect()
       .build();
 
