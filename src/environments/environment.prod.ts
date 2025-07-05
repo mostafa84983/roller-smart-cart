@@ -1,7 +1,7 @@
-export const environment = {
-  production: true,
-  apiUrl: 'http://smartcart-api:8080/api',
-  backendBaseUrl: 'http://smartcart-api:8080',
-  signalRUrl: 'http://smartcart-api:8080/hubs' 
+export const environment = { 
+  production: true, 
+  apiUrl: 'https://localhost/api', 
+  backendBaseUrl: 'https://localhost', 
+  signalRUrl: 'https://localhost/hubs' 
 };
 
