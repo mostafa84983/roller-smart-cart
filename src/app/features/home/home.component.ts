@@ -3,6 +3,7 @@ import { productCartDto } from '../cart-product/productCartDto.model';
 import { CartproductService } from '../cart-product/cartproduct.service';
 import { CartProductComponent } from '../cart-product/cart-product.component';
 import { CartService } from '../../shared/cart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit {
 
    errorMessage : string = ''
 
-   constructor(private cartProductService : CartproductService , private cartservice : CartService){}
+   constructor(private cartProductService : CartproductService , private cartservice : CartService, private route : Router){}
   
    ngOnInit(): void {
     this.cartservice.orderid$.subscribe(id => {
@@ -53,7 +54,10 @@ export class HomeComponent implements OnInit {
   }
 
    
-
+onCheckout()
+{
+ this.route.navigate(['/payment']);
+}
 
 
 }
