@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { productCartDto } from './productCartDto.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-cart-product',
@@ -11,7 +12,7 @@ import { productCartDto } from './productCartDto.model';
 export class CartProductComponent {
   @Input({required : true}) products : productCartDto[]={} as productCartDto[] ; 
   
-  backendBaseUrl = 'https://localhost:7075/';
+  backendBaseUrl = environment.backendBaseUrl;
 
 getImageUrl(imageFileName: string): string 
 {

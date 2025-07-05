@@ -4,6 +4,7 @@ import { HeaderComponent } from './core/layout/header/header.component';
 import { CartSignalrService } from './features/cart-product/cart-signalr.service';
 import { CartService } from './shared/cart.service';
 import { ProductAddOrRemoveDto } from './features/cart-product/ProductAddOrRemoveDto';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ import { ProductAddOrRemoveDto } from './features/cart-product/ProductAddOrRemov
 export class AppComponent implements OnInit{
   title = 'smart cart';
   cartId ="1234";
-  backendBaseUrl = 'https://localhost:7075/';
+  backendBaseUrl = environment.backendBaseUrl;
   currentProduct:any = null;
   productStatus :string = "" ;
 

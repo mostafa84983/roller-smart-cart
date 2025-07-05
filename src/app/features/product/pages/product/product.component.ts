@@ -7,12 +7,13 @@ import { CommonModule } from '@angular/common';
 import { CreateProductDialogComponent } from '../../dialogs/create-product-dialog/create-product-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateProductDialogComponent } from '../../dialogs/update-product-dialog/update-product-dialog.component';
+import { environment } from '../../../../../environments/environment';
 
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CommonModule,CreateProductDialogComponent, UpdateProductDialogComponent],
+  imports: [CommonModule],
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss'
 })
@@ -31,8 +32,7 @@ export class ProductComponent implements OnInit{
   
 
 
-  backendBaseUrl = 'https://localhost:7075';
-
+ backendBaseUrl = environment.backendBaseUrl;
 
   constructor(private productService : ProductService, private route : ActivatedRoute,
     private authService : AuthService, private dialog: MatDialog) {}

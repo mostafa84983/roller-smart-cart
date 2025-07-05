@@ -3,17 +3,17 @@ import { CategoryService } from '../../category.service';
 import { CategoryModel } from '../../models/category.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { NgFor, NgIf } from '@angular/common';
 import { Params } from '@angular/router';
 import { CreateCategoryDialogComponent } from '../../dialogs/create-category-dialog/create-category-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateCategoryDialogComponent } from '../../dialogs/update-category-dialog/update-category-dialog.component';
+import { environment } from '../../../../../environments/environment';
 
 
 @Component({
   selector: 'app-category',
   standalone: true,
-  imports: [NgIf,NgFor, UpdateCategoryDialogComponent],
+  imports: [],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss'
 })
@@ -28,7 +28,7 @@ export class CategoryComponent implements OnInit{
     isOffer : boolean = false;
     isAdmin : boolean = false;
 
-    backendBaseUrl = 'https://localhost:7075';
+    backendBaseUrl = environment.backendBaseUrl;
 
     constructor(private categoryService : CategoryService, private activatedRoute : ActivatedRoute,private route :Router,
       private authService : AuthService, private dialog: MatDialog) { }

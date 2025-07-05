@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class CartSignalrService {
 
   startConnection(cartId: string) {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7075/hubs/cart') 
+      .withUrl(`${environment.apiUrl}/cart`) 
       .withAutomaticReconnect()
       .build();
 

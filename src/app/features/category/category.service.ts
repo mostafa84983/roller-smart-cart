@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CategoryModel } from './models/category.model';
 import { PaginatedResult } from '../../shared/paginated-result.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ import { PaginatedResult } from '../../shared/paginated-result.model';
 export class CategoryService {
 
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:7075/api/Category';
+  private baseUrl = `${environment.apiUrl}/Category`;
 
   getPaginatedCategories(page : number , pageSize : number) : Observable<PaginatedResult<CategoryModel>> 
   {

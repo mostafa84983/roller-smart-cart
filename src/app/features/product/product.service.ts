@@ -5,6 +5,7 @@ import { PaginatedResult } from '../../shared/paginated-result.model';
 import { productModel } from './models/product.model';
 import { AddOfferModel } from './models/add-offer.model';
 import { RemoveOfferModel } from './models/remove-offer.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ import { RemoveOfferModel } from './models/remove-offer.model';
 export class ProductService {
 
   private http = inject(HttpClient);
-  private baseUrl = 'https://localhost:7075/api/Product';
+  private baseUrl = `${environment.apiUrl}/Product`;
 
 
   getPaginatedProductsInCategory(categoryId : number , page : number , pageSize : number) : Observable<PaginatedResult<productModel>>

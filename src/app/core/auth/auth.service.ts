@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { RegisterDto } from './register.model';
+import { environment } from '../../../environments/environment';
+
 
 
 @Injectable({
@@ -19,12 +21,12 @@ export class AuthService {
 
   login(credintials:{email:string , password:string}) 
   {
-    return this.http.post<any>('https://localhost:7075/api/User/Login' , credintials) ;
+    return this.http.post<any>(`${environment.apiUrl}/User/Login` , credintials) ;
   }
 
  register(register:RegisterDto) 
  {
-  return this.http.post<any>('https://localhost:7075/api/User/Register', register) ;
+  return this.http.post<any>(`${environment.apiUrl}/User/Register`, register) ;
  }
   
 

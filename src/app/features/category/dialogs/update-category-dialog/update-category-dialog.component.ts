@@ -19,8 +19,7 @@ import { UpdateCategoryModel } from '../../models/update-category.model';
       MatFormFieldModule,
       MatInputModule,
       MatIconModule,
-      MatButtonModule,
-      MatError
+      MatButtonModule
   ],
   templateUrl: './update-category-dialog.component.html',
   styleUrl: './update-category-dialog.component.scss'

@@ -2,6 +2,7 @@ import { Injectable , inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaymentModel } from './payment.model';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
@@ -10,7 +11,7 @@ import { PaymentModel } from './payment.model';
 export class PaymentService {
 
     private http = inject(HttpClient);
-    private baseUrl = 'https://localhost:7075/api/Payment';
+    private baseUrl = `${environment.apiUrl}/Payment`;
 
     createCheckoutSession(orderId : number) : Observable<PaymentModel>
     {
