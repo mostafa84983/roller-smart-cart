@@ -81,6 +81,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IStripeService, StripeService>();
+/*builder.Services.AddScoped<IPaymentVerificationService, PaymentVerificationService>(); */
+builder.Services.AddScoped<IWebhookService, WebhookService>();
 builder.Services.AddScoped<IFileService, FileService>();
 
 

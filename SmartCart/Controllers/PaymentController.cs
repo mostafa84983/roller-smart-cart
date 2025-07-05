@@ -19,15 +19,16 @@ namespace SmartCart.API.Controllers
 
         [HttpPost("checkout")]
         [Authorize]
-        public async Task<IActionResult> CreateCheckoutSession([FromBody] int orderId)
+        public async Task<IActionResult> CreateCheckoutSession([FromBody] CheckoutRequestDto request)
         {
             var userIdClaims = GetUserId();
+            var orderId = request.OrderId;
 
-            var result = await _paymentService.CreateStripeSession(orderId , userIdClaims);
+            var result = await _paymentService.CreateStripeSession(orderId, userIdClaims);
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok(result.Value);
+            return Ok(new { value = result.Value });
         }
 
     }
