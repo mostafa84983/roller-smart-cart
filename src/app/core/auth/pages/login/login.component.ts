@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule, Validators } from '@angular/forms';
 import {MatError, MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import { AuthService } from '../../auth.service';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { Router, RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent  {
+export class LoginComponent implements OnInit  {
 
   errorMessage : string = "" ;
   isloggedIn = true;
@@ -41,7 +41,7 @@ export class LoginComponent  {
         this.isloggedIn= true;
         this.authService.startLogin();
         this.authService.storeToken(response.token , response.expiration , response.role)
-        this.router.navigate(['/home']) ;
+        this.router.navigate(['/start']) ;
       } ,
       error : err => 
       {

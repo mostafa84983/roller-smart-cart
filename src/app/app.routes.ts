@@ -9,6 +9,8 @@ import { PaymentComponent } from './features/payment/pages/payment/payment.compo
 import { PaymentSuccessComponent } from './features/payment/payment-success/payment-success.component';
 import { PaymentCancelComponent } from './features/payment/payment-cancel/payment-cancel.component';
 import { OrderComponent } from './features/order/order.component';
+import { UserComponent } from './features/user/user.component';
+import { StartComponent } from './features/start/start.component';
 
 export const routes: Routes = 
 [
@@ -17,8 +19,18 @@ export const routes: Routes =
     component: LoginComponent
 },
 {
+    path :'start',
+    component : StartComponent,
+    canActivate :[authGuard]
+},
+{
     path :'home',
     component : HomeComponent,
+    
+},
+{
+    path :'user',
+    component : UserComponent,
     canActivate :[authGuard]
 },
 {
@@ -48,9 +60,9 @@ export const routes: Routes =
      component: PaymentCancelComponent 
 },
 { 
-        path: '',
-        redirectTo: '/home', 
-        pathMatch: 'full'
+  path: '', 
+  redirectTo: '/start', 
+  pathMatch: 'full' 
 }
 
 
