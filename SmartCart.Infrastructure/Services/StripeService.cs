@@ -27,9 +27,20 @@ namespace SmartCart.Infrastructure.Services
                 LineItems = BuildLineItems(dto.Products),
                 Mode = "payment",
                 CustomerEmail = dto.Email,
-                SuccessUrl = $"{_configuration["Stripe:SuccessUrl"]}?orderId={dto.OrderId}",
-/*                SuccessUrl = $"{_configuration["Stripe:SuccessUrl"]}?orderId={dto.OrderId}&cartId={dto.CartId}",
-*/                CancelUrl = _configuration["Stripe:CancelUrl"]
+                PhoneNumberCollection = new SessionPhoneNumberCollectionOptions { Enabled = false },
+                SuccessUrl = $"{_configuration["Stripe:SuccessUrl"]}?sessionId={{CHECKOUT_SESSION_ID}}",
+                /*      SuccessUrl = $"{_configuration["Stripe:SuccessUrl"]}?orderId={dto.OrderId}",  */
+                /*      SuccessUrl = $"{_configuration["Stripe:SuccessUrl"]}?orderId={dto.OrderId}&cartId={dto.CartId}",  */
+
+                CancelUrl = _configuration["Stripe:CancelUrl"],
+                Metadata = new Dictionary<string, string>
+                {
+                 {   "orderId", dto.OrderId.ToString() }
+                }
+          /*      Metadata = new Dictionary<string, string>
+                    {
+                        { "orderId", "2002" }  
+                    }*/
             };
 
             var service = new SessionService();
