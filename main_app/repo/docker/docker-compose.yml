@@ -18,12 +18,31 @@ services:
     container_name: smartcart-api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      # - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=SmartCart;User Id=sa;Password=Yourpassword123!;TrustServerCertificate=True;
     ports:
-      - "5138:8080"  # container listens on 8080
+      - "7075:8080"  # map localhost:7075 to container:8080
     depends_on:
       - sqlserver
     restart: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  smartcart-web:
+    image: caddy:alpine 
+    container_name: smartcart-web
+    ports:
+      - "4200:80"
+    volumes:
+      - $PWD/frontend/browser:/usr/share/caddy
+      - $PWD/caddy_conf:/etc/caddy
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    depends_on:
+      - smartcart-api
 
 volumes:
   sql_data:
+  caddy_data:
+  caddy_config:
