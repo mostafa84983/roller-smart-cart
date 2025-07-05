@@ -65,7 +65,7 @@ createProduct(formData : FormData) : Observable<void>
 
 updateProduct(formData : FormData) : Observable<void>
 {
- return this.http.patch<void>(this.baseUrl,formData);
+ return this.http.patch<void>(this.baseUrl, formData);
 }
 
 }

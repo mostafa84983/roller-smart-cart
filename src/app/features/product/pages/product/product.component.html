@@ -45,7 +45,7 @@
 
                 @if (isAdmin) {
                   <div class="admin-buttons">
-                    <button class="btn btn-sm btn-new2">Update</button>
+                    <button class="btn btn-sm btn-new2" (click)="openUpdateProductDialog(product); $event.stopPropagation()">Update</button>
                     <button class="btn btn-sm">Delete</button>
                     @if (!product.isOffer) {
                       <button class="btn btn-sm btn-new">Add Offer</button>
