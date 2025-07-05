@@ -12,6 +12,8 @@ import { CartService } from '../../../shared/cart.service';
 export class PaymentSuccessComponent implements OnInit{
 
   sessionId? : string;
+  countDown : number = 5;
+  private countdownInterval: any;
   
   constructor(private activatedRoute : ActivatedRoute, private cartSerivce : CartService, private route : Router) {}
 
@@ -23,11 +25,27 @@ export class PaymentSuccessComponent implements OnInit{
     if(this.sessionId)
     {
       this.cartSerivce.setOrderId(-1);
+      
     }
+
+    this.countDownButton();
   }
 
   goToHome()
   {
- this.route.navigate(['/home']);
+    this.route.navigate(['/home']);
+  }
+
+  countDownButton()
+  {
+        this.countdownInterval = setInterval(() => {
+        this.countDown--;
+
+        if (this.countDown === 0) 
+        {
+          clearInterval(this.countdownInterval);
+          this.goToHome();
+        }
+      }, 1000);
   }
 }

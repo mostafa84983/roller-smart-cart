@@ -10,13 +10,29 @@ import {  Router } from '@angular/router';
 })
 export class PaymentCancelComponent implements OnInit{
 
+  countDown : number = 5;
+  private countdownInterval: any;
+
   constructor(private route : Router) {}
   ngOnInit(): void {
-    
+  this.countDownButton();
   }
 
   goToHome()
   {
      this.route.navigate(['/home']);
+  }
+
+  countDownButton()
+  {
+        this.countdownInterval = setInterval(() => {
+        this.countDown--;
+
+        if (this.countDown === 0) 
+        {
+          clearInterval(this.countdownInterval);
+          this.goToHome();
+        }
+      }, 1000);
   }
 }
