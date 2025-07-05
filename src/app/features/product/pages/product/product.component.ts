@@ -6,12 +6,13 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { CreateProductDialogComponent } from '../../dialogs/create-product-dialog/create-product-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UpdateProductDialogComponent } from '../../dialogs/update-product-dialog/update-product-dialog.component';
 
 
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [CommonModule,CreateProductDialogComponent],
+  imports: [CommonModule,CreateProductDialogComponent, UpdateProductDialogComponent],
   templateUrl: './product.component.html',
   styleUrl: './product.component.scss'
 })
@@ -147,5 +148,30 @@ export class ProductComponent implements OnInit{
     }
   });
 }
+openUpdateProductDialog(product : productModel)
+{
+ const dialogRef = this.dialog.open(UpdateProductDialogComponent, {
+      width: '350px',
+      maxWidth: '500px',
+      height: '90vh',   
+      autoFocus: false,
+      data: {
+        productId: product.productId,
+        productName: product.productName,
+        productCode: product.productCode,
+        productWeight: product.productWeight,
+        quantity: product.quantity,
+        productPrice: product.productPrice,
+        productImage: product.productImage,
+        productDescription: product.productDescription,
+        isAvaiable: product.isAvaiable
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'updated') {
+        this.fetchProductsOfCategory();
+      }
+    });
+}
 }

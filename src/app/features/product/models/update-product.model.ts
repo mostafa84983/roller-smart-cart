@@ -5,7 +5,7 @@ productCode? : number ;
 productWeight? : number ; 
 quantity? : number;
 productPrice?  : number ;
-productImage? : string ;
+productImage? : File ;
 productDescription? : string ;
 isAvaiable? : boolean ;
 }
