@@ -12,7 +12,7 @@ export class CartproductService {
 
   getProductsOfCart (page : number , pageSize : number , orderId: number)
   {
-    return this.http.get<productCartDto[]>(`${environment.apiUrl}/Product/order/${orderId}/products?page=${page}&pageSize=${pageSize}`) ;
+    return this.http.get<any>(`${environment.apiUrl}/Product/order/${orderId}/products?page=${page}&pageSize=${pageSize}`) ;
   }
 
   OpenOCR(cartId: string)

@@ -14,10 +14,10 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
    products: productCartDto[] = [];
+   totalPrice : number = 0 ;
    page : number = 1 ;
    pagesize : number = 3 ;
    orderId : number = -1;
-   totalPrice : number = 0;
 
    errorMessage : string = ''
 
@@ -40,7 +40,8 @@ export class HomeComponent implements OnInit {
   startPage(){
   this.cartProductService.getProductsOfCart(this.page, this.pagesize,this.orderId).subscribe( {
       next : data => {
-        this.products= data;
+        this.products= data.products;
+        this.totalPrice = data.total ;
       },
       error : err =>{
       this.errorMessage = err.error ;
