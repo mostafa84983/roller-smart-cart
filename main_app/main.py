@@ -31,6 +31,17 @@ def set_token():
     except Exception as e:
         return {"error": str(e)}, 500
 
+@app.route('/REDO', methods=['POST'])
+def redo():
+    data = request.get_json()
+    return {"status": "ok"}, 200
+
+@app.route('/open-OCR', methods=['POST'])
+def ocr():
+    data = request.get_json()
+    
+    return {"status": "ok"}, 200
+
 @app.route('/health', methods=['GET'])
 def health():
     return {"status": "ok"}, 200
