@@ -25,6 +25,7 @@ ocr_requested = Event()
 last_detection_time = 0
 last_expected_weight = 0.0  # weight expected from last detected product
 state_lock = threading.Lock()
+product = None  # currently detected product
 
 app = Flask(__name__)
 
@@ -82,7 +83,7 @@ def weight_monitor(weight_sensor):
         with state_lock:
             expected = last_expected_weight
 
-        if abs(delta) > 0.0:
+        if abs(delta) > 50.0:
             # If the change matches expected weight -> add/remove
             if abs(abs(delta) - expected) <= expected * 0.10:
                 if delta > 0:
@@ -136,7 +137,7 @@ def camera_loop(cam, barcode_detector, weight_sensor):
 
 
 def process_detection(identifier):
-    global last_expected_weight
+    global last_expected_weight, product
 
     label, product_code, product_info = get_product_info(identifier)
     if not product_info:

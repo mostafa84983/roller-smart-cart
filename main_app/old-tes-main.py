@@ -22,6 +22,7 @@ detection_cooldown = 2  # seconds
 last_detected_label = None
 is_removal = False
 token = None
+product = None
 
 # ------------------- Flask Endpoints -------------------
 
@@ -66,7 +67,7 @@ def weight_monitor(weight_sensor):
         curr_weight = weight_sensor.get_weight()
         delta = abs(curr_weight - prev_weight)
 
-        if delta > 5.0 and time.time() - last_detection_time > 3:  # weight changed, but no detection recently
+        if delta > 50.0 and time.time() - last_detection_time > 3:  # weight changed, but no detection recently
             print("[WeightMonitor] Weight mismatch detected!")
             # send_weight_mismatch_error_to_backend(curr_weight, delta)
 
