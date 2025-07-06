@@ -1,10 +1,5 @@
 # main.py
 
-import time
-import os
-import threading
-import requests
-
 from threading import Thread, Event
 from flask import Flask, request
 from picamera2 import Picamera2
@@ -16,19 +11,20 @@ from weight_sensor import WeightSensor
 from cart_api import add_product, remove_product, get_token, TOKEN_FILE
 from label_map import get_product_info
 
-# Constants
-CART_ID = "1234"
-WEIGHT_MISMATCH_URL = "http://localhost:5138/api/product/Failed/Product"
-
-# Threading state
-ocr_requested = Event()
-last_detection_time = 0
-last_expected_weight = 0.0  # weight expected from last detected product
-state_lock = threading.Lock()
+import time
+import os
 
 app = Flask(__name__)
 
+ocr_requested = Event()
+last_detection_time = 0
+detection_cooldown = 2  # seconds
+last_detected_label = None
+is_removal = False
+token = None
+
 # ------------------- Flask Endpoints -------------------
+
 @app.route('/set-token', methods=['POST'])
 def set_token():
     data = request.get_json()
@@ -36,7 +32,7 @@ def set_token():
     if not t:
         return {"error": "No token provided"}, 400
     try:
-        with open(TOKEN_FILE, 'w') as f:
+        with open("token.txt", 'w') as f:
             f.write(t.strip())
         return {"message": "Token saved"}, 200
     except Exception as e:
@@ -52,59 +48,46 @@ def open_ocr():
 def health():
     return {"status": "ok"}, 200
 
-# ---------------------- Helper Functions ----------------------
+def start_flask():
+    app.run(host='0.0.0.0', port=5050)
+
+
+# ---------------------- Main Logic ----------------------
+
 def verify_weight(expected, actual, tolerance):
     return abs(actual - expected) <= tolerance
 
 
-def report_weight_mismatch(actual_delta):
-    payload = {"cartId": CART_ID}
-    try:
-        requests.post(WEIGHT_MISMATCH_URL, json=payload)
-        print(f"[WeightMonitor] Reported mismatch: {actual_delta:.2f}g")
-    except Exception as e:
-        print(f"[WeightMonitor] Failed to report mismatch: {e}")
-
-# ---------------------- Threads ----------------------
 def weight_monitor(weight_sensor):
-    global last_expected_weight
     print("[WeightMonitor] Started.")
-    prev_weight = weight_sensor.get_weight() or 0.0
-
+    prev_weight = weight_sensor.get_weight()
     while True:
         time.sleep(0.5)
-        curr_weight = weight_sensor.get_weight() or prev_weight
-        delta = curr_weight - prev_weight
+        curr_weight = weight_sensor.get_weight()
+        delta = abs(curr_weight - prev_weight)
 
-        with state_lock:
-            expected = last_expected_weight
-
-        if abs(delta) > 0.0:
-            # If the change matches expected weight -> add/remove
-            if abs(abs(delta) - expected) <= expected * 0.10:
-                if delta > 0:
-                    print(f"[WeightMonitor] Detected addition: +{delta:.2f}g matches expected {expected:.2f}g")
-                    add_product_to_cart()
-                else:
-                    print(f"[WeightMonitor] Detected removal: {delta:.2f}g matches expected {expected:.2f}g")
-                    remove_product_from_cart()
-            else:
-                # Mismatch
-                print(f"[WeightMonitor] Weight mismatch: delta={delta:.2f}g expected={expected:.2f}g")
-                report_weight_mismatch(delta)
-
-            # reset expected
-            with state_lock:
-                last_expected_weight = 0.0
+        if delta > 5.0 and time.time() - last_detection_time > 3:  # weight changed, but no detection recently
+            print("[WeightMonitor] Weight mismatch detected!")
+            # send_weight_mismatch_error_to_backend(curr_weight, delta)
 
         prev_weight = curr_weight
 
 
 def camera_loop(cam, barcode_detector, weight_sensor):
-    global last_detection_time, last_expected_weight
+    global last_detection_time, last_detected_label, is_removal
 
     while True:
-        # Default: object detection or OCR fallback
+        # Manual override for debugging
+        try:
+            if msvcrt.kbhit():
+                ch = msvcrt.getch().decode('utf-8').lower()
+                if ch == 'b':
+                    ocr_requested.set()
+                elif ch == 'c':
+                    print("[Debug] Manual object detection triggered.")
+        except:
+            pass
+
         if ocr_requested.is_set():
             print("[Main] Running Barcode Scan Mode...")
             ocr_requested.clear()
@@ -112,13 +95,13 @@ def camera_loop(cam, barcode_detector, weight_sensor):
             identifier = barcode_detector.scan_once(timeout=5)
             if identifier:
                 print(f"[Barcode] Found: {identifier}")
-                process_detection(identifier)
+                handle_detection(identifier, weight_sensor)
             else:
                 print("[Barcode] No barcode found in 5 seconds.")
 
-            continue
+            continue  # loop back to object detection
 
-        # Object detection
+        # Default: object detection
         result = cam.capture_and_detect(show_window=False)
         identifier, conf = cam.get_top_label(result)
 
@@ -127,11 +110,12 @@ def camera_loop(cam, barcode_detector, weight_sensor):
 
         print(f"[Detect] Found: {identifier} ({conf*100:.1f}%)")
         last_detection_time = time.time()
-        process_detection(identifier)
+        last_detected_label = identifier
 
+        handle_detection(identifier, weight_sensor)
 
-def process_detection(identifier):
-    global last_expected_weight
+def handle_detection(identifier, weight_sensor):
+    global is_removal
 
     label, product_code, product_info = get_product_info(identifier)
     if not product_info:
@@ -146,13 +130,30 @@ def process_detection(identifier):
     expected = float(product['productWeight'])
     tolerance = expected * 0.10
 
-    print(f"[Detect] Expected weight: {expected:.2f}g ±{tolerance:.2f}g")
+    print(f"[Detect] Waiting for weight. Expecting ~{expected}g")
 
-    # store for weight monitor
-    with state_lock:
-        last_expected_weight = expected
+    time.sleep(1)
+    weight = weight_sensor.get_weight()
+    if weight is None:
+        print("[Detect] Failed to read weight.")
+        return
+
+    print(f"[Detect] Measured Weight: {weight:.2f}g")
+
+    if verify_weight(expected, weight, tolerance):
+        print("[Detect] Weight matched.")
+        if is_removal:
+            success = remove_product(product['productCode'], cart_id="1234")
+            print("[Backend] Removed." if success else "[Backend] Failed to remove.")
+        else:
+            success = add_product(product['productCode'], cart_id="1234")
+            print("[Backend] Added." if success else "[Backend] Failed to add.")
+    else:
+        print("[Detect] Weight mismatch.")
+
 
 # ------------------- Main -------------------
+
 def main():
     print("[Main] Starting Flask server...")
     Thread(target=start_flask, daemon=True).start()
@@ -160,26 +161,20 @@ def main():
 
     print("[Main] Initializing components...")
     cam_mgr = CameraManager()
-    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(
-        main={"format": "RGB888", "size": (3280, 2464)}))
-    cam_mgr.add_config("detect", cam_mgr.picam2.create_preview_configuration(
-        main={"format": "RGB888", "size": (640, 640)}))
+    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(main={"format": "RGB888", "size": (3280, 2464)}))
+    cam_mgr.add_config("detect", cam_mgr.picam2.create_preview_configuration(main={"format": "RGB888", "size": (640, 640)}))
 
     cam = CameraModule(cam_mgr, config_name="detect")
     barcode_detector = BarcodeModule(cam_mgr, config_name="barcode")
     weight_sensor = WeightSensor()
 
     print("[Main] Launching threads...")
+
     Thread(target=weight_monitor, args=(weight_sensor,), daemon=True).start()
     Thread(target=camera_loop, args=(cam, barcode_detector, weight_sensor), daemon=True).start()
 
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("[Main] Shutting down...")
-        weight_sensor.close()
-        cam.release()
+    while True:
+        time.sleep(1)
 
 
 if __name__ == "__main__":
