@@ -52,6 +52,9 @@ def open_ocr():
 def health():
     return {"status": "ok"}, 200
 
+def start_flask():
+    app.run(host='0.0.0.0', port=5050)
+
 # ---------------------- Helper Functions ----------------------
 def verify_weight(expected, actual, tolerance):
     return abs(actual - expected) <= tolerance
