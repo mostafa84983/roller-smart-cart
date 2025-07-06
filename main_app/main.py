@@ -87,10 +87,12 @@ def weight_monitor(weight_sensor):
             if abs(abs(delta) - expected) <= expected * 0.10:
                 if delta > 0:
                     print(f"[WeightMonitor] Detected addition: +{delta:.2f}g matches expected {expected:.2f}g")
-                    add_product_to_cart()
+                    success = add_product(product['productCode'], cart_id="1234")
+                    print("[Backend] Added." if success else "[Backend] Failed to add.")
                 else:
                     print(f"[WeightMonitor] Detected removal: {delta:.2f}g matches expected {expected:.2f}g")
-                    remove_product_from_cart()
+                    success = remove_product(product['productCode'], cart_id="1234")
+                    print("[Backend] Removed." if success else "[Backend] Failed to remove.")
             else:
                 # Mismatch
                 print(f"[WeightMonitor] Weight mismatch: delta={delta:.2f}g expected={expected:.2f}g")
