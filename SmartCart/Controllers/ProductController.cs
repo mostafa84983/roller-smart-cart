@@ -213,12 +213,12 @@ namespace SmartCart.API.Controllers
         public async Task<IActionResult> OpenOCR(string cartId)
         {
 
-            // Send to external API
-            //using (var httpClient = new HttpClient())
-            //{ 
-            //    var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/open-OCR", true);
+            //Send to external API
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/open-OCR", true);
 
-            //}
+            }
 
             return Ok();
 
@@ -228,11 +228,11 @@ namespace SmartCart.API.Controllers
         public async Task<IActionResult> REDO(string cartId)
         {
             // Send to external API
-            //using (var httpClient = new HttpClient())
-            //{
-            //    var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/REDO", true);
+            using (var httpClient = new HttpClient())
+            {
+                var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/REDO", true);
 
-            //}
+            }
 
             return Ok();
 

@@ -128,7 +128,10 @@ builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
-        builder => builder.WithOrigins("http://localhost:4200")  // Use http if your Angular app is running on http
+       builder => builder.WithOrigins(
+            "http://localhost:4200",  // dev ng serve
+            "http://localhost"        // prod via Caddy on port 80 inside container, remapped to host:4200
+        )    // Use http if your Angular app is running on http
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials());  // Allow credentials for secure cookie or token-based authentication
