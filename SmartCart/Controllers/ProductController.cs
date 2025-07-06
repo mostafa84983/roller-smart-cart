@@ -54,13 +54,13 @@ namespace SmartCart.API.Controllers
 
             if (!Enum.TryParse<RoleEnum>(role, ignoreCase: true, out var roleEnum))
                 return BadRequest("Invalid role in token");
-            
 
             var result = await _productService.GetPaginatedProductsOfOrder(orderId, page, pageSize, userIdClaims, roleEnum);
+            var (products, total) = result.Value;
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);
 
-            return Ok(result.Value);
+            return Ok(new { products, total });
         }
 
 
@@ -196,5 +196,49 @@ namespace SmartCart.API.Controllers
             else
                 return BadRequest(result.ErrorMessage);
         }
+
+
+        [HttpPost("Failed/Product")]
+        public async Task<IActionResult> FailedProductDetection(string cartId)
+        {
+
+            await _hubContext.Clients.Group(cartId)
+               .SendAsync("FailedProductDetection");
+
+            return Ok();
+
+        }
+
+        [HttpPost("OCR")]
+        public async Task<IActionResult> OpenOCR(string cartId)
+        {
+
+            // Send to external API
+            //using (var httpClient = new HttpClient())
+            //{ 
+            //    var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/open-OCR", true);
+
+            //}
+
+            return Ok();
+
+        }
+
+        [HttpPost("REDO")]
+        public async Task<IActionResult> REDO(string cartId)
+        {
+            // Send to external API
+            //using (var httpClient = new HttpClient())
+            //{
+            //    var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/REDO", true);
+
+            //}
+
+            return Ok();
+
+        }
+
+
+
     }
 }

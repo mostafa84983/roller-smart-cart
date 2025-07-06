@@ -73,18 +73,18 @@ namespace SmartCart.Application.Services
 
             return GenericResult<PaginatedResult<ProductDto>>.Success(paginatedResult);
         }
-
-        public async Task<GenericResult<IEnumerable<ProductInOrderDto>>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
+ 
+        public async Task<GenericResult<(IEnumerable<ProductInOrderDto>, decimal)>> GetPaginatedProductsOfOrder(int orderId, int page, int pageSize, int userClaims, RoleEnum role)
         {
             var order = await _unitOfWork.Order.GetById(orderId);
             if (order == null)
             {
-                return GenericResult<IEnumerable<ProductInOrderDto>>.Failure("Order not found");
+                return GenericResult<(IEnumerable<ProductInOrderDto>, decimal)>.Failure("Order not found");
             }
 
             if (order.UserId != userClaims && role != RoleEnum.Admin)
             {
-                return GenericResult<IEnumerable<ProductInOrderDto>>.Failure("You are not authorized to view products of this order");
+                return GenericResult<(IEnumerable<ProductInOrderDto>, decimal)>.Failure("You are not authorized to view products of this order");
             }
 
             var orderProducts =await _unitOfWork.Product.GetPaginatedProductsOfOrder(orderId, page, pageSize);
@@ -102,7 +102,7 @@ namespace SmartCart.Application.Services
                 CategoryId = op.Product.CategoryId
             }).ToList();
 
-            return GenericResult<IEnumerable<ProductInOrderDto>>.Success(productInOrderDtos);
+            return GenericResult<(IEnumerable<ProductInOrderDto>, decimal)>.Success((productInOrderDtos, order.OrderPrice));
 
         }
 
