@@ -5,6 +5,7 @@ import { CartSignalrService } from './features/cart-product/cart-signalr.service
 import { CartService } from './shared/cart.service';
 import { ProductAddOrRemoveDto } from './features/cart-product/ProductAddOrRemoveDto';
 import { environment } from '../environments/environment';
+import { CartproductService } from './features/cart-product/cartproduct.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,10 @@ export class AppComponent implements OnInit{
   cartId ="1234";
   backendBaseUrl = environment.backendBaseUrl;
   currentProduct:any = null;
+  failedProduct: boolean = false;
   productStatus :string = "" ;
 
-  constructor(private cartSignalRService : CartSignalrService , private cartservice : CartService){}
+  constructor(private cartSignalRService : CartSignalrService , private cartservice : CartService , private cartProductService : CartproductService){}
 
   
 
@@ -45,6 +47,11 @@ this.cartSignalRService.onOrderCompleted(() => {
   this.cartservice.setOrderId(-1);
 });
 
+this.cartSignalRService.onFailedProduct(() => {
+      this.failedProduct = true;
+      this.currentProduct = null;
+    });
+
 }
 
 closePopup() {
@@ -55,6 +62,31 @@ getImageUrl(imageFileName: string): string
 {
   return `${this.backendBaseUrl}/${imageFileName}` ;
 }
+
+runOCR() {
+   this.failedProduct = false;
+    console.log("Running OCR fallback...");
+    this.closePopup();
+    this.cartProductService.OpenOCR(this.cartId).subscribe({
+      next : data => {
+
+      },
+      error : err => 
+      {}
+    });
+  }
+
+  closePopupOCR()
+  {
+     this.failedProduct = false;
+     this.cartProductService.REDO(this.cartId).subscribe({
+      next : data => {
+
+      },
+      error : err => 
+      {}
+    });
+  }
 
 
 }

@@ -15,4 +15,14 @@ export class CartproductService {
     return this.http.get<productCartDto[]>(`${environment.apiUrl}/Product/order/${orderId}/products?page=${page}&pageSize=${pageSize}`) ;
   }
 
+  OpenOCR(cartId: string)
+  {
+   return this.http.post<any>(`${environment.apiUrl}/Product/REDO?cartId=${cartId}`, {});
+  }
+
+   REDO(cartId: string)
+  {
+   return this.http.post<any>(`${environment.apiUrl}/Product/REDO?cartId=${cartId}`, {});
+  }
+
 }
