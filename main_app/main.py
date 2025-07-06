@@ -1,6 +1,6 @@
 # main.py
 
-from threading import Thread
+from threading import Thread, Event
 from flask import Flask, request
 from picamera2 import Picamera2
 from camera_manager import CameraManager
