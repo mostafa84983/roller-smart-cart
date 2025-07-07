@@ -132,8 +132,7 @@ def camera_loop(cam, barcode_detector, weight_sensor):
                 identifier = barcode_detector.scan_frame()
                 if identifier:
                     break
-                time.sleep(0.2)
-            time.sleep(2)
+                time.sleep(2)
 
 
             if identifier:
