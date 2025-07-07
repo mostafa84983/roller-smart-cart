@@ -123,23 +123,25 @@ def camera_loop(cam, barcode_detector, weight_sensor):
 
         if ocr_requested.is_set():
             print("[Main] Running Barcode Scan Mode...")
-            ocr_requested.clear()
+            # ocr_requested.clear()
 
             barcode_detector.prepare()
             identifier = None
-            start = time.time()
-            while time.time() - start < 5:
+            barcode_detector.prepare()
+            print("[Barcode] Waiting for barcode detection...")
+            start_time = time.time()
+            while time.time() - start_time < 5 and not exit_requested.is_set():
                 identifier = barcode_detector.scan_frame()
                 if identifier:
+                    print(f"[Barcode] Detected: {identifier}")
+                    ocr_requested.clear()
+                    last_detection_time = time.time()
+                    cam.prepare()
+                    process_detection(identifier)
                     break
-                time.sleep(2)
-
-
-            if identifier:
-                print(f"[Barcode] Found: {identifier}")
-                process_detection(identifier)
-            else:
-                print("[Barcode] No barcode found in 5 seconds.")
+                else:
+                    print("[Barcode] No barcode detected, retrying...")
+                time.sleep(1)
 
             cam.prepare()
             continue
@@ -183,10 +185,10 @@ def main():
 
     print("[Main] Initializing components...")
     cam_mgr = CameraManager()
-    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(
-        main={"format": "RGB888", "size": (3280, 2464)}))
     cam_mgr.add_config("detect", cam_mgr.picam2.create_preview_configuration(
         main={"format": "RGB888", "size": (640, 640)}))
+    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(
+        main={"format": "RGB888", "size": (3280, 2464)}))
 
     cam = CameraModule(cam_mgr, config_name="detect")
     barcode_detector = BarcodeModule(cam_mgr, config_name="barcode")
