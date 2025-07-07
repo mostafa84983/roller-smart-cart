@@ -11,7 +11,7 @@ class CameraModule:
         self.model = YOLO(model_path)
         self.imgsz = imgsz
 
-    def capture_and_detect(self, show_window=True):
+    def capture_and_detect(self, show_window=False):
         print("[CameraModule] Capturing and detecting...")
         frame = self.cam_manager.capture(self.config_name)
         results = self.model.predict(frame, imgsz=self.imgsz)
