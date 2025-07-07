@@ -86,7 +86,7 @@ def weight_monitor(weight_sensor):
             expected = last_expected_weight
 
         if abs(delta) > 50.0:
-            if abs(abs(delta) - expected) <= expected * 0.10:
+            if abs(abs(delta) - expected) <= expected * 0.3:
                 if delta > 0:
                     print(f"[WeightMonitor] Detected addition: +{delta:.2f}g matches expected {expected:.2f}g")
                     success = add_product(product['productCode'], cart_id="1234")
