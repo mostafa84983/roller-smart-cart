@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: smartcart-db
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Yourpassword123!
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  smartcart-api:
+    build:
+      context: .
+      dockerfile: SmartCart/Dockerfile
+    container_name: smartcart-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080          # <<< bind Kestrel on HTTP 8080
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=SmartCart;User Id=sa;Password=Yourpassword123!;TrustServerCertificate=True;
+    ports:
+      - "5138:8080"  # host:5138 → container:8080 (unused by Caddy, but handy for direct calls)
+    depends_on:
+      - sqlserver
+    restart: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  smartcart-web:
+    image: caddy:alpine
+    container_name: smartcart-web
+    ports:
+      - "80:80"    # host:80 → container:80 (Caddy)
+    volumes:
+      - /home/maro/Desktop/yolo/test_modules/smart-cart/dist/smart-cart/browser:/usr/share/caddy  # your built Angular files
+      - ./caddy_conf:/etc/caddy
+      - caddy_data:/data
+      - caddy_config:/config
+      # - $PWD/custom-resolv.conf:/etc/resolv.conf:ro
+    restart: unless-stopped
+    depends_on:
+      - smartcart-api
+
+volumes:
+  sql_data:
+  caddy_data:
+  caddy_config:

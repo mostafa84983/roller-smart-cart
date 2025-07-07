@@ -1,0 +1,62 @@
+#:80
+
+#root * /usr/share/caddy
+#file_server
+
+# Optional: proxy backend API requests (for dev)
+# Uncomment if you want to call API via frontend domain (e.g. /api instead of http://smartcart-api:8080/api)
+# reverse_proxy /api/* smartcart-api:8080
+# reverse_proxy /hubs/* smartcart-api:8080
+#handle_path /api/* {
+#  reverse_proxy smartcart-api:8080
+#}
+
+#handle_path /hubs/* {
+#  reverse_proxy smartcart-api:8080
+#}
+
+#localhost:443 {
+#  root * /usr/share/caddy
+#  file_server
+
+#  handle_path /api/* {
+#    reverse_proxy smartcart-api:8080
+#  }
+
+#  handle_path /hubs/* {
+#    reverse_proxy smartcart-api:8080
+#  }
+
+#  tls internal  # use internal self-signed TLS cert
+#}
+localhost:80 {
+
+    root * /usr/share/caddy
+    file_server
+
+    handle /api/* {
+        reverse_proxy smartcart-api:8080 {
+            header_up Host {host}
+        }
+    }
+
+    handle /hubs/* {
+        reverse_proxy smartcart-api:8080 {
+            header_up Host {host}
+        }
+    }
+
+    handle_path /*.jpg {
+         reverse_proxy smartcart-api:8080
+   }
+
+    @notFound {
+        not path /api/*
+        not path /hubs/*
+        not path /assets/*
+        not path */*.jpg
+        not file
+    }
+    rewrite @notFound /index.html
+
+}
