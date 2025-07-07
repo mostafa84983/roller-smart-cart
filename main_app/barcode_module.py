@@ -1,6 +1,7 @@
 # barcode_module.py
 
 import cv2
+import time
 
 class BarcodeModule:
     def __init__(self, cam_manager, config_name):

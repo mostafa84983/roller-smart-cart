@@ -2,6 +2,7 @@
 
 import cv2
 from ultralytics import YOLO
+import time
 
 class CameraModule:
     def __init__(self, cam_manager, config_name, model_path="my_model_ncnn_model", imgsz=480):
