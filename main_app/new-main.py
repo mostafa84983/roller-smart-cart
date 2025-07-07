@@ -141,7 +141,7 @@ def camera_loop(cam, barcode_detector, weight_sensor):
 
             continue
 
-        result = cam.capture_and_detect(show_window=True)
+        result = cam.capture_and_detect(show_window=False)
         identifier, conf = cam.get_top_label(result)
 
         if not identifier:
