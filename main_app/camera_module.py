@@ -11,7 +11,7 @@ class CameraModule:
         self.model = YOLO(model_path)
         self.imgsz = imgsz
 
-    def capture_and_detect(self, show_window=False):
+    def capture_and_detect(self, show_window=True):
         print("[CameraModule] Capturing and detecting...")
         frame = self.cam_manager.capture(self.config_name)
         results = self.model.predict(frame, imgsz=self.imgsz)
@@ -25,7 +25,7 @@ class CameraModule:
 
         return result
 
-    def get_top_label(self, result, min_conf=0.2):
+    def get_top_label(self, result, min_conf=0.5):
         print("[CameraModule] Getting top label with minimum confidence:", min_conf)
         if len(result.boxes) == 0:
             print("[CameraModule] No boxes detected")

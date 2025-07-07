@@ -125,7 +125,14 @@ def camera_loop(cam, barcode_detector, weight_sensor):
             print("[Main] Running Barcode Scan Mode...")
             ocr_requested.clear()
 
-            identifier = barcode_detector.scan_once(timeout=5)
+            start = time.time()
+            identifier = None
+            while time.time() - start < 5:
+                identifier = barcode_detector.scan_once()
+                if identifier:
+                    break
+                time.sleep(0.5)
+
             if identifier:
                 print(f"[Barcode] Found: {identifier}")
                 process_detection(identifier)
