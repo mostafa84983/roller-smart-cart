@@ -81,6 +81,7 @@ def weight_monitor(weight_sensor):
         time.sleep(0.5)
         curr_weight = weight_sensor.get_weight() or prev_weight
         delta = curr_weight - prev_weight
+        print(f"[WeightMonitor] Current weight: {curr_weight:.2f}g, Delta: {delta:.2f}g")
 
         with state_lock:
             expected = last_expected_weight
