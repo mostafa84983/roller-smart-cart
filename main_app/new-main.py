@@ -133,6 +133,7 @@ def camera_loop(cam, barcode_detector, weight_sensor):
                 if identifier:
                     break
                 time.sleep(0.2)
+            time.sleep(0.2)
 
 
             if identifier:
