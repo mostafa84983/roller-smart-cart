@@ -125,7 +125,7 @@ def camera_loop(cam, barcode_detector, weight_sensor):
             print("[Main] Running Barcode Scan Mode...")
             ocr_requested.clear()
 
-            identifier = barcode_detector.scan_once(timeout=5)
+            identifier = barcode_detector.scan_once()
             if identifier:
                 print(f"[Barcode] Found: {identifier}")
                 process_detection(identifier)
@@ -173,10 +173,10 @@ def main():
 
     print("[Main] Initializing components...")
     cam_mgr = CameraManager()
-    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(
-        main={"format": "RGB888", "size": (3280, 2464)}))
     cam_mgr.add_config("detect", cam_mgr.picam2.create_preview_configuration(
         main={"format": "RGB888", "size": (640, 640)}))
+    cam_mgr.add_config("barcode", cam_mgr.picam2.create_still_configuration(
+        main={"format": "RGB888", "size": (3280, 2464)}))
 
     cam = CameraModule(cam_mgr, config_name="detect")
     barcode_detector = BarcodeModule(cam_mgr, config_name="barcode")

@@ -25,7 +25,7 @@ class CameraModule:
 
         return result
 
-    def get_top_label(self, result, min_conf=0.2):
+    def get_top_label(self, result, min_conf=0.5):
         print("[CameraModule] Getting top label with minimum confidence:", min_conf)
         if len(result.boxes) == 0:
             print("[CameraModule] No boxes detected")
