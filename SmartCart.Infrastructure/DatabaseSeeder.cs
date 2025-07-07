@@ -38,7 +38,7 @@ public static class DatabaseSeeder
             new User
             {
                 UserName = "heba.elsayed@gmail.com",
-                Email = "heba.elsayed@gmail.com",
+                Email = "hebaabobaa00@gmail.com",
                 FirstName = "Heba",
                 LastName = "Elsayed",
                 Gender = "Female",
@@ -48,7 +48,7 @@ public static class DatabaseSeeder
             new User
             {
                 UserName = "menna.mabrouk@gmail.com",
-                Email = "menna.mabrouk@gmail.com",
+                Email = "mmaly569@gmail.com",
                 FirstName = "Menna",
                 LastName = "Mabrouk",
                 Gender = "Female",
@@ -132,7 +132,7 @@ public static class DatabaseSeeder
                     ProductCode = 1001,
                     ProductWeight = 100.00m,
                     Quantity = 100,
-                    ProductPrice = 22.95m,
+                    ProductPrice = 25.00m,
                     ProductImage = "alarousa_tea.jpg",
                     ProductDescription = "Alarousa Black Tea - 100g pack",
                     IsAvaiable = true,
@@ -146,7 +146,7 @@ public static class DatabaseSeeder
                     ProductCode = 1003,
                     ProductWeight = 575.00m,
                     Quantity = 100,
-                    ProductPrice = 6.00m,
+                    ProductPrice = 7.00m,
                     ProductImage = "Dasani_Water.jpg",
                     ProductDescription = "Dasani_Water 575ml",
                     IsAvaiable = true,
@@ -245,7 +245,7 @@ public static class DatabaseSeeder
                     ProductCode = 1009,
                     ProductWeight = 250m,
                     Quantity = 100,
-                    ProductPrice = 51.00m,
+                    ProductPrice = 57.00m,
                     ProductImage = "Halawa_Elbawady.jpg",
                     ProductDescription = "Halawa_Elbawady 250g",
                     IsAvaiable = true,
@@ -377,6 +377,34 @@ public static class DatabaseSeeder
                     ProductPrice = 38.95m,
                     ProductImage = "americana_red_kidney_beans.jpg",
                     ProductDescription = "Americana Red Kidney Beans - 400g",
+                    IsAvaiable = true,
+                    CategoryId = categories.First(c => c.CategoryName == "Canned Goods").CategoryId,
+                    IsOffer = false,
+                    OfferPercentage = 0m
+                },
+                new Product
+                {
+                    ProductName = "Dulfin tune",
+                    ProductCode = 2004,
+                    ProductWeight = 200.0m,
+                    Quantity = 100,
+                    ProductPrice = 85.0m,
+                    ProductImage = "tune200.jpg",
+                    ProductDescription = "Dulfin tune- 200g",
+                    IsAvaiable = true,
+                    CategoryId = categories.First(c => c.CategoryName == "Canned Goods").CategoryId,
+                    IsOffer = false,
+                    OfferPercentage = 0m
+                },
+                new Product
+                {
+                    ProductName = "Dulfin tune",
+                    ProductCode = 2005,
+                    ProductWeight = 140.0m,
+                    Quantity = 100,
+                    ProductPrice = 70.0m,
+                    ProductImage = "tune140.jpg",
+                    ProductDescription = "Dulfin tune- 140g",
                     IsAvaiable = true,
                     CategoryId = categories.First(c => c.CategoryName == "Canned Goods").CategoryId,
                     IsOffer = false,
