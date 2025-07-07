@@ -125,13 +125,15 @@ def camera_loop(cam, barcode_detector, weight_sensor):
             print("[Main] Running Barcode Scan Mode...")
             ocr_requested.clear()
 
-            start = time.time()
+            barcode_detector.prepare()
             identifier = None
+            start = time.time()
             while time.time() - start < 5:
-                identifier = barcode_detector.scan_once()
+                identifier = barcode_detector.scan_frame()
                 if identifier:
                     break
-                time.sleep(0.5)
+                time.sleep(0.2)
+
 
             if identifier:
                 print(f"[Barcode] Found: {identifier}")
@@ -139,6 +141,7 @@ def camera_loop(cam, barcode_detector, weight_sensor):
             else:
                 print("[Barcode] No barcode found in 5 seconds.")
 
+            cam.prepare()
             continue
 
         result = cam.capture_and_detect(show_window=False)
@@ -190,6 +193,7 @@ def main():
     weight_sensor = WeightSensor()
 
     print("[Main] Launching threads...")
+    cam.prepare()
     Thread(target=weight_monitor, args=(weight_sensor,), daemon=True).start()
     Thread(target=camera_loop, args=(cam, barcode_detector, weight_sensor), daemon=True).start()
 

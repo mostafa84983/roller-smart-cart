@@ -9,9 +9,12 @@ class BarcodeModule:
         self.config_name = config_name
         self.detector = cv2.barcode_BarcodeDetector()
 
-    def scan_once(self):
-        print("[BarcodeModule] Capturing frame")
-        frame = self.cam_manager.capture(self.config_name)
+    def prepare(self):
+        self.cam_manager.switch(self.config_name)
+        time.sleep(0.2)  # let camera warm up
+    
+    def scan_frame(self):
+        frame = self.cam_manager.picam2.capture_array()
 
         # Crop center region
         crop_w, crop_h = 1280, 960
