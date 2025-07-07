@@ -13,6 +13,7 @@ class CameraModule:
         self.imgsz = imgsz
 
     def prepare(self):
+        print("[CameraModule] Preparing camera with configuration:", self.config_name)
         self.cam_manager.switch(self.config_name)
         time.sleep(0.2)
 

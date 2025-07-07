@@ -11,6 +11,7 @@ class BarcodeModule:
         self.detector = cv2.barcode_BarcodeDetector()
 
     def prepare(self):
+        print(f"[BarcodeModule] Preparing camera with configuration: {self.config_name}")
         self.cam_manager.switch(self.config_name)
         time.sleep(0.2)  # let camera warm up
     
