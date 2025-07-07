@@ -42,6 +42,9 @@ export class CartSignalrService {
 onFailedProduct(callback: (data: any) => void){
   this.hubConnection.on('FailedProductDetection', callback);
 }
+onProductDetected(callback: (data: any) => void){
+  this.hubConnection.on('ProductDetection', callback);
+}
 
 
 }

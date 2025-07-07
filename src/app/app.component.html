@@ -23,9 +23,26 @@
   </div>
 }
 
-@if(failedProduct)
+@if(ProductDetected)
 {
   <div class="overlay" (click)="closePopup()">
+    <div class="card-popup" (click)="$event.stopPropagation()">
+      <div class="card" style="width: 20rem;">
+         <h2 class="title">Product Detected</h2>
+        <img [src]="getImageUrl(ProductDetected.productImage)" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h2 class="card-title">{{ProductDetected.productName}}</h2>
+          <p class="card-text"><strong>Price:</strong> {{ProductDetected.productPrice }} LE</p>
+          <button class="btn btn-danger" (click)="closePopup()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if(failedProduct)
+{
+  <div class="overlay" (click)="closePopupOCR()">
     <div class="card-popup" (click)="$event.stopPropagation()">
       <div class="card" style="width: 20rem;">
         <h2 class="title">Product Detection Failed</h2>

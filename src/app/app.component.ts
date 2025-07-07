@@ -6,6 +6,7 @@ import { CartService } from './shared/cart.service';
 import { ProductAddOrRemoveDto } from './features/cart-product/ProductAddOrRemoveDto';
 import { environment } from '../environments/environment';
 import { CartproductService } from './features/cart-product/cartproduct.service';
+import { productModel } from './features/product/models/product.model';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit{
   cartId ="1234";
   backendBaseUrl = environment.backendBaseUrl;
   currentProduct:any = null;
+  ProductDetected: productModel | null = null
   failedProduct: boolean = false;
   productStatus :string = "" ;
 
@@ -52,10 +54,15 @@ this.cartSignalRService.onFailedProduct(() => {
       this.currentProduct = null;
     });
 
+this.cartSignalRService.onProductDetected(data => {
+this.ProductDetected = data ;
+});
+    
 }
 
 closePopup() {
   this.currentProduct = null;
+  this.ProductDetected = null;
 }
 
 getImageUrl(imageFileName: string): string 
