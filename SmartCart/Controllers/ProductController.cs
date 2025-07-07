@@ -239,6 +239,23 @@ namespace SmartCart.API.Controllers
         }
 
 
+        [HttpPost("Detection")]
+        public async Task<IActionResult> ProductDetection([FromBody] ProductRequest productRequest)
+        {
+            var result = await _productService.GetProductByCode(productRequest.ProductCode);
+            if(result.IsSuccess)
+            {
+                await _hubContext.Clients.Group(productRequest.CartId.ToString())
+               .SendAsync("ProductDetection" , result.Value);
+                return Ok(result.Value);
+            }
+
+            return BadRequest(result.ErrorMessage);
+           
+
+        }
+
+
 
     }
 }
