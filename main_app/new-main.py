@@ -100,8 +100,8 @@ def weight_monitor(weight_sensor):
                 print(f"[WeightMonitor] Weight mismatch: delta={delta:.2f}g expected={expected:.2f}g")
                 report_weight_mismatch(delta)
 
-            with state_lock:
-                last_expected_weight = 0.0
+            # with state_lock:
+            #     last_expected_weight = 0.0
 
         prev_weight = curr_weight
 
