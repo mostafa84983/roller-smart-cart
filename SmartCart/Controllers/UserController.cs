@@ -73,12 +73,12 @@ namespace SmartCart.API.Controllers
             var tokenString = new JwtSecurityTokenHandler().WriteToken(result.Value.Token);
 
             //Send to external API
-            using (var httpClient = new HttpClient())
-            {
-                var payload = new { token = tokenString };
-                var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/set-token", payload);
+            //using (var httpClient = new HttpClient())
+            //{
+            //    var payload = new { token = tokenString };
+            //    var response = await httpClient.PostAsJsonAsync("http://host.docker.internal:5050/set-token", payload);
 
-            }
+            //}
             return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(result.Value.Token),
