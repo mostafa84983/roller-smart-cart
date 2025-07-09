@@ -15,4 +15,5 @@ export class UserService {
     return this.http.get<UserModel[]>(`${environment.apiUrl}/User?page=1&pageSize=4`);
   }
 
+
 }
