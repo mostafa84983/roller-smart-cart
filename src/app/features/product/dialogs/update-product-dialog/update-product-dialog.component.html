@@ -1,0 +1,92 @@
+<h2 class="mb-4 text">Update Product</h2>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+  <mat-form-field>
+    <mat-label>Product Name</mat-label>
+    <input matInput formControlName="productName" placeholder="Enter product name" />
+    <mat-icon matSuffix>shopping_cart</mat-icon>
+    <mat-error *ngIf="productForm.get('productName')?.hasError('required')">
+      Product name is required
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Product Code</mat-label>
+    <input type="number" matInput formControlName="productCode" placeholder="Enter product code" />
+    <mat-icon matSuffix>code</mat-icon>
+    <mat-error *ngIf="productForm.get('productCode')?.hasError('min')">
+      Code must be greater than 0
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Weight (kg)</mat-label>
+    <input type="number" matInput formControlName="productWeight" placeholder="Enter product weight" />
+    <mat-icon matSuffix>fitness_center</mat-icon>
+    <mat-error *ngIf="productForm.get('productWeight')?.hasError('min')">
+      Weight must be greater than 0
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Quantity</mat-label>
+    <input type="number" matInput formControlName="quantity" placeholder="Enter quantity" />
+    <mat-icon matSuffix>format_list_numbered</mat-icon>
+    <mat-error *ngIf="productForm.get('quantity')?.hasError('min')">
+      Quantity must be greater than 0
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Price</mat-label>
+    <input type="number" matInput formControlName="productPrice" placeholder="Enter product price" />
+    <mat-icon matSuffix>attach_money</mat-icon>
+    <mat-error *ngIf="productForm.get('productPrice')?.hasError('min')">
+      Price must be greater than 0
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="productDescription" placeholder="Enter product description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Product Image</mat-label>
+    <input
+      type="text"
+      matInput
+      [value]="selectedFile?.name || data.productImage || ''"
+      placeholder="No file selected"
+      readonly
+    />
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      aria-label="Select image"
+      (click)="fileInput.click()"
+    >
+      <mat-icon>image</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <input
+    type="file"
+    accept="image/*"
+    #fileInput
+    (change)="onFileSelected($event)"
+    style="display: none"
+  />
+
+  <mat-checkbox formControlName="isAvaiable" class="mb-3">Available</mat-checkbox>
+
+  <div *ngIf="errorMessage" class="alert alert-danger my-2">
+    {{ errorMessage }}
+  </div>
+
+  <button type="submit" class="w-100 btn">
+    Update
+  </button>
+</form>

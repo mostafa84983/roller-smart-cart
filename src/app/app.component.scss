@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fffdfd;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.card-popup {
+  background: white;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.title{
+  text-align: center;
+
+}
+.buttons{
+  display: flex; 
+  justify-content: space-between;
+}

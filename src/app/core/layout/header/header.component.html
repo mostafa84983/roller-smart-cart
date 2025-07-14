@@ -1,0 +1,95 @@
+<nav class="navbar navbar-dark  "> 
+  <div class="container-fluid">
+    <img src="assets/logo2.jpg" alt="My Photo">
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+      <div class="offcanvas-header">
+        <h1 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Welcome!</h1>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a 
+            class="nav-link text-light" 
+            [routerLink]="['/categories']" 
+            [queryParams]="{ isOffer: false }"
+            routerLinkActive="active"data-bs-dismiss="offcanvas">Categories</a>
+           </li>
+            <li class="nav-item">
+              <a 
+                class="nav-link text-light" 
+                [routerLink]="['/categories']" 
+                [queryParams]="{ isOffer: true }"
+                routerLinkActive="active"
+                data-bs-dismiss="offcanvas">Offers</a>
+            </li>
+          
+             @if (!isLoggedIn)
+            {
+              <li class="nav-item">
+                <a class="nav-link" 
+                  [routerLink]="['/Login']" 
+                  routerLinkActive="active" 
+                  data-bs-dismiss="offcanvas">
+                  Login
+                </a>
+              </li>
+            }
+           
+   
+          @if (isLoggedIn && role == "User") 
+          {
+            <li class="nav-item"><a 
+              class="nav-link text-light"
+              [routerLink]="['/home']" 
+              routerLinkActive="active"
+              data-bs-dismiss="offcanvas"
+              >My Cart</a></li>
+            <li class="nav-item"><a class="nav-link text-light">Profile</a></li>
+            <li class="nav-item"><a 
+              class="nav-link text-light" 
+              [routerLink]="['/orders']" 
+              routerLinkActive="active"
+              data-bs-dismiss="offcanvas"
+              >Orders</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" (click) = "Logout()" >logout</a></li>
+
+          }
+          @else if (isLoggedIn && role == "Admin") 
+          {
+              <li class="nav-item"><a 
+              class="nav-link text-light"
+              [routerLink]="['/start']" 
+              routerLinkActive="active"
+              data-bs-dismiss="offcanvas"
+              >Users</a></li>
+            <li class="nav-item"><a class="nav-link" href="#" (click) = "Logout()" >logout</a></li>
+          }
+
+          
+          
+          <!-- <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li> -->
+        </ul>
+        <!-- <form class="d-flex mt-3" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+          <button class="btn btn-success" type="submit">Search</button>
+        </form> -->
+      </div>
+    </div>
+  </div>
+</nav>
