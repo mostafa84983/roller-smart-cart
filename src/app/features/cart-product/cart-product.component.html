@@ -1,0 +1,31 @@
+<div class="container my-4">
+  @for (product of products; track product.ProductId) 
+  {
+    <div class="card product-card mb-4 shadow-sm">
+      <div class="row g-0 align-items-center">
+        <div class="col-md-4">
+          <img  [src]="getImageUrl(product.productImage)" class="img-fluid rounded-start product-img" alt="{{product.productName}}">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h1 class="card-title mb-2">{{ product.productName }}</h1>
+            <p class="card-text text-muted ">{{ product.productDescription }}</p>
+            
+            <div class="mb-2">
+              <span class="badge gramBtn fs-6 me-2">
+                💰 {{ product.productPrice }} EGP
+              </span>
+              <span class="badge moneyBtn text-dark fs-6">
+                ⚖ {{ product.productWeight }} g
+              </span>
+            </div>
+
+            <p class="mb-0">
+              <strong>Quantity :</strong> {{ product.quantityInOrder }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

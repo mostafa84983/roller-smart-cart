@@ -1,0 +1,107 @@
+:host {
+  display: block;
+  margin: 1rem auto;
+  font-family: Arial, sans-serif;
+  color: #000000;
+  background-color: #eeeded;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  max-width: 600px;
+  transition: transform 0.3s ease;
+}
+
+.text {
+  color: #e20202;
+}
+
+:host:hover {
+  transform: translateY(-5px);
+}
+
+h2 {
+  color: #000000;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+mat-form-field mat-error {
+  margin-top: 4px;
+  font-size: 15px;
+  color: #ec2c12;
+}
+
+mat-form-field .mat-form-field-outline {
+  background-color: #fffdfd;
+  border-radius: 4px;
+}
+
+mat-form-field .mat-form-field-outline-thick {
+  border-color: #ec2c12;
+}
+
+mat-label {
+  color: #000000;
+  font-weight: 500;
+}
+
+input.mat-input-element,
+textarea.mat-input-element {
+  color: #000000;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+mat-form-field .mat-form-field-suffix .mat-icon {
+  color: #e20202;
+}
+
+button[mat-icon-button] {
+  background-color: #eeeded;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  color: #000000;
+}
+
+button[mat-icon-button]:hover {
+  background-color: #ec2c12;
+  color: #ffffff;
+  border-color: #ec2c12;
+}
+
+mat-checkbox {
+  color: #000;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.alert-danger {
+  background-color: #fffdfd;
+  border: 1px solid #ec2c12;
+  color: #ec2c12;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.btn {
+  background-color: #ec2c12;
+  color: white;
+  font-weight: 600;
+  padding: 0.6rem 0;
+  border-radius: 4px;
+  cursor: pointer;
+}

@@ -1,0 +1,43 @@
+.container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 40px;
+  background-color: #fdecea;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.2);
+  text-align: center;
+
+  &.cancel {
+    color: #c62828;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+
+  .icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #ec2c12;
+  }
+
+  .btn {
+    background-color: #ec2c12;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #a51d1d;
+    }
+  }
+}

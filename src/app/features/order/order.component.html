@@ -1,0 +1,23 @@
+<table class="table table-striped">
+	<thead>
+		<tr>			
+			<th scope="col">Order Number</th>
+			<th scope="col">Creation Date</th>
+			<th scope="col">orderDiscount</th>
+            <th scope="col">Order Price</th>
+			
+
+		</tr>
+	</thead>
+	<tbody>
+		@for (order of orders; track order.orderId) {
+		<tr>
+			<td>{{order.orderPrice}}</td>
+            <td>{{order.creationDate}}</td>
+            <td>{{order.orderDiscount}}</td>
+            <td>{{order.orderPrice}}</td>
+		
+		</tr>
+		}
+	</tbody>
+</table>
