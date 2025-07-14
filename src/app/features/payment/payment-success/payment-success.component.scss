@@ -1,0 +1,43 @@
+.container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 40px;
+  background-color: #e6f4ea;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(34, 139, 34, 0.2);
+  text-align: center;
+
+  &.success {
+    color: #2e7d32;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+  }
+
+  .icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #2e7d32;
+  }
+
+  .btn {
+    background-color: #2e7d32;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #27632a;
+    }
+  }
+}

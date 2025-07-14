@@ -1,0 +1,59 @@
+<div class="app-container">
+  <app-header></app-header>
+  <router-outlet></router-outlet>
+</div>
+
+@if(currentProduct)
+{
+  <div class="overlay" (click)="closePopup()">
+    <div class="card-popup" (click)="$event.stopPropagation()">
+      <div class="card" style="width: 20rem;">
+        <h2 class="title">{{productStatus}}</h2>
+        <img [src]="getImageUrl(currentProduct.product.productImage)" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h2 class="card-title">{{ currentProduct.product.productName}}</h2>
+          <p class="card-text">{{ currentProduct.product.productDescription }}</p>
+          <p class="card-text"><strong>Price:</strong> {{ currentProduct.product.productPrice }}</p>
+          <p class="card-text"><strong>Weight:</strong> {{ currentProduct.product.productWeight }}</p>
+          <p class="card-text"><strong>Order Price:</strong> {{ currentProduct.total }}</p>
+          <button class="btn btn-danger" (click)="closePopup()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if(ProductDetected)
+{
+  <div class="overlay" (click)="closePopup()">
+    <div class="card-popup" (click)="$event.stopPropagation()">
+      <div class="card" style="width: 20rem;">
+         <h2 class="title">Product Detected</h2>
+        <img [src]="getImageUrl(ProductDetected.productImage)" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h2 class="card-title">{{ProductDetected.productName}}</h2>
+          <p class="card-text"><strong>Price:</strong> {{ProductDetected.productPrice }} LE</p>
+          <button class="btn btn-danger" (click)="closePopup()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if(failedProduct)
+{
+  <div class="overlay" (click)="closePopupOCR()">
+    <div class="card-popup" (click)="$event.stopPropagation()">
+      <div class="card" style="width: 20rem;">
+        <h2 class="title">Product Detection Failed</h2>
+        <div class="card-body">
+          <p class="card-text">Remove and Add Product again or press Open OCR</p>
+          <div class="buttons">
+            <button class="btn btn-primary" (click)="runOCR()">OCR</button>
+            <button class="btn btn-danger" (click)="closePopupOCR()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

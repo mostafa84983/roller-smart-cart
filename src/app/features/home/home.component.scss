@@ -1,0 +1,79 @@
+.empty-cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.empty-cart h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #000000;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
+  margin-top: 2%;
+  max-width: 800px;
+}
+
+.empty-cart img {
+  width: 300px;
+  max-width: 80%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+
+.empty-cart img:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive text */
+@media (max-width: 600px) {
+  .empty-cart h1 {
+    font-size: 1.8rem;
+  }
+}
+
+.total-price-heading {
+  margin-top: 1%;
+  margin-left: 1%;
+  font-size: 30px;
+  color: black;
+}
+
+.total-price-badge {
+  font-size: 25px;
+  color: rgb(92, 89, 89);
+}
+.egp{
+  color: rgb(3, 3, 3);
+}
+
+.total-price-container {
+  margin-top: 5px;
+  display: flex;
+  justify-content:space-evenly;
+  align-items: center;
+
+}
+
+.total-price-heading {
+  margin: 0; 
+}
+
+.checkout-btn {
+
+  white-space: nowrap;
+  background-color: #eeeded;
+  font-size: larger;
+  font-weight: bold;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  border-style: solid;
+  border-color: #000000;
+}

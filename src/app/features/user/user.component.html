@@ -1,0 +1,30 @@
+<table class="table table-striped">
+	<thead>
+		<tr>			
+			<th scope="col">Email</th>
+			<th scope="col">First Name</th>
+			<th scope="col">Last Name</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Gender</th>
+            <th scope="col">BirthDate</th>
+			<th>Lock</th>
+			<th>Unlock</th>
+
+		</tr>
+	</thead>
+	<tbody>
+		@for (user of users; track user.id) {
+		<tr>
+			<td>{{user.email}}</td>
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.phoneNumber}}</td>
+            <td>{{user.gender}}</td>
+            <td>{{user.birthDate}}</td>
+			<td><a href="">Lock</a></td>
+			<td><a href="">Unlock</a></td>
+
+		</tr>
+		}
+	</tbody>
+</table>

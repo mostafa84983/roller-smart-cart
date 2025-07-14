@@ -1,0 +1,120 @@
+<h2 text-color class="dialog-body">Create Product</h2>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+
+  <p>
+    <mat-form-field  class="w-100">
+      <mat-label>Product Name</mat-label>
+      <input matInput formControlName="productName" placeholder="Enter name" />
+      <mat-icon matSuffix>shopping_cart</mat-icon>
+      @if (productForm.get('productName')?.hasError('required')) 
+      {
+        <mat-error>Product name is required</mat-error>
+      }
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field  class="w-100">
+      <mat-label>Product Code</mat-label>
+      <input matInput type="number" formControlName="productCode" />
+      <mat-icon matSuffix>qr_code</mat-icon>
+      @if (productForm.get('productCode')?.hasError('required')) 
+      {
+        <mat-error>Product code is required</mat-error>
+      }
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field  class="w-100">
+      <mat-label>Weight</mat-label>
+      <input matInput type="number" formControlName="productWeight" />
+      <mat-icon matSuffix>scale</mat-icon>
+      @if (productForm.get('productWeight')?.hasError('required')) 
+      {
+        <mat-error>Weight is required</mat-error>
+      }
+      @if (productForm.get('productWeight')?.hasError('min')) 
+      {
+        <mat-error>Weight must be greater than 0</mat-error>
+      }
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field  class="w-100">
+      <mat-label>Price</mat-label>
+      <input matInput type="number" formControlName="productPrice" />
+      <mat-icon matSuffix>payments</mat-icon>
+      @if (productForm.get('productPrice')?.hasError('required')) 
+      {
+        <mat-error>Price is required</mat-error>
+      }
+      @if (productForm.get('productPrice')?.hasError('min')) 
+      {
+        <mat-error>Price must be greater than 0</mat-error>
+      }
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field  class="w-100">
+      <mat-label>Quantity</mat-label>
+      <input matInput type="number" formControlName="quantity" />
+      <mat-icon matSuffix>inventory</mat-icon>
+      @if (productForm.get('quantity')?.hasError('required')) 
+      {
+        <mat-error>Quantity is required</mat-error>
+      }
+      @if (productForm.get('quantity')?.hasError('min')) 
+      {
+        <mat-error>Quantity must be greater than 0</mat-error>
+      }
+    </mat-form-field>
+  </p>
+
+<!-- <input
+    type="file"
+    (change)="onFileSelected($event)"
+    accept="image/*"/> -->
+
+<p>
+  <mat-form-field  class="w-100" floatLabel="always">
+    <mat-label>Product Image</mat-label>
+
+    <input type="text" matInput [value]="selectedFile?.name || ''" placeholder="No file selected" readonly />
+
+    <button mat-icon-button matSuffix (click)="fileInput.click()" type="button" aria-label="Select file">
+      <mat-icon>image</mat-icon>
+    </button>
+
+  </mat-form-field>
+
+  <!-- Hidden real file input -->
+  <input
+    type="file"
+    accept="image/*"
+    #fileInput
+    (change)="onFileSelected($event)"
+    style="display: none"
+  />
+</p>
+
+  <p>
+    <mat-form-field  class="w-100">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="productDescription"></textarea>
+      <mat-icon matSuffix>description</mat-icon>
+    </mat-form-field>
+  </p>
+
+  @if (errorMessage) 
+  {
+    <div class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Create</button>
+</form>
