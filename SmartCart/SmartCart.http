@@ -1,0 +1,6 @@
+@SmartCart_HostAddress = http://localhost/api
+
+GET {{SmartCart_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
